@@ -1,0 +1,184 @@
+
+const express = require("express");
+const { Pool } = require("pg");
+const cors = require("cors");
+const PORT = 3000;
+const HOST = "0.0.0.0";
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(express.static("public"));
+
+const pool = new Pool({
+  user: "postgres",
+  host: "localhost",
+  database: "cosmic-event",
+  password: "Universo22..",
+  port: 5432,
+});
+
+app.get("/events", async (req, res) => {
+  try {
+    const { id_productora } = req.query;
+
+    const id = id_productora ? parseInt(id_productora) : null;
+
+    const result = await pool.query(
+      "SELECT * FROM events.get_events($1)",
+      [id]
+    );
+
+    res.json(result.rows);
+
+  } catch (error) {
+    console.error("Error al obtener eventos:", error);
+    res.status(500).json({
+      error: "Error en servidor",
+      detalle: error.message
+    });
+  }
+});
+
+app.get("/events/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+
+    const result = await pool.query(
+      "SELECT * FROM events.get_productora_by_id($1)",
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Evento no encontrado" });
+    }
+
+    res.json(result.rows[0]);
+
+  } catch (error) {
+    console.error("Error al obtener evento:", error);
+    res.status(500).json({ error: "Error en servidor" });
+  }
+});
+
+
+app.get("/productoras/:id", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+
+    const result = await pool.query(
+      "SELECT * FROM events.get_productora_by_id($1)",
+      [id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Productora no encontrada" });
+    }
+
+    res.json(result.rows[0]);
+
+  } catch (error) {
+    console.error("Error al obtener productora:", error);
+    res.status(500).json({ error: "Error en servidor" });
+  }
+});
+
+
+app.get("/productoras/:id/eventos", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+
+    const result = await pool.query(
+      "SELECT * FROM events.get_events_by_productora($1)",
+      [id]
+    );
+
+    res.json(result.rows);
+
+  } catch (error) {
+    console.error("Error al obtener eventos de productora:", error);
+    res.status(500).json({ error: "Error en servidor" });
+  }
+});
+
+app.get("/productoras/:id/detalle/:eventoId", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const eventoId = parseInt(req.params.eventoId);
+
+    const result = await pool.query(
+      "SELECT * FROM events.get_detalle_productora($1, $2)",
+      [id, eventoId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Detalle no encontrado" });
+    }
+
+    res.json(result.rows[0]);
+
+  } catch (error) {
+    console.error("Error detalle productora:", error);
+    res.status(500).json({ error: "Error en servidor" });
+  }
+});
+
+
+app.post("/contacto", async (req, res) => {
+  try {
+    const { nombre, email, mensaje } = req.body;
+
+    // validación básica
+    if (!nombre || !email || !mensaje) {
+      return res.status(400).json({ error: "Faltan datos" });
+    }
+
+
+    const result = await pool.query(
+  "SELECT * FROM events.insert_contacto($1, $2, $3)",
+  [nombre, email, mensaje]
+);
+    res.json({ ok: true, data: result.rows[0] });
+
+  } catch (error) {
+    console.error("Error en contacto:", error);
+    res.status(500).json({ error: "Error del servidor" });
+  }
+});
+
+app.get("/eventos/buscar", async (req, res) => {
+  const { q } = req.query;
+
+  try {
+    const result = await pool.query(
+      `SELECT * FROM events.cat_events 
+       WHERE LOWER(name) LIKE LOWER($1)`,
+      [`%${q}%`]
+    );
+
+    res.json(result.rows);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error");
+  }
+});
+
+app.get("/productoras/:id/features", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+
+    const result = await pool.query(
+      "SELECT * FROM events.get_productora_features($1)",
+      [id]
+    );
+
+    res.json(result.rows);
+
+  } catch (error) {
+    console.error("Error al obtener features:", error);
+    res.status(500).json({ error: "Error en servidor" });
+  }
+});
+
+app.listen(PORT, HOST, () => {
+  console.log(`🚀 Server corriendo en http://${HOST}:${PORT}`);
+});

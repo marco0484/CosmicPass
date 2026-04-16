@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout | Cosmic Pass</title>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<nav>
+  <div class="logo">Cosmic Pass</div>
+  <!-- dentro de tu navbar o donde quieras -->
+<button id="btnHome">🏠 Volver al Inicio 🏠</button>
+  <ul>
+    <li onclick="irHome()">Eventos</li>
+    <li>Comprar</li>
+    <li>Login</li>
+  </ul>
+</nav>
+
+<section class="checkout">
+  <h1>Finalizar compra</h1>
+  <div class="checkout-container">
+    <div class="checkout-summary">
+      <h2>Resumen</h2>
+
+      <p><strong>Evento:</strong> Festival Electrónico</p>
+      <p><strong>Lugar:</strong> CDMX</p>
+
+      <div class="price">
+        <p>Total:</p>
+        <h2>$500 MXN</h2>
+      </div>
+    </div>
+
+    <div class="checkout-pay">
+      <h2>Pagar</h2>
+
+      <button onclick="pagar()">Pagar ahora</button>
+
+      <p class="note">Pago seguro con tarjeta / QR</p>
+    </div>
+
+  </div>
+
+</section>
+
+<footer>
+  © 2026 Cosmic Pass. Todos los derechos reservados.
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
