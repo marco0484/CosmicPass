@@ -1,7 +1,12 @@
-const API = window.location.hostname === "localhost" 
+
+const API = "http://192.168.100.23:3000"; // pruebas locales
+
+/*  CON VERCEL
+const API = window.location.hostname === "localhost"
   || window.location.hostname === "127.0.0.1"
   ? "http://localhost:3000"
   : "https://cosmicpass.space";
+*/
 
 document.addEventListener("DOMContentLoaded", async () => {
   window.scrollTo(0, 0);
@@ -140,8 +145,8 @@ async function cargarEventos() {
       return;
     }
 
-    //const res = await fetch("http://192.168.100.23:3000/events");
-    const res = await fetch(`${API}/events`);
+    const res = await fetch("http://192.168.100.23:3000/events");
+    //const res = await fetch(`${API}/events`);
     const eventos = await res.json();
     eventosGlobal = eventos;
     eventosCache = eventos;

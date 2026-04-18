@@ -1523,6 +1523,162 @@ h2{
   margin: 0 auto;    /* 🔥 centra todo */
 }
 
+/* =========================
+   MODAL DE COMPRA MAMÓN
+========================= */
+
+.ticket-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: none;
+}
+
+.ticket-modal.active {
+  display: block;
+}
+
+.ticket-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+}
+
+.ticket-content {
+  position: relative;
+  z-index: 2;
+  width: min(92%, 560px);
+  margin: 5vh auto;
+  padding: 32px;
+  border-radius: 24px;
+
+  background: #0f1117;
+  border: 1px solid rgba(255,255,255,0.08);
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,0.35),
+    0 0 20px rgba(0,229,255,0.05);
+}
+
+.ticket-close {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+
+  background: transparent;
+  border: 0;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+.ticket-close:hover {
+  transform: scale(1.1);
+  opacity: 0.8;
+}
+
+.ticket-kicker {
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #00e5ff;
+  margin-bottom: 10px;
+}
+
+.ticket-content h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.ticket-sub {
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 28px;
+}
+
+.ticket-options {
+  display: grid;
+  gap: 14px;
+}
+
+.ticket-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 18px;
+  border-radius: 18px;
+
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.03);
+
+  transition: 0.25s ease;
+  cursor: pointer;
+}
+
+.ticket-option:hover {
+  transform: translateY(-2px);
+  border-color: rgba(0,229,255,0.4);
+  background: rgba(0,229,255,0.05);
+}
+
+.ticket-option h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.ticket-option p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  color: rgba(255,255,255,0.65);
+}
+
+.ticket-option strong {
+  font-size: 1.1rem;
+  color: #00e5ff;
+}
+
+.btn-buy-final {
+  width: 100%;
+  margin-top: 24px;
+  padding: 16px;
+
+  border: 0;
+  border-radius: 16px;
+
+  background: #00e5ff;
+  color: #000;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.btn-buy-final:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 10px 25px rgba(0,229,255,0.25);
+}
+
+@media (max-width: 768px) {
+  .ticket-content {
+    width: 94%;
+    padding: 24px;
+    margin: 4vh auto;
+  }
+
+  .ticket-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .ticket-option {
+    padding: 14px;
+  }
+}
+
 
 @media (max-width: 1024px){
 

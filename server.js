@@ -190,13 +190,13 @@ app.listen(PORT, HOST, () => {
 */
 // CON SUPABASE
 
-let cacheEventos = null;
+let cacheEventos = {};
 let cacheTime = null;
 const express = require("express");
 const cors = require("cors");
 const { createClient } = require("@supabase/supabase-js");
-const PORT = 3000;
 const HOST = "0.0.0.0";
+const PORT = 3000;
 const app = express();
 
 app.use(cors());
@@ -435,6 +435,30 @@ app.get("/productoras/:id/features", async (req, res) => {
   } catch (error) {
     console.error("Error features:", error);
     res.status(500).json({ error: "Error en servidor" });
+  }
+});
+
+app.get("/eventos/:id/tickets", async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+
+    const { data, error } = await supabase
+      .from("ticket_types")
+      .select("*")
+      .eq("id_evento", id)
+      .eq("ind_activo", 1)
+      .order("precio", { ascending: true });
+
+    if (error) throw error;
+
+    res.json(data);
+
+  } catch (error) {
+    console.error("Error obteniendo tickets:", error);
+
+    res.status(500).json({
+      error: "Error en servidor"
+    });
   }
 });
 

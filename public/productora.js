@@ -1,7 +1,13 @@
-const API = window.location.hostname === "localhost"
-  || window.location.hostname === "127.0.0.1"
-  ? "http://localhost:3000"
-  : "https://cosmicpass.space"; // 👈 cambia esto por tu dominio real
+const API = "http://192.168.100.23:3000"; // 🔥 pruebas locales (Mac + celular misma red)
+
+/*
+const API =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1" ||
+  window.location.hostname.startsWith("192.168.")
+    ? "http://192.168.100.23:3000" // local
+    : "https://cosmicpass.space"; // producción
+*/
 
 const params = new URLSearchParams(window.location.search);
 const idProductora = params.get("id");
@@ -51,10 +57,10 @@ function renderEvents(eventos) {
         <p>📅 ${formatDate(evento.date)}</p>
         <p class="price">$${evento.price}</p>
 
-        <button onclick="irEvento(${evento.id})">
-          Comprar
+        <button onclick="openTicketModal('${evento.name}', ${evento.id})">
+        Pagar Mi Ticket
         </button>
-      </div>
+        </div>
     `;
 
     container.appendChild(card);
@@ -242,3 +248,69 @@ function irHome() {
 }
 
 loadData();
+
+async function openTicketModal(eventName, eventId) {
+  const modal = document.getElementById("ticket-modal");
+  const title = document.getElementById("modal-event-name");
+  const container = document.getElementById("ticket-options");
+
+  if (!modal || !title || !container) {
+    console.error("❌ No existe el modal en HTML");
+    return;
+  }
+
+  title.textContent = eventName;
+  container.innerHTML = "<p>Cargando boletos...</p>";
+
+  modal.classList.add("active");
+
+  try {
+    const res = await fetch(`${API}/eventos/${eventId}/tickets`);
+
+    if (!res.ok) {
+      throw new Error("Error cargando tickets");
+    }
+
+    const tickets = await res.json();
+
+    if (!tickets.length) {
+      container.innerHTML = `
+        <p>No hay boletos disponibles</p>
+      `;
+      return;
+    }
+
+    container.innerHTML = "";
+
+    tickets.forEach(ticket => {
+      const div = document.createElement("div");
+      div.classList.add("ticket-option");
+
+      div.innerHTML = `
+        <div>
+          <h3>${ticket.tipo_ticket}</h3>
+          <p>${ticket.desc_ticket || ""}</p>
+        </div>
+
+        <strong>$${ticket.precio}</strong>
+      `;
+
+      container.appendChild(div);
+    });
+
+  } catch (error) {
+    console.error(error);
+
+    container.innerHTML = `
+      <p>Error cargando boletos</p>
+    `;
+  }
+}
+
+function closeTicketModal() {
+  const modal = document.getElementById("ticket-modal");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+}
