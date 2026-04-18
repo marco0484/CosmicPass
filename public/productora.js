@@ -1,4 +1,8 @@
-const API = "http://192.168.100.23:3000";
+const API = window.location.hostname === "localhost"
+  || window.location.hostname === "127.0.0.1"
+  ? "http://localhost:3000"
+  : "https://cosmicpass.space"; // 👈 cambia esto por tu dominio real
+
 const params = new URLSearchParams(window.location.search);
 const idProductora = params.get("id");
 
@@ -6,12 +10,12 @@ if (!idProductora) {
   console.error("❌ No hay ID de productora");
 }
 
-function scrollToEvents(){
-  document.querySelector('.producer-events-section')
-    ?.scrollIntoView({ behavior: 'smooth' });
+function scrollToEvents() {
+  document.querySelector(".producer-events-section")
+    ?.scrollIntoView({ behavior: "smooth" });
 }
 
-function formatDate(date){
+function formatDate(date) {
   return new Date(date).toLocaleDateString("es-MX", {
     day: "numeric",
     month: "short",
@@ -19,8 +23,10 @@ function formatDate(date){
   });
 }
 
-function renderEvents(eventos){
+function renderEvents(eventos) {
   const container = document.getElementById("producer-events");
+  if (!container) return;
+
   container.innerHTML = "";
 
   if (!eventos.length) {
@@ -29,17 +35,22 @@ function renderEvents(eventos){
   }
 
   eventos.forEach(evento => {
-
     const card = document.createElement("div");
     card.classList.add("event-card");
 
     card.innerHTML = `
-      <img src="${evento.image || 'img/default.jpg'}" alt="${evento.name}">
+      <img 
+        src="${evento.image}" 
+        alt="${evento.name}"
+        loading="lazy"
+      >
+
       <div class="info">
         <h3>${evento.name}</h3>
-        <p>📍 ${evento.city || 'México'}</p>
+        <p>📍 ${evento.city || "México"}</p>
         <p>📅 ${formatDate(evento.date)}</p>
         <p class="price">$${evento.price}</p>
+
         <button onclick="irEvento(${evento.id})">
           Comprar
         </button>
@@ -50,12 +61,13 @@ function renderEvents(eventos){
   });
 }
 
-function renderFeatures(features){
-  const headers = features.filter(f => f.level === 1);
+function renderFeatures(features) {
   const tag = document.getElementById("producer-tag");
 
   if (tag) {
     tag.innerHTML = "";
+
+    const headers = features.filter(f => f.level === 1);
 
     headers.forEach(header => {
       const div = document.createElement("div");
@@ -97,7 +109,6 @@ function renderFeatures(features){
 
       div.innerHTML = `
         <h3>${f.icon || ""} ${f.name}</h3>
-        <p>Eventos diseñados para impactar.</p>
       `;
 
       trustContainer.appendChild(div);
@@ -105,35 +116,35 @@ function renderFeatures(features){
   }
 }
 
-function renderProducer(data, eventos){
-
+function renderProducer(data, eventos) {
   document.getElementById("producer-name").textContent = data.name;
-  document.getElementById("producer-tag").textContent =
-    data.tag || "Experiencias únicas";
 
   document.getElementById("historia").textContent =
     data.historia || data.description || "";
 
+  document.title = `${data.name} | Cosmic Pass`;
+
   const cover = document.getElementById("producer-cover");
+
   if (cover) {
-    cover.src = eventos?.[0]?.image || data.cover || "img/default.jpg";
+    cover.src = eventos?.[0]?.image || data.cover || "";
 
     cover.onerror = () => {
-      cover.src = "img/default.jpg";
+      cover.style.display = "none";
     };
   }
 
   const logo = document.getElementById("producer-logo");
 
   if (logo) {
-    logo.src = eventos?.[0]?.logo || "images/playlabel_logo.jpg";
+    logo.src = eventos?.[0]?.logo || data.logo || "";
 
     logo.onerror = () => {
-      logo.src = "images/playlabel_logo.jpg";
+      logo.style.display = "none";
     };
   }
 
-  function setSocial(id, value){
+  function setSocial(id, value) {
     const el = document.getElementById(id);
     if (!el) return;
 
@@ -150,48 +161,83 @@ function renderProducer(data, eventos){
   setSocial("x", data.x);
 }
 
-async function loadData(){
-
+async function loadData() {
   try {
+    const cacheKey = `productora_${idProductora}`;
 
-    const [resProd, resEventos] = await Promise.all([
-      fetch(`${API}/productoras/${idProductora}`),
-      fetch(`${API}/productoras/${idProductora}/eventos`)
-    ]);
+    const prefetch = localStorage.getItem(
+      `prefetch_productora_${idProductora}`
+    );
 
-    const productora = await resProd.json();
-    const eventos = await resEventos.json();
-
-    if (!productora) return;
-
-    renderProducer(productora, eventos);
-    renderEvents(eventos);
-
-    try {
-      const resFeatures = await fetch(`${API}/productoras/${idProductora}/features`);
-
-      if (resFeatures.ok) {
-        const features = await resFeatures.json();
-        console.log("FEATURES:", features);
-        renderFeatures(features);
-      } else {
-        console.warn("No hay features");
-      }
-
-    } catch (e) {
-      console.warn("Features no disponible");
+    if (prefetch) {
+      console.log("⚡ prefetch encontrado");
     }
 
+    const cacheLocal = localStorage.getItem(cacheKey);
+    const cacheTime = localStorage.getItem(`${cacheKey}_time`);
+    const now = Date.now();
+
+    // cache válida por 5 min
+    if (
+      cacheLocal &&
+      cacheTime &&
+      (now - cacheTime < 300000)
+    ) {
+      const data = JSON.parse(cacheLocal);
+
+      renderProducer(data.productora, data.eventos);
+      renderEvents(data.eventos);
+      renderFeatures(data.features);
+
+      console.log("⚡ productora desde cache");
+      return;
+    }
+
+    // endpoint único (1 request)
+    const res = await fetch(`${API}/productora-full/${idProductora}`);
+
+    if (!res.ok) {
+      throw new Error("Error cargando productora");
+    }
+
+    const data = await res.json();
+
+    if (!data.productora) return;
+
+    renderProducer(data.productora, data.eventos);
+    renderEvents(data.eventos);
+    renderFeatures(data.features);
+
+    localStorage.setItem(cacheKey, JSON.stringify(data));
+    localStorage.setItem(`${cacheKey}_time`, now);
+
+    console.log("🌐 productora desde API");
+
   } catch (err) {
+    console.warn("⚠️ fallback:", err);
+
+    const cacheKey = `productora_${idProductora}`;
+    const cacheLocal = localStorage.getItem(cacheKey);
+
+    if (cacheLocal) {
+      const data = JSON.parse(cacheLocal);
+
+      renderProducer(data.productora, data.eventos);
+      renderEvents(data.eventos);
+      renderFeatures(data.features);
+
+      return;
+    }
+
     console.error("❌ Error cargando datos:", err);
   }
 }
 
-function irEvento(id){
+function irEvento(id) {
   window.location.href = `evento.html?id=${id}`;
 }
 
-function irHome(){
+function irHome() {
   window.location.href = "index.html";
 }
 

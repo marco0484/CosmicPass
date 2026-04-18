@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Compra boletos para eventos de forma rápida y segura con Cosmic Pass.">
   <title>Cosmic Pass</title>
-  <link rel="icon" type="image/png" sizes="32x32" href="images/logo.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="images/logo.webp">
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -22,9 +22,18 @@
 
  <ul class="nav-links">
   <li><a href="#contacto">Contacto</a></li>
-  <li><a href="login.html" class="login">Login</a></li>
-  <li><a href="#" class="cta">Publicar evento</a></li>
-  <li><a href="#">Mis boletos</a></li>
+  <!-- <li><a href="login.html" class="login">Login</a></li> -->
+  <li>
+  <a 
+    href="https://wa.me/5215580761435?text=Hola%20quiero%20publicar%20un%20evento%20en%20Cosmic%20Pass.%0A%0AMi%20nombre%20es:%20%0ATipo%20de%20evento:%20%0ACiudad:%20%0AFecha:%20%0A%0A¿Podemos%20agendar%20una%20llamada%20o%20me%20explicas%20cómo%20funciona?"
+    class="cta"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Publica tu evento 🚀
+  </a>
+</li>
+ <!--  <li><a href="#">Mis boletos</a></li> -->
 </ul>
 </nav>
 
@@ -34,9 +43,19 @@
     Tu próximo evento comienza aquí
     <span class="rocket">🚀</span>
   </h1>
+
   <p class="hero-sub">
     Compra boletos, descubre experiencias y vive momentos únicos
   </p>
+
+  <div class="hero-benefits">
+    <span>🎟️ Sin comisiones abusivas</span>
+    <br>
+    <span>⚡ Publicación rápida</span>
+    <br>
+    <span>📲 Control con QR</span>
+  </div>
+
   <button id="btnExplorar">Explorar eventos ahora</button>
 </section>
 
@@ -44,8 +63,15 @@
   <h2>¿Organizas eventos?</h2>
 <p>Vende boletos, controla accesos y recibe pagos en minutos</p>
   <div class="creators-actions">
-    <a href="#" class="btn-primary fire-btn">Publicar tu evento</a>
-  </div>
+  <a 
+    href="https://wa.me/5215580761435?text=Hola%20quiero%20publicar%20un%20evento%20en%20Cosmic%20Pass.%0A%0AMi%20nombre%20es:%20%0ATipo%20de%20evento:%20%0ACiudad:%20%0AFecha:%20%0A%0A¿Podemos%20agendar%20una%20llamada%20o%20me%20explicas%20cómo%20funciona?"
+    class="btn-primary fire-btn"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Publicar tu evento 🚀
+  </a>
+</div>
 </section>
 
 <section class="events" id="eventos">
@@ -111,26 +137,35 @@
   </div>
 
   <div class="contact-socials">
-    <p>Síguenos</p>
+    <p>Redes Oficiales</p>
 
-    <div class="contact-icons">
-      <a href="https://instagram.com/coosmic_spacee" target="_blank">
-        <img src="images/instagram.svg" alt="Instagram">
-      </a>
+  <div class="contact-icons">
 
-      <a href="https://facebook.com/CosmicSpace20" target="_blank">
-        <img src="images/facebook.svg" alt="Facebook">
-      </a>
+  <a href="https://instagram.com/coosmic_spacee" target="_blank">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm5 5.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm5.5-.75a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25z"/>
+    </svg>
+  </a>
 
-      <a href="https://tiktok.com/@marco.mmy" target="_blank">
-        <img src="images/tiktok.svg" alt="TikTok">
-      </a>
+  <a href="https://facebook.com/CosmicSpace20" target="_blank">
+    <svg width="24" height="24" fill="currentColor">
+      <path d="M13 22v-9h3l1-4h-4V7c0-1.1.9-2 2-2h2V1h-3c-2.8 0-5 2.2-5 5v3H6v4h3v9h4z"/>
+    </svg>
+  </a>
 
-      <a href="https://x.com/@cosmic_space0" target="_blank">
-        <img src="images/x.svg" alt="X">
-      </a>
-    </div>
-  </div>
+  <a href="https://tiktok.com/@marco.mmy" target="_blank">
+    <svg width="24" height="24" fill="currentColor">
+      <path d="M12 2v12.5a3.5 3.5 0 1 1-3-3.46V8a6.5 6.5 0 1 0 5 6.3V7.5a7.5 7.5 0 0 0 4 1.2V5.7A4.5 4.5 0 0 1 12 2z"/>
+    </svg>
+  </a>
+
+  <a href="https://x.com/@cosmic_space0" target="_blank">
+    <svg width="24" height="24" fill="currentColor">
+      <path d="M18 2h3l-7 8 8 12h-6l-5-8-7 8H1l8-9L1 2h6l5 7 6-7z"/>
+    </svg>
+  </a>
+
+</div>
 
 </section>
 
@@ -161,6 +196,6 @@
 <p>© 2026 Cosmic Pass. Todos los derechos reservados.</p>
 </footer>
 
-<script src="script.js"></script>
+<script src="script.js" defer></script>
 </body>
 </html>

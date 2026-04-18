@@ -225,7 +225,7 @@ nav li a:hover::after{
   gap: 3px;
   background:
     linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.9)), 
-    url('images/cosmic.jpg');
+    url('images/cosmic.webp');
   background-size: cover;
   background-position: center;
   overflow: hidden;
@@ -771,7 +771,6 @@ footer{
 .social-icons a img{
   width:22px;
   height:22px;
-  filter:invert(1);
 }
 
 .separator {
@@ -1128,13 +1127,6 @@ footer{
   box-shadow:0 6px 18px rgba(0,229,255,0.15);
 }
 
-.socials img,
-.contact-icons img,
-.social-icons img{
-  width:22px;
-  height:22px;
-  filter:invert(1);
-}
 
 .socials-icon a{
   width:48px;
@@ -1242,13 +1234,19 @@ footer{
     0 0 12px rgba(0,229,255,0.25);
 }
 
-.socials-icon img,
-.contact-icons img,
-.social-icons img{
+.socials-icon svg,
+.contact-icons svg,
+.social-icons svg{
   width:22px;
   height:22px;
-  filter:invert(1);
-  object-fit:contain;
+  fill:#fff; /* 👈 color base */
+  transition:0.3s ease;
+}
+
+.contact-icons a:hover svg,
+.social-icons a:hover svg{
+  fill:#00e5ff;
+  filter: drop-shadow(0 0 6px rgba(0,229,255,0.6));
 }
 
 .contact-socials p{

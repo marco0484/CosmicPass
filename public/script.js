@@ -1,4 +1,7 @@
-let eventosGlobal = [];
+const API = window.location.hostname === "localhost" 
+  || window.location.hostname === "127.0.0.1"
+  ? "http://localhost:3000"
+  : "https://cosmicpass.space";
 
 document.addEventListener("DOMContentLoaded", async () => {
   window.scrollTo(0, 0);
@@ -90,7 +93,8 @@ function initFormulario() {
     btn.disabled = true;
 
     try {
-      const res = await fetch("http://192.168.100.23:3000/contacto", {
+      //const res = await fetch("http://192.168.100.23:3000/contacto", {
+      fetch(`${API}/contacto`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -122,11 +126,28 @@ function initFormulario() {
 async function cargarEventos() {
 
   try {
+    const cacheLocal = localStorage.getItem("eventos");
 
-    const res = await fetch("http://192.168.100.23:3000/events");
+    if (cacheLocal) {
+      const eventos = JSON.parse(cacheLocal);
+
+      eventosGlobal = eventos;
+      eventosCache = eventos;
+
+      renderEventos(eventos);
+
+      console.log("⚡ eventos desde cache local");
+      return;
+    }
+
+    //const res = await fetch("http://192.168.100.23:3000/events");
+    const res = await fetch(`${API}/events`);
     const eventos = await res.json();
     eventosGlobal = eventos;
+    eventosCache = eventos;
+    localStorage.setItem("eventos", JSON.stringify(eventos));
     renderEventos(eventos);
+
   } catch (error) {
     console.error("Error cargando eventos:", error);
   }
@@ -165,8 +186,13 @@ function renderEventos(lista){
         </div>
 
         <div class="card-img-container">
-          <img src="${evento.image}" alt="${evento.name}" class="card-img">
-        </div>
+  <img 
+    src="${evento.image}" 
+    alt="${evento.name}" 
+    class="card-img"
+    loading="lazy"
+  >
+</div>
       </div>
     `;
 
@@ -181,12 +207,17 @@ function renderEventos(lista){
     });
 
     card.addEventListener("click", () => {
-      card.classList.add("active-click");
+  card.classList.add("active-click");
 
-      setTimeout(() => {
-        window.location.href = `productora.html?id=${evento.id_productora}`;
-      }, 180);
-    });
+  localStorage.setItem(
+    `prefetch_productora_${evento.id_productora}`,
+    JSON.stringify(evento)
+  );
+
+  setTimeout(() => {
+    window.location.href = `productora.html?id=${evento.id_productora}`;
+  }, 180);
+});
 
     const btn = card.querySelector(".btn-card");
     btn.addEventListener("click", (e) => {
