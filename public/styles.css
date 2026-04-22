@@ -46,8 +46,10 @@ nav a:hover{
 
 
 body{
-  color:white;
-  background:#000;
+  color: white;
+  background:
+    radial-gradient(circle at top, rgba(0,229,255,0.08), transparent 40%),
+    linear-gradient(180deg, #071018 0%, #0b1220 45%, #111827 100%);
 }
 
 
@@ -73,9 +75,9 @@ nav{
 }
 
 .logo{
-  font-size:22px;
-  font-weight:700;
-  letter-spacing:1px;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 1px;
 }
 
 .logo a{
@@ -604,10 +606,10 @@ font-weight: 600;
 }
 
 footer{
-  text-align:center;
+ text-align:center;
   padding:20px;
-  background:#000;
-  opacity:0.6;
+  background:#0b1120;
+  opacity:0.9;
 }
 
 .rocket{
@@ -916,11 +918,15 @@ footer{
   background: linear-gradient(180deg, #000, #070707);
 }
 
-.producer-story h2 {
-  font-size: 30px;
-  margin-bottom: 15px;
-  text-shadow:0 0 15px rgba(0,229,255,0.3);
+.producer-story h2,
+.trust h2,
+.producer-socials h2 {
+  font-size: clamp(34px, 5vw, 52px);
+  font-weight: 800;
+  letter-spacing: -1px;
 }
+
+
 
 .producer-story p {
   max-width: 750px;
@@ -1488,17 +1494,27 @@ nav::after {
   box-shadow: 0 0 15px rgba(0,229,255,0.3);
 }
 
-.trust-item{
-  background: var(--bg-card);
-  border:1px solid var(--border-soft) !important;
-  backdrop-filter: blur(10px);
-  transition: all .3s ease;
+.trust-item {
+  background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  padding: 28px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.08);
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.03);
+
+  transition: 0.3s ease;
 }
 
-.trust-item:hover{
-  transform: translateY(-6px);
-  border-color: var(--primary-soft);
-  box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+.trust-item:hover {
+  transform: translateY(-8px);
+  border-color: rgba(0,229,255,0.35);
+
+  box-shadow:
+    0 20px 50px rgba(0,0,0,0.45),
+    0 0 20px rgba(0,229,255,0.12);
 }
 
 .event-card:hover{
@@ -1607,13 +1623,10 @@ h2{
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   padding: 18px;
   border-radius: 18px;
-
   border: 1px solid rgba(255,255,255,0.08);
   background: rgba(255,255,255,0.03);
-
   transition: 0.25s ease;
   cursor: pointer;
 }
@@ -1644,10 +1657,8 @@ h2{
   width: 100%;
   margin-top: 24px;
   padding: 16px;
-
   border: 0;
   border-radius: 16px;
-
   background: #00e5ff;
   color: #000;
   font-weight: 700;
