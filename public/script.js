@@ -177,7 +177,7 @@ function renderEventos(lista){
       month: "long",
       year: "numeric"
     });
-
+/*
     card.innerHTML = `
       <div class="card-content">
         <div class="card-text">
@@ -189,6 +189,42 @@ function renderEventos(lista){
           <p>$${evento.price}</p>
           <button class="btn-card">Comprar Boleto</button>
         </div>
+        */
+    card.innerHTML = `
+  <div class="card-content">
+    <div class="card-text">
+      <h3>
+        ${evento.name}
+        <span class="by">by: ${evento.productora_name}</span>
+      </h3>
+
+      <p>${evento.city} - ${fechaFormateada}</p>
+
+      <p>
+        ${
+          // Aquí validamos el precio del evento:
+          // si price es 0 → mostramos "Gratis"
+          // si no → mostramos el precio normal ($500, $800, etc.)
+          Number(evento.price) === 0
+            ? "Gratis"
+            : `$${evento.price}`
+        }
+      </p>
+
+      <button class="btn-card">
+        ${
+          // Aquí hacemos la misma validación para el botón:
+          // si el evento es gratis → "Obtener Ticket"
+          // si tiene costo → "Comprar Ticket"
+          Number(evento.price) === 0
+            ? "Obtener Ticket"
+            : "Comprar Ticket"
+        }
+      </button>
+    </div>
+
+    <div class="card-img-container">
+`;
 
         <div class="card-img-container">
   <img 
