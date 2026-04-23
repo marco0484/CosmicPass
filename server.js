@@ -462,6 +462,49 @@ app.get("/eventos/:id/tickets", async (req, res) => {
   }
 });
 
+// INICIO QR
+app.post("/api/create-ticket", async (req, res) => {
+  try {
+    const { event_id, name, email } = req.body;
+
+    // 1. generar folio único
+    const qrCode = `CPASS-${Date.now()}-${Math.floor(Math.random() * 9999)}`;
+
+    // 2. generar imagen QR
+    const qrImage = await QRCode.toDataURL(qrCode);
+
+    // 3. guardar en Supabase
+    const { data, error } = await supabase
+      .from("tickets")
+      .insert([
+        {
+          event_id,
+          buyer_name: name,
+          buyer_email: email,
+          qr_code: qrCode,
+          qr_image_url: qrImage,
+          payment_status: "free"
+        }
+      ])
+      .select();
+
+    if (error) throw error;
+
+    // 4. responder
+    res.json({
+      success: true,
+      ticket: data[0]
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      success: false,
+      message: "Error al generar ticket"
+    });
+  }
+});
+// FIN QR
 
 app.listen(PORT, HOST, () => {
   console.log(`🚀 Server corriendo en http://${HOST}:${PORT}`);
