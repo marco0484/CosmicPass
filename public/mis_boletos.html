@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mis Boletos | Cosmic Pass</title>
+
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -19,30 +20,34 @@
     </nav>
   </header>
 
-  <main class="mis-boletos-page">
-    <section class="tickets-section">
-      <h1>Tus Boletos 🎟️</h1>
-      <p>Ingresa tu correo para consultar tus tickets disponibles.</p>
+  <main class="tickets-page">
+    <div class="tickets-wrapper">
 
-      <form id="ticket-search-form" class="ticket-form">
+      <h1 class="tickets-title">Tus Boletos 🎟️</h1>
+
+      <p class="tickets-subtitle">
+        Ingresa tu correo para consultar tus tickets disponibles
+      </p>
+
+      <form id="ticket-search-form" class="tickets-form">
         <input
           type="email"
           id="email"
-          name="email"
+          class="tickets-input"
           placeholder="Ingresa tu correo"
           required
         />
 
-        <button type="submit">Buscar Boletos</button>
+        <button type="submit" class="tickets-btn">
+          Buscar Boletos
+        </button>
       </form>
 
-      <div id="tickets-container" class="tickets-container">
-        <div class="empty-state">
-          <p>Aún no has buscado tus boletos.</p>
-          <p>Cuando ingreses tu correo, aquí aparecerán tus accesos.</p>
-        </div>
+      <div id="tickets-container" class="tickets-box">
+        <p>Aquí aparecerán tus boletos.</p>
       </div>
-    </section>
+
+    </div>
   </main>
 
   <script src="script.js"></script>
