@@ -196,7 +196,8 @@ const express = require("express");
 const cors = require("cors");
 const { createClient } = require("@supabase/supabase-js");
 const HOST = "0.0.0.0";
-const PORT = 3000;
+//const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors());
@@ -505,7 +506,7 @@ app.post("/api/create-ticket", async (req, res) => {
   }
 });
 // FIN QR
-
-app.listen(PORT, HOST, () => {
-  console.log(`🚀 Server corriendo en http://${HOST}:${PORT}`);
-});
+// Solo local
+//app.listen(PORT, HOST, () => {
+//  console.log(`🚀 Server corriendo en http://${HOST}:${PORT}`);
+//});
