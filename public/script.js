@@ -250,16 +250,14 @@ function renderEventos(lista){
     <div class="card-img-container">
 `;
 
-        <div class="card-img-container">
+        `<div class="card-img-container">
   <img 
     src="${evento.image}" 
     alt="${evento.name}" 
     class="card-img"
     loading="lazy"
   >
-</div>
-      </div>
-    `;
+</div>`;
 
     card.addEventListener('touchstart', () => {
       card.classList.add('touch');
