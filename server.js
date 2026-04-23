@@ -194,13 +194,16 @@ const express = require("express");
 const cors = require("cors");
 const { createClient } = require("@supabase/supabase-js");
 const HOST = "0.0.0.0";
-//const PORT = 3000;
 const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 const supabase = createClient(
   "https://uqrbykxgsarsfyyvmibr.supabase.co",
@@ -503,10 +506,3 @@ app.post("/api/create-ticket", async (req, res) => {
     });
   }
 });
-if (require.main === module) {
-  app.listen(PORT, HOST, () => {
-    console.log(`🚀 Server corriendo en http://${HOST}:${PORT}`);
-  });
-}
-
-module.exports = app;
