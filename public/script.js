@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   initNavbar();
   initBotones();
   initFormulario();
+  initMisBoletos();
   await cargarEventos(); 
   initBuscador(); 
 
@@ -77,7 +78,7 @@ function initBotones() {
     });
   }
 }
-
+// INICIO FORMULARIO
 function initFormulario() {
   const form = document.querySelector(".contact-form");
 
@@ -128,6 +129,29 @@ function initFormulario() {
   });
 }
 
+function initMisBoletos() {
+  const form = document.getElementById("ticket-search-form");
+  const container = document.getElementById("tickets-container");
+
+  if (!form) return;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+
+    if (!email) return;
+
+    container.innerHTML = `
+      <div class="ticket-item">
+        <p>Buscando boletos para <strong>${email}</strong>...</p>
+      </div>
+    `;
+
+    // luego aquí irá fetch real
+  });
+}
+// FIN QR
 async function cargarEventos() {
 
   try {
