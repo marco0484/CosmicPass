@@ -506,3 +506,5 @@ app.post("/api/create-ticket", async (req, res) => {
     });
   }
 });
+
+module.exports = app;
