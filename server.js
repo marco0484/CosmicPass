@@ -1,5 +1,3 @@
-
-
 /* local */
 /*
 const express = require("express");
@@ -183,7 +181,7 @@ app.get("/productoras/:id/features", async (req, res) => {
 });
 
 app.listen(PORT, HOST, () => {
-  console.log(`🚀 Server corriendo en http://${HOST}:${PORT}`);
+  console.log(`Server corriendo en http://${HOST}:${PORT}`);
 });
 
 
@@ -505,8 +503,10 @@ app.post("/api/create-ticket", async (req, res) => {
     });
   }
 });
-// FIN QR
-// Solo local
-//app.listen(PORT, HOST, () => {
-//  console.log(`🚀 Server corriendo en http://${HOST}:${PORT}`);
-//});
+if (require.main === module) {
+  app.listen(PORT, HOST, () => {
+    console.log(`🚀 Server corriendo en http://${HOST}:${PORT}`);
+  });
+}
+
+module.exports = app;
