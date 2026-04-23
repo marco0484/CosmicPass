@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mis Boletos | Cosmic Pass</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="eventos.html">Eventos</a></li>
+        <li><a href="productoras.html">Productoras</a></li>
+        <li><a href="mis-boletos.html" class="active">Mis Boletos</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="mis-boletos-page">
+    <section class="tickets-section">
+      <h1>Tus Boletos 🎟️</h1>
+      <p>Ingresa tu correo para consultar tus tickets disponibles.</p>
+
+      <form id="ticket-search-form" class="ticket-form">
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Ingresa tu correo"
+          required
+        />
+
+        <button type="submit">Buscar Boletos</button>
+      </form>
+
+      <div id="tickets-container" class="tickets-container">
+        <div class="empty-state">
+          <p>Aún no has buscado tus boletos.</p>
+          <p>Cuando ingreses tu correo, aquí aparecerán tus accesos.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
