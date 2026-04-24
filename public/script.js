@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   initFormulario();
   initMisBoletos();
   //await cargarEventos();
-  //
-  if (document.querySelector(".events-grid")) {
+  
+  if (document.querySelector(".cards")) {
     await cargarEventos();
     initBuscador();
   }
