@@ -15,6 +15,9 @@ const API = window.location.hostname === "localhost"
   ? "http://localhost:3000"
   : "https://cosmic-base-sigma.vercel.app";
 
+let selectedTicket = null;
+let selectedEventId = null;
+
 const params = new URLSearchParams(window.location.search);
 const idProductora = params.get("id");
 
@@ -289,20 +292,36 @@ async function openTicketModal(eventName, eventId) {
     container.innerHTML = "";
 
     tickets.forEach(ticket => {
-      const div = document.createElement("div");
-      div.classList.add("ticket-option");
+  const div = document.createElement("div");
+  div.classList.add("ticket-option");
 
-      div.innerHTML = `
-        <div>
-          <h3>${ticket.tipo_ticket}</h3>
-          <p>${ticket.desc_ticket || ""}</p>
-        </div>
+  div.innerHTML = `
+    <div>
+      <h3>${ticket.tipo_ticket}</h3>
+      <p>${ticket.desc_ticket || ""}</p>
+    </div>
 
-        <strong>$${ticket.precio}</strong>
-      `;
+    <strong>
+      ${
+        Number(ticket.precio) === 0
+          ? "Free Access"
+          : `$${ticket.precio}`
+      }
+    </strong>
+  `;
 
-      container.appendChild(div);
-    });
+  div.addEventListener("click", () => {
+    document.querySelectorAll(".ticket-option")
+      .forEach(el => el.classList.remove("selected"));
+
+    div.classList.add("selected");
+
+    selectedTicket = ticket;
+    selectedEventId = eventId;
+  });
+
+  container.appendChild(div);
+});
 
   } catch (error) {
     //console.error(error);
@@ -320,3 +339,58 @@ function closeTicketModal() {
     modal.classList.remove("active");
   }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btnFinal = document.querySelector(".btn-buy-final");
+
+  if (!btnFinal) return;
+
+  btnFinal.addEventListener("click", async () => {
+    if (!selectedTicket) {
+      alert("Selecciona un tipo de boleto primero");
+      return;
+    }
+
+    if (Number(selectedTicket.precio) > 0) {
+      alert("Aquí irá Mercado Pago después");
+      return;
+    }
+
+    const nombre = prompt("Ingresa tu nombre completo");
+    const email = prompt("Ingresa tu correo");
+    const telefono = prompt("Ingresa tu teléfono");
+
+    if (!nombre || !email || !telefono) {
+      alert("Todos los campos son obligatorios");
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API}/api/create-ticket`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          evento_id: selectedEventId,
+          nombre,
+          email,
+          telefono
+        })
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.message || "Error");
+      }
+
+      alert("Tu Free Access fue generado correctamente 🎟️");
+      closeTicketModal();
+
+    } catch (error) {
+      console.error(error);
+      alert("No pudimos generar tu acceso");
+    }
+  });
+});

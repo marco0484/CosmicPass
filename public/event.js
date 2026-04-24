@@ -18,7 +18,7 @@ const res = await fetch(`http://192.168.100.23:3000/api/events/${id}`);
     document.getElementById("img").src = evento.image;
 
   } catch (error) {
-    console.error("Error cargando evento:", error);
+    //console.error("Error cargando evento:", error);
   }
 }
 

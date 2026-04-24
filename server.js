@@ -198,6 +198,8 @@ const HOST = "0.0.0.0";
 const PORT = process.env.PORT || 3000;
 const app = express();
 
+const QRCode = require("qrcode");
+
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
@@ -240,7 +242,7 @@ app.get("/productora-full/:id", async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Error en /productora-full:", error);
+    //console.error("Error en /productora-full:", error);
     res.status(500).json({
       error: "Error en servidor"
     });
@@ -261,7 +263,7 @@ app.get("/events", async (req, res) => {
       cacheEventos[key] &&
       (now - cacheEventos[key].time < 300000)
     ) {
-      console.log("⚡ cache backend:", key);
+      //console.log("⚡ cache backend:", key);
       return res.json(cacheEventos[key].data);
     }
 
@@ -277,12 +279,12 @@ app.get("/events", async (req, res) => {
       time: now
     };
 
-    console.log("🌐 supabase fetch:", key);
+    //console.log("🌐 supabase fetch:", key);
 
     res.json(data);
 
   } catch (error) {
-    console.error("Error al obtener eventos:", error);
+    //console.error("Error al obtener eventos:", error);
     res.status(500).json({ error: "Error en servidor" });
   }
 });
@@ -305,7 +307,7 @@ app.get("/events/:id", async (req, res) => {
     res.json(data[0]);
 
   } catch (error) {
-    console.error("Error al obtener evento:", error);
+    //console.error("Error al obtener evento:", error);
     res.status(500).json({ error: "Error en servidor" });
   }
 });
@@ -328,7 +330,7 @@ app.get("/productoras/:id", async (req, res) => {
     res.json(data[0]);
 
   } catch (error) {
-    console.error("Error al obtener productora:", error);
+   // console.error("Error al obtener productora:", error);
     res.status(500).json({ error: "Error en servidor" });
   }
 });
@@ -347,7 +349,7 @@ app.get("/productoras/:id/eventos", async (req, res) => {
     res.json(data);
 
   } catch (error) {
-    console.error("Error al obtener eventos:", error);
+    //console.error("Error al obtener eventos:", error);
     res.status(500).json({ error: "Error en servidor" });
   }
 });
@@ -372,7 +374,7 @@ app.get("/productoras/:id/detalle/:eventoId", async (req, res) => {
     res.json(data[0]);
 
   } catch (error) {
-    console.error("Error detalle:", error);
+   // console.error("Error detalle:", error);
     res.status(500).json({ error: "Error en servidor" });
   }
 });
@@ -397,7 +399,7 @@ app.post("/contacto", async (req, res) => {
     res.json({ ok: true, data });
 
   } catch (error) {
-    console.error("Error en contacto:", error);
+    //console.error("Error en contacto:", error);
     res.status(500).json({ error: "Error del servidor" });
   }
 });
@@ -417,7 +419,7 @@ app.get("/eventos/buscar", async (req, res) => {
     res.json(data);
 
   } catch (error) {
-    console.error("Error buscar:", error);
+    //console.error("Error buscar:", error);
     res.status(500).send("Error");
   }
 });
@@ -436,7 +438,7 @@ app.get("/productoras/:id/features", async (req, res) => {
     res.json(data);
 
   } catch (error) {
-    console.error("Error features:", error);
+    //console.error("Error features:", error);
     res.status(500).json({ error: "Error en servidor" });
   }
 });
@@ -457,7 +459,7 @@ app.get("/eventos/:id/tickets", async (req, res) => {
     res.json(data);
 
   } catch (error) {
-    console.error("Error obteniendo tickets:", error);
+    //console.error("Error obteniendo tickets:", error);
 
     res.status(500).json({
       error: "Error en servidor"
@@ -468,39 +470,62 @@ app.get("/eventos/:id/tickets", async (req, res) => {
 // INICIO QR
 app.post("/api/create-ticket", async (req, res) => {
   try {
-    const { event_id, name, email } = req.body;
+    const {
+      evento_id,
+      nombre,
+      email,
+      telefono
+    } = req.body;
 
-    // 1. generar folio único
-    const qrCode = `CPASS-${Date.now()}-${Math.floor(Math.random() * 9999)}`;
+    // Validación básica
+    if (!evento_id || !nombre || !email || !telefono) {
+      return res.status(400).json({
+        success: false,
+        message: "Faltan datos obligatorios"
+      });
+    }
 
-    // 2. generar imagen QR
-    const qrImage = await QRCode.toDataURL(qrCode);
+    // Folio visible para usuario
+    const folio = `CP-${Date.now()}-${Math.floor(Math.random() * 9999)}`;
 
-    // 3. guardar en Supabase
+    // Token interno seguro
+    const ticketToken = `TK-${Date.now()}-${Math.random().toString(36).substring(2, 12)}`;
+
+    // QR que puede contener token o folio
+    const qrContent = ticketToken;
+
+    // Imagen QR en base64
+    const qrImage = await QRCode.toDataURL(qrContent);
+
+    // Guardado real en Supabase
     const { data, error } = await supabase
       .from("tickets")
       .insert([
         {
-          event_id,
-          buyer_name: name,
-          buyer_email: email,
-          qr_code: qrCode,
-          qr_image_url: qrImage,
-          payment_status: "free"
+          evento_id: evento_id,
+          nombre_cliente: nombre,
+          telefono: telefono,
+          correo: email,
+          tipo_ticket: "free_access",
+          estatus: "activo",
+          ticket_token: ticketToken,
+          qr_code: qrImage,
+          folio: folio
         }
       ])
       .select();
 
     if (error) throw error;
 
-    // 4. responder
     res.json({
       success: true,
+      message: "Ticket generado correctamente",
       ticket: data[0]
     });
 
   } catch (error) {
     console.error(error);
+
     res.status(500).json({
       success: false,
       message: "Error al generar ticket"

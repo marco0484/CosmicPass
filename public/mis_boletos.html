@@ -9,16 +9,15 @@
 </head>
 <body>
 
-  <header>
-    <nav>
-      <ul>
-        <li><a href="index.html">Inicio</a></li>
-        <li><a href="eventos.html">Eventos</a></li>
-        <li><a href="productoras.html">Productoras</a></li>
-        <li><a href="mis-boletos.html" class="active">Mis Boletos</a></li>
-      </ul>
-    </nav>
-  </header>
+  <nav class="main-nav">
+    <div class="nav-left">
+      <a href="index.html" class="back-btn">← Inicio</a>
+    </div>
+
+    <div class="logo">
+      <a href="index.html">Cosmic Pass</a>
+    </div>
+  </nav>
 
   <main class="tickets-page">
     <div class="tickets-wrapper">
@@ -26,25 +25,40 @@
       <h1 class="tickets-title">Tus Boletos 🎟️</h1>
 
       <p class="tickets-subtitle">
-        Ingresa tu correo para consultar tus tickets disponibles
+        Ingresa tu correo y los últimos 4 dígitos de tu teléfono para consultar tus boletos de forma segura
       </p>
 
       <form id="ticket-search-form" class="tickets-form">
+
         <input
           type="email"
           id="email"
           class="tickets-input"
-          placeholder="Ingresa tu correo"
+          placeholder="Correo electrónico"
+          required
+        />
+
+        <input
+          type="text"
+          id="telefono"
+          class="tickets-input"
+          placeholder="Últimos 4 dígitos de tu teléfono"
+          maxlength="4"
+          inputmode="numeric"
+          pattern="[0-9]{4}"
           required
         />
 
         <button type="submit" class="tickets-btn">
           Buscar Boletos
         </button>
+
       </form>
 
       <div id="tickets-container" class="tickets-box">
-        <p>Aquí aparecerán tus boletos.</p>
+        <p>
+          Aquí aparecerán tus boletos o recibirás un acceso seguro en tu correo.
+        </p>
       </div>
 
     </div>

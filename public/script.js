@@ -131,7 +131,7 @@ function initFormulario() {
       }
 
     } catch (err) {
-      console.error(err);
+      //console.error(err);
       btn.innerText = "Error de conexión ❌";
     }
 
@@ -152,33 +152,62 @@ function initMisBoletos() {
     e.preventDefault();
 
     const email = document.getElementById("email").value.trim();
+    const telefono = document.getElementById("telefono").value.trim();
 
-    if (!email) return;
+    if (!email || !telefono) {
+      container.innerHTML = `
+        <div class="ticket-item">
+          <p>Completa tu correo y los últimos 4 dígitos de tu teléfono.</p>
+        </div>
+      `;
+      return;
+    }
+
+    if (telefono.length !== 4) {
+      container.innerHTML = `
+        <div class="ticket-item">
+          <p>Ingresa únicamente los últimos 4 dígitos de tu teléfono.</p>
+        </div>
+      `;
+      return;
+    }
 
     container.innerHTML = `
       <div class="ticket-item">
-        <p>Buscando boletos para <strong>${email}</strong>...</p>
+        <p>Estamos validando tu información...</p>
+        <p>Si encontramos tus boletos, recibirás un acceso seguro en tu correo.</p>
       </div>
     `;
 
-    // luego aquí irá fetch real
+    /*
+    Aquí después conectamos el backend real:
+
+    const res = await fetch(`${API}/mis-boletos`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        email,
+        telefono
+      })
+    });
+
+    const result = await res.json();
+    */
   });
 }
 // FIN QR
-async function cargarEventos() {
 
+async function cargarEventos() {
   try {
     const cacheLocal = localStorage.getItem("eventos");
-
     if (cacheLocal) {
       const eventos = JSON.parse(cacheLocal);
-
       eventosGlobal = eventos;
       eventosCache = eventos;
-
       renderEventos(eventos);
-
-      console.log("⚡ eventos desde cache local");
+     // console.log("⚡ eventos desde cache local");
       return;
     }
 // LOCAL ABAJO SUPABASE
@@ -191,7 +220,7 @@ async function cargarEventos() {
     renderEventos(eventos);
 
   } catch (error) {
-    console.error("Error cargando eventos:", error);
+   //console.error("Error cargando eventos:", error);
   }
 }
 
