@@ -168,9 +168,9 @@ async function cargarEventos() {
       console.log("⚡ eventos desde cache local");
       return;
     }
-
-    const res = await fetch("http://192.168.100.23:3000/events");
-    //const res = await fetch(`${API}/events`);
+// LOCAL ABAJO SUPABASE
+    //const res = await fetch("http://192.168.100.23:3000/events");
+    const res = await fetch(`${API}/events`);
     const eventos = await res.json();
     eventosGlobal = eventos;
     eventosCache = eventos;
