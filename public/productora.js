@@ -385,8 +385,18 @@ document.addEventListener("DOMContentLoaded", () => {
         throw new Error(result.message || "Error");
       }
 
-      alert("Tu Free Access fue generado correctamente 🎟️");
-      closeTicketModal();
+     alert("Tu Free Access fue generado correctamente 🎟️");
+
+if (result.ticket?.qr_code) {
+  const link = document.createElement("a");
+  link.href = result.ticket.qr_code;
+  link.download = `ticket-${result.ticket.folio}.png`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+closeTicketModal();
 
     } catch (error) {
       console.error(error);

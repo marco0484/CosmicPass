@@ -495,7 +495,11 @@ app.post("/api/create-ticket", async (req, res) => {
     const qrContent = ticketToken;
 
     // Imagen QR en base64
-    const qrImage = await QRCode.toDataURL(qrContent);
+  const qrImage = await QRCode.toDataURL(qrContent, {
+  width: 300,
+  margin: 2,
+  errorCorrectionLevel: "H"
+});
 
     // Guardado real en Supabase
     const { data, error } = await supabase
