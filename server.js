@@ -192,6 +192,7 @@ let cacheEventos = {};
 let cacheTime = null;
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const { createClient } = require("@supabase/supabase-js");
 const HOST = "0.0.0.0";
 const PORT = process.env.PORT || 3000;
