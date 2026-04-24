@@ -1,4 +1,4 @@
-const API = "http://192.168.100.23:3000"; // 🔥 pruebas locales (Mac + celular misma red)
+//const API = "http://192.168.100.23:3000"; // 🔥 pruebas locales (Mac + celular misma red)
 
 /*
 const API =
@@ -8,6 +8,12 @@ const API =
     ? "http://192.168.100.23:3000" // local
     : "https://cosmicpass.space"; // producción
 */
+
+// PRE PRO
+const API = window.location.hostname === "localhost"
+  || window.location.hostname === "127.0.0.1"
+  ? "http://localhost:3000"
+  : "https://cosmic-base-sigma.vercel.app";
 
 const params = new URLSearchParams(window.location.search);
 const idProductora = params.get("id");
