@@ -233,20 +233,14 @@ function renderEventos(lista){
 
       <p>
         ${
-          // Aquí validamos el precio del evento:
-          // si price es 0 → mostramos "Gratis"
-          // si no → mostramos el precio normal ($500, $800, etc.)
           Number(evento.price) === 0
-            ? "Gratis"
+            ? "Free Access"
             : `$${evento.price}`
         }
       </p>
 
       <button class="btn-card">
         ${
-          // Aquí hacemos la misma validación para el botón:
-          // si el evento es gratis → "Obtener Ticket"
-          // si tiene costo → "Comprar Ticket"
           Number(evento.price) === 0
             ? "Obtener Ticket"
             : "Comprar Ticket"
@@ -255,17 +249,15 @@ function renderEventos(lista){
     </div>
 
     <div class="card-img-container">
+      <img 
+        src="${evento.image}" 
+        alt="${evento.name}" 
+        class="card-img"
+        loading="lazy"
+      >
+    </div>
+  </div>
 `;
-
-        `<div class="card-img-container">
-  <img 
-    src="${evento.image}" 
-    alt="${evento.name}" 
-    class="card-img"
-    loading="lazy"
-  >
-</div>`;
-
     card.addEventListener('touchstart', () => {
       card.classList.add('touch');
     });

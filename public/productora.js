@@ -19,7 +19,7 @@ const params = new URLSearchParams(window.location.search);
 const idProductora = params.get("id");
 
 if (!idProductora) {
-  console.error("❌ No hay ID de productora");
+ // console.error("❌ No hay ID de productora");
 }
 
 function scrollToEvents() {
@@ -182,7 +182,7 @@ async function loadData() {
     );
 
     if (prefetch) {
-      console.log("⚡ prefetch encontrado");
+     // console.log("⚡ prefetch encontrado");
     }
 
     const cacheLocal = localStorage.getItem(cacheKey);
@@ -201,7 +201,7 @@ async function loadData() {
       renderEvents(data.eventos);
       renderFeatures(data.features);
 
-      console.log("⚡ productora desde cache");
+      //console.log("⚡ productora desde cache");
       return;
     }
 
@@ -223,10 +223,10 @@ async function loadData() {
     localStorage.setItem(cacheKey, JSON.stringify(data));
     localStorage.setItem(`${cacheKey}_time`, now);
 
-    console.log("🌐 productora desde API");
+   // console.log("🌐 productora desde API");
 
   } catch (err) {
-    console.warn("⚠️ fallback:", err);
+    //console.warn("⚠️ fallback:", err);
 
     const cacheKey = `productora_${idProductora}`;
     const cacheLocal = localStorage.getItem(cacheKey);
@@ -241,7 +241,7 @@ async function loadData() {
       return;
     }
 
-    console.error("❌ Error cargando datos:", err);
+   // console.error("❌ Error cargando datos:", err);
   }
 }
 
@@ -261,7 +261,7 @@ async function openTicketModal(eventName, eventId) {
   const container = document.getElementById("ticket-options");
 
   if (!modal || !title || !container) {
-    console.error("❌ No existe el modal en HTML");
+    //console.error("❌ No existe el modal en HTML");
     return;
   }
 
@@ -305,7 +305,7 @@ async function openTicketModal(eventName, eventId) {
     });
 
   } catch (error) {
-    console.error(error);
+    //console.error(error);
 
     container.innerHTML = `
       <p>Error cargando boletos</p>
