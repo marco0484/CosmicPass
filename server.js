@@ -524,13 +524,14 @@ app.post("/api/create-ticket", async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
+  console.error("ERROR CREATE TICKET:", error);
 
-    res.status(500).json({
-      success: false,
-      message: "Error al generar ticket"
-    });
-  }
+  res.status(500).json({
+    success: false,
+    message: error.message,
+    detalle: error
+  });
+}
 });
 
 module.exports = app;
