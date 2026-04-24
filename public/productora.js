@@ -358,7 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const nombre = prompt("Ingresa tu nombre completo");
     const email = prompt("Ingresa tu correo");
-    const telefono = prompt("Ingresa tu teléfono");
+    const telefono = prompt("Ingresa los ultimo 4 digitos de tu numero telefonico");
 
     if (!nombre || !email || !telefono) {
       alert("Todos los campos son obligatorios");

@@ -112,8 +112,7 @@ function initFormulario() {
     btn.disabled = true;
 
     try {
-      //const res = await fetch("http://192.168.100.23:3000/contacto", {
-      fetch(`${API}/contacto`, {
+      const res = await fetch(`${API}/contacto`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -131,7 +130,7 @@ function initFormulario() {
       }
 
     } catch (err) {
-      //console.error(err);
+      console.error(err);
       btn.innerText = "Error de conexión ❌";
     }
 
