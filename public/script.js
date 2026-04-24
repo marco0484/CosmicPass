@@ -21,7 +21,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   initBotones();
   initFormulario();
   initMisBoletos();
-  await cargarEventos(); 
+  //await cargarEventos();
+  //
+  if (document.querySelector(".events-grid")) {
+    await cargarEventos();
+    initBuscador();
+  }
+
   initBuscador(); 
 
 
