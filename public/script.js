@@ -202,7 +202,7 @@ function renderEventos(lista){
     const card = document.createElement("div");
     card.classList.add("card");
 
-    const fecha = new Date(evento.date);
+    const fecha = new Date(evento.event_date);
     const fechaFormateada = fecha.toLocaleDateString("es-MX", {
       day: "2-digit",
       month: "long",
