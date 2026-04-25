@@ -1,198 +1,18 @@
-/* local */
-/*
-const express = require("express");
-const { Pool } = require("pg");
-const cors = require("cors");
-const PORT = 3000;
-const HOST = "0.0.0.0";
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.static("public"));
-
-const pool = new Pool({
-  user: "postgres",
-  host: "localhost",
-  database: "cosmic-event",
-  password: "Universo22..",
-  port: 5432,
-});
-
-app.get("/events", async (req, res) => {
-  try {
-    const { id_productora } = req.query;
-
-    const id = id_productora ? parseInt(id_productora) : null;
-
-    const result = await pool.query(
-      "SELECT * FROM events.get_events($1)",
-      [id]
-    );
-
-    res.json(result.rows);
-
-  } catch (error) {
-    console.error("Error al obtener eventos:", error);
-    res.status(500).json({
-      error: "Error en servidor",
-      detalle: error.message
-    });
-  }
-});
-
-app.get("/events/:id", async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-
-    const result = await pool.query(
-      "SELECT * FROM events.get_productora_by_id($1)",
-      [id]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Evento no encontrado" });
-    }
-
-    res.json(result.rows[0]);
-
-  } catch (error) {
-    console.error("Error al obtener evento:", error);
-    res.status(500).json({ error: "Error en servidor" });
-  }
-});
-
-
-app.get("/productoras/:id", async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-
-    const result = await pool.query(
-      "SELECT * FROM events.get_productora_by_id($1)",
-      [id]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Productora no encontrada" });
-    }
-
-    res.json(result.rows[0]);
-
-  } catch (error) {
-    console.error("Error al obtener productora:", error);
-    res.status(500).json({ error: "Error en servidor" });
-  }
-});
-
-
-app.get("/productoras/:id/eventos", async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-
-    const result = await pool.query(
-      "SELECT * FROM events.get_events_by_productora($1)",
-      [id]
-    );
-
-    res.json(result.rows);
-
-  } catch (error) {
-    console.error("Error al obtener eventos de productora:", error);
-    res.status(500).json({ error: "Error en servidor" });
-  }
-});
-
-app.get("/productoras/:id/detalle/:eventoId", async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    const eventoId = parseInt(req.params.eventoId);
-
-    const result = await pool.query(
-      "SELECT * FROM events.get_detalle_productora($1, $2)",
-      [id, eventoId]
-    );
-
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Detalle no encontrado" });
-    }
-
-    res.json(result.rows[0]);
-
-  } catch (error) {
-    console.error("Error detalle productora:", error);
-    res.status(500).json({ error: "Error en servidor" });
-  }
-});
-
-
-app.post("/contacto", async (req, res) => {
-  try {
-    const { nombre, email, mensaje } = req.body;
-
-    // validación básica
-    if (!nombre || !email || !mensaje) {
-      return res.status(400).json({ error: "Faltan datos" });
-    }
-
-
-    const result = await pool.query(
-  "SELECT * FROM events.insert_contacto($1, $2, $3)",
-  [nombre, email, mensaje]
-);
-    res.json({ ok: true, data: result.rows[0] });
-
-  } catch (error) {
-    console.error("Error en contacto:", error);
-    res.status(500).json({ error: "Error del servidor" });
-  }
-});
-
-app.get("/eventos/buscar", async (req, res) => {
-  const { q } = req.query;
-
-  try {
-    const result = await pool.query(
-      `SELECT * FROM events.cat_events 
-       WHERE LOWER(name) LIKE LOWER($1)`,
-      [`%${q}%`]
-    );
-
-    res.json(result.rows);
-  } catch (error) {
-    console.error(error);
-    res.status(500).send("Error");
-  }
-});
-
-app.get("/productoras/:id/features", async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-
-    const result = await pool.query(
-      "SELECT * FROM events.get_productora_features($1)",
-      [id]
-    );
-
-    res.json(result.rows);
-
-  } catch (error) {
-    console.error("Error al obtener features:", error);
-    res.status(500).json({ error: "Error en servidor" });
-  }
-});
-
-app.listen(PORT, HOST, () => {
-  console.log(`Server corriendo en http://${HOST}:${PORT}`);
-});
-
-
-*/
-// CON SUPABASE
-
 let cacheEventos = {};
 let cacheTime = null;
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const nodemailer = require("nodemailer");
+const transporter = nodemailer.createTransport({
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
+  auth: {
+    user: "a93c19001@smtp-brevo.com",
+    pass: "0zs3CKam7TRwvd9H"
+  }
+});
 const { createClient } = require("@supabase/supabase-js");
 const HOST = "0.0.0.0";
 const PORT = process.env.PORT || 3000;
@@ -495,11 +315,11 @@ app.post("/api/create-ticket", async (req, res) => {
     const qrContent = ticketToken;
 
     // Imagen QR en base64
-  const qrImage = await QRCode.toDataURL(qrContent, {
-  width: 300,
-  margin: 2,
-  errorCorrectionLevel: "H"
-});
+    const qrImage = await QRCode.toDataURL(qrContent, {
+      width: 300,
+      margin: 2,
+      errorCorrectionLevel: "H"
+    });
 
     // Guardado real en Supabase
     const { data, error } = await supabase
@@ -510,7 +330,7 @@ app.post("/api/create-ticket", async (req, res) => {
           nombre_cliente: nombre,
           telefono: telefono,
           correo: email,
-          tipo_ticket: "free_access",
+          tipo_ticket: "Free Access",
           estatus: "activo",
           ticket_token: ticketToken,
           qr_code: qrImage,
@@ -521,21 +341,69 @@ app.post("/api/create-ticket", async (req, res) => {
 
     if (error) throw error;
 
+    // 👇 AQUÍ está el ajuste importante
+    // consultamos datos del evento para enriquecer el ticket
+    const { data: eventoData, error: eventoError } = await supabase
+      .from("cat_events")
+      .select(`
+        name,
+        city,
+        date,
+        image,
+        price
+      `)
+      .eq("id", evento_id)
+      .single();
+
+    if (eventoError) throw eventoError;
+
+    try {
+  await transporter.sendMail({
+    from: '"Cosmic Pass" <cosmicpass0484@gmail.com>',
+    to: email,
+    subject: "Tu Ticket Cosmic Pass 🎟️",
+    html: `
+      <h1>Tu acceso fue generado correctamente</h1>
+
+      <p><strong>Evento:</strong> ${eventoData.name}</p>
+      <p><strong>Ciudad:</strong> ${eventoData.city}</p>
+      <p><strong>Fecha:</strong> ${eventoData.date}</p>
+      <p><strong>Folio:</strong> ${folio}</p>
+
+      <p>Presenta este QR en acceso:</p>
+
+      <img src="${qrImage}" width="250" />
+
+      <p>Gracias por usar Cosmic Pass 🚀</p>
+    `
+  });
+} catch (mailError) {
+  console.error("Error enviando correo:", mailError);
+}
+
+    // respuesta final enriquecida
     res.json({
       success: true,
       message: "Ticket generado correctamente",
-      ticket: data[0]
+      ticket: {
+        ...data[0],
+        evento_nombre: eventoData.name,
+        lugar: eventoData.city,
+        fecha_evento: eventoData.date,
+        imagen_evento: eventoData.image,
+        precio_evento: eventoData.price
+      }
     });
 
   } catch (error) {
-  console.error("ERROR CREATE TICKET:", error);
+    console.error("ERROR CREATE TICKET:", error);
 
-  res.status(500).json({
-    success: false,
-    message: error.message,
-    detalle: error
-  });
-}
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      detalle: error
+    });
+  }
 });
 
 app.post("/mis-boletos", async (req, res) => {

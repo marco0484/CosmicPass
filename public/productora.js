@@ -413,16 +413,7 @@ async function generateFreeTicket() {
     }
 
     alert("Tu Free Access fue generado correctamente 🎟️");
-
-    if (result.ticket?.qr_code) {
-      const link = document.createElement("a");
-      link.href = result.ticket.qr_code;
-      link.download = `ticket-${result.ticket.folio}.png`;
-
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    }
+    alert("Tu ticket será enviado a tu correo electrónico 📩");
 
     document.getElementById("user-name").value = "";
     document.getElementById("user-email").value = "";
