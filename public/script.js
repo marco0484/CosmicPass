@@ -128,23 +128,35 @@ function initMisBoletos() {
         <p>Si encontramos tus boletos, recibirás un acceso seguro en tu correo.</p>
       </div>
     `;
+ const res = await fetch(`${API}/mis-boletos`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    email,
+    telefono
+  })
+});
 
-    /*
-    Aquí después conectamos el backend real:
+const result = await res.json();
 
-    const res = await fetch(`${API}/mis-boletos`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        email,
-        telefono
-      })
-    });
+if (result.success) {
+  container.innerHTML = `
+    <div class="ticket-item">
+      <p>Encontramos tus boletos 🎟️</p>
+      <p>Te enviaremos un acceso seguro a tu correo.</p>
+    </div>
+  `;
+} else {
+  container.innerHTML = `
+    <div class="ticket-item">
+      <p>${result.message}</p>
+    </div>
+  `;
+}
 
     const result = await res.json();
-    */
   });
 }
 // FIN QR
