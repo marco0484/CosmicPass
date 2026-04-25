@@ -89,12 +89,16 @@ function renderEvents(eventos) {
 }
 
 function renderFeatures(features) {
+  console.log("FEATURES:", features);
+
   const tag = document.getElementById("producer-tag");
 
   if (tag) {
     tag.innerHTML = "";
 
-    const headers = features.filter(f => f.level === 1);
+    const headers = features.filter(
+      f => Number(f.level) === 1
+    );
 
     headers.forEach(header => {
       const div = document.createElement("div");
@@ -114,7 +118,9 @@ function renderFeatures(features) {
   if (badgesContainer) {
     badgesContainer.innerHTML = "";
 
-    const badges = features.filter(f => f.level === 2);
+    const badges = features.filter(
+      f => Number(f.level) === 2
+    );
 
     badges.forEach(f => {
       const span = document.createElement("span");
@@ -128,7 +134,9 @@ function renderFeatures(features) {
   if (trustContainer) {
     trustContainer.innerHTML = "";
 
-    const trust = features.filter(f => f.level === 3);
+    const trust = features.filter(
+      f => Number(f.level) === 3
+    );
 
     trust.forEach(f => {
       const div = document.createElement("div");
