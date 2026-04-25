@@ -93,43 +93,35 @@ function initBotones() {
 
 
 function initMisBoletos() {
+  console.log("INIT MIS BOLETOS CARGÓ");
+
   const form = document.getElementById("ticket-search-form");
   const container = document.getElementById("tickets-container");
 
-  if (!form) return;
+  if (!form) {
+    console.log("NO ENCONTRÓ EL FORM");
+    return;
+  }
 
   form.addEventListener("submit", async (e) => {
+    console.log("SUBMIT DETECTADO");
+
     e.preventDefault();
 
     const email = document.getElementById("email").value.trim();
     const telefono = document.getElementById("telefono").value.trim();
 
-    if (!email || !telefono) {
-      container.innerHTML = `
-        <div class="ticket-item">
-          <p>Completa tu correo y los últimos 4 dígitos de tu teléfono.</p>
-        </div>
-      `;
-      return;
-    }
-
-    if (telefono.length !== 4) {
-      container.innerHTML = `
-        <div class="ticket-item">
-          <p>Ingresa únicamente los últimos 4 dígitos de tu teléfono.</p>
-        </div>
-      `;
-      return;
-    }
+    console.log("Datos:", email, telefono);
 
     container.innerHTML = `
       <div class="ticket-item">
         <p>Estamos validando tu información...</p>
-        <p>Si encontramos tus boletos, recibirás un acceso seguro en tu correo.</p>
       </div>
     `;
 
     try {
+      console.log("ANTES DEL FETCH");
+
       const res = await fetch(`${API}/mis-boletos`, {
         method: "POST",
         headers: {
@@ -141,31 +133,14 @@ function initMisBoletos() {
         })
       });
 
+      console.log("FETCH RESPONDIÓ");
+
       const result = await res.json();
 
-      if (result.success) {
-        container.innerHTML = `
-          <div class="ticket-item">
-            <p>Encontramos tus boletos 🎟️</p>
-            <p>Te enviaremos un acceso seguro a tu correo.</p>
-          </div>
-        `;
-      } else {
-        container.innerHTML = `
-          <div class="ticket-item">
-            <p>${result.message}</p>
-          </div>
-        `;
-      }
+      console.log("RESULTADO:", result);
 
     } catch (error) {
-      console.error("Error mis boletos:", error);
-
-      container.innerHTML = `
-        <div class="ticket-item">
-          <p>Error de conexión con el servidor.</p>
-        </div>
-      `;
+      console.error("ERROR REAL:", error);
     }
   });
 }
