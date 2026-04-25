@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   window.scrollTo(0, 0);
   initNavbar();
   initBotones();
-  initFormulario();
   initMisBoletos();
   //await cargarEventos();
   
