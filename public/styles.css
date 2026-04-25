@@ -1554,6 +1554,143 @@ h2{
   display: block;
 }
 
+/* MODAL FORM PREMIUM */
+
+.ticket-content {
+  width: min(92%, 1100px);
+  background: #070b14;
+  border-radius: 28px;
+  padding: 56px 48px;
+  position: relative;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+}
+
+.ticket-kicker {
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #18e4ff;
+  margin-bottom: 18px;
+}
+
+#modal-event-name {
+  font-size: clamp(2.8rem, 5vw, 4.8rem);
+  font-weight: 800;
+  line-height: 1.05;
+  color: #ffffff;
+  margin: 0 0 18px;
+}
+
+.ticket-sub {
+  font-size: 1.5rem;
+  color: rgba(255,255,255,0.72);
+  margin-bottom: 42px;
+  font-weight: 500;
+}
+
+.ticket-options {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 36px;
+}
+
+/* inputs */
+
+.ticket-content input {
+  width: 100%;
+  height: 64px;
+  padding: 0 22px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.04);
+  color: white;
+  font-size: 1.05rem;
+  outline: none;
+  transition: 0.25s ease;
+}
+
+.ticket-content input::placeholder {
+  color: rgba(255,255,255,0.45);
+}
+
+.ticket-content input:focus {
+  border-color: #18e4ff;
+  background: rgba(255,255,255,0.06);
+  box-shadow: 0 0 0 4px rgba(24,228,255,0.08);
+}
+
+/* botón principal */
+
+.btn-buy-final {
+  width: 100%;
+  height: 88px;
+  border: none;
+  border-radius: 24px;
+  background: #19d8f2;
+  color: #071018;
+  font-size: 2rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.btn-buy-final:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 20px 40px rgba(25,216,242,0.18);
+}
+
+/* botón cerrar */
+
+.ticket-close {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  width: 52px;
+  height: 52px;
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 2.5rem;
+  cursor: pointer;
+  opacity: 0.85;
+  transition: 0.2s ease;
+}
+
+.ticket-close:hover {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+/* responsive */
+
+@media (max-width: 768px) {
+  .ticket-content {
+    padding: 36px 24px;
+    border-radius: 22px;
+  }
+
+  #modal-event-name {
+    font-size: 2.2rem;
+  }
+
+  .ticket-sub {
+    font-size: 1.1rem;
+  }
+
+  .btn-buy-final {
+    height: 72px;
+    font-size: 1.35rem;
+    border-radius: 18px;
+  }
+
+  .ticket-content input {
+    height: 58px;
+  }
+}
+
 .ticket-backdrop {
   position: absolute;
   inset: 0;
