@@ -1828,23 +1828,44 @@ h2{
 }
 
 
-@media (max-width: 1024px){
-
+@media (max-width: 1024px) {
   .producer-hero {
-    height: 45vh;
+    padding: 120px 20px 50px;
+    height: auto;
+    min-height: auto;
   }
 
-  .producer-logo{
+  .producer-logo {
     width: 100px;
     height: 100px;
   }
-
 }
 
 @media (min-width: 769px){
-  .producer-hero .hero-content{
-    top: 55%;
-    transform: translateY(-50%);
+  .producer-hero {
+    min-height: 70vh;
+    padding: 140px 20px 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  .producer-hero .hero-content {
+    position: relative;
+    top: auto;
+    transform: none;
+  }
+
+  .hero-inner {
+    padding-top: 40px;
+  }
+
+  .producer-logo {
+    margin: 0 auto 24px;
+    width: 160px;
+    height: 160px;
+    display: block;
   }
 }
 
