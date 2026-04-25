@@ -10,33 +10,53 @@
 <body>
 
 <nav>
-<a href="index.html" class="logo">Cosmic Pass</a>
-<button class="btn-back" onclick="history.back()">⬅ Volver</button></nav>
-
+  <a href="index.html" class="logo">Cosmic Pass</a>
+  <button class="btn-back" onclick="history.back()">
+    ⬅ Volver
+  </button>
+</nav>
 
 <!-- HERO -->
 <section class="producer-hero">
-
   <div class="hero-content">
     <div class="hero-inner">
 
       <img id="producer-logo" class="producer-logo">
 
-      <h1 id="producer-name">Cargando...</h1>
+      <h1 id="producer-name">
+        Cargando...
+      </h1>
+
       <p id="producer-tag"></p>
 
     </div>
   </div>
+</section>
+
+<!-- EVENTOS -->
+<section class="producer-events-section">
+
+  <h2>🔥 Compra tus boletos</h2>
+
+  <div id="featured-event"></div>
+
+  <div
+    id="producer-events"
+    class="events-grid"
+  ></div>
 
 </section>
 
-<section class="producer-events-section"> 
-  <h2>🔥 Compra tus boletos</h2>
-  <div id="featured-event"></div>
-  <div id="producer-events" class="events-grid"></div>
-  <section id="ticket-modal" class="ticket-modal">
+<!-- MODAL 1: SELECCIÓN DE BOLETO -->
+<section
+  id="ticket-modal"
+  class="ticket-modal"
+>
 
-  <div class="ticket-backdrop" onclick="closeTicketModal()"></div>
+  <div
+    class="ticket-backdrop"
+    onclick="closeTicketModal()"
+  ></div>
 
   <div class="ticket-content">
 
@@ -47,7 +67,9 @@
       ✕
     </button>
 
-    <p class="ticket-kicker">Cosmic Pass</p>
+    <p class="ticket-kicker">
+      Cosmic Pass
+    </p>
 
     <h2 id="modal-event-name">
       Selecciona tu acceso
@@ -60,8 +82,8 @@
     <div
       id="ticket-options"
       class="ticket-options"
-    >
-    </div>
+    ></div>
+
     <button class="btn-buy-final">
       Continuar compra
     </button>
@@ -69,53 +91,148 @@
   </div>
 
 </section>
+
+<!-- MODAL 2: DATOS DEL USUARIO -->
+<section
+  id="user-data-modal"
+  class="ticket-modal"
+>
+
+  <div
+    class="ticket-backdrop"
+    onclick="closeUserDataModal()"
+  ></div>
+
+  <div class="ticket-content">
+
+    <button
+      class="ticket-close"
+      onclick="closeUserDataModal()"
+    >
+      ✕
+    </button>
+
+    <p class="ticket-kicker">
+      Cosmic Pass
+    </p>
+
+    <h2>
+      Completa tus datos
+    </h2>
+
+    <p class="ticket-sub">
+      Necesitamos estos datos para generar tu acceso
+    </p>
+
+    <div class="user-form">
+
+      <input
+        type="text"
+        id="user-name"
+        placeholder="Nombre completo"
+      >
+
+      <input
+        type="email"
+        id="user-email"
+        placeholder="Correo electrónico"
+      >
+
+      <input
+        type="text"
+        id="user-phone"
+        placeholder="Últimos 4 dígitos de tu teléfono"
+        maxlength="4"
+      >
+
+      <button
+        class="btn-buy-final"
+        onclick="generateFreeTicket()"
+      >
+        Generar Free Access
+      </button>
+
+    </div>
+
+  </div>
+
 </section>
 
-
+<!-- HISTORIA -->
 <section class="producer-story">
-  <h2>¿Quiénes somos?</h2>
+
+  <h2>
+    ¿Quiénes somos?
+  </h2>
+
   <p id="historia"></p>
 
   <div class="badges"></div>
+
 </section>
 
+<!-- TRUST -->
 <section class="trust">
-  <h2>¿Por qué elegir esta productora?</h2>
 
-  <div class="trust-grid">
-  </div>
+  <h2>
+    ¿Por qué elegir esta productora?
+  </h2>
+
+  <div class="trust-grid"></div>
+
 </section>
 
+<!-- REDES -->
 <section class="producer-socials">
-  <h2>Redes de la productora</h2>
+
+  <h2>
+    Redes de la productora
+  </h2>
 
   <div class="socials-icon">
 
-  <a id="insta" href="#" target="_blank">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm5 5.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm5.5-.75a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25z"/>
-    </svg>
-  </a>
+    <a
+      id="insta"
+      href="#"
+      target="_blank"
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M7 2C4.24 2 2 4.24 2 7v10c0 2.76 2.24 5 5 5h10c2.76 0 5-2.24 5-5V7c0-2.76-2.24-5-5-5H7zm5 5.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5zm5.5-.75a1.25 1.25 0 1 1-1.25 1.25 1.25 1.25 0 0 1 1.25-1.25z"/>
+      </svg>
+    </a>
 
-  <a id="fb" href="#" target="_blank">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M13 22v-9h3l1-4h-4V7c0-1.1.9-2 2-2h2V1h-3c-2.8 0-5 2.2-5 5v3H6v4h3v9h4z"/>
-    </svg>
-  </a>
+    <a
+      id="fb"
+      href="#"
+      target="_blank"
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M13 22v-9h3l1-4h-4V7c0-1.1.9-2 2-2h2V1h-3c-2.8 0-5 2.2-5 5v3H6v4h3v9h4z"/>
+      </svg>
+    </a>
 
-  <a id="tiktok" href="#" target="_blank">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12 2v12.5a3.5 3.5 0 1 1-3-3.46V8a6.5 6.5 0 1 0 5 6.3V7.5a7.5 7.5 0 0 0 4 1.2V5.7A4.5 4.5 0 0 1 12 2z"/>
-    </svg>
-  </a>
+    <a
+      id="tiktok"
+      href="#"
+      target="_blank"
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2v12.5a3.5 3.5 0 1 1-3-3.46V8a6.5 6.5 0 1 0 5 6.3V7.5a7.5 7.5 0 0 0 4 1.2V5.7A4.5 4.5 0 0 1 12 2z"/>
+      </svg>
+    </a>
 
-  <a id="x" href="#" target="_blank">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-      <path d="M18 2h3l-7 8 8 12h-6l-5-8-7 8H1l8-9L1 2h6l5 7 6-7z"/>
-    </svg>
-  </a>
+    <a
+      id="x"
+      href="#"
+      target="_blank"
+    >
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M18 2h3l-7 8 8 12h-6l-5-8-7 8H1l8-9L1 2h6l5 7 6-7z"/>
+      </svg>
+    </a>
 
-</div>
+  </div>
+
 </section>
 
 <footer>
@@ -123,5 +240,6 @@
 </footer>
 
 <script src="productora.js" defer></script>
+
 </body>
 </html>
