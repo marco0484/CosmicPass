@@ -91,55 +91,7 @@ function initBotones() {
     });
   }
 }
-// INICIO FORMULARIO
-function initFormulario() {
-  const form = document.querySelector(".contact-form");
 
-  if (!form) return;
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const btn = form.querySelector("button");
-
-    const data = {
-      nombre: form[0].value,
-      email: form[1].value,
-      mensaje: form[2].value
-    };
-
-    btn.innerText = "Enviando...";
-    btn.disabled = true;
-
-    try {
-      const res = await fetch(`${API}/contacto`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(data)
-      });
-
-      const result = await res.json();
-
-      if (result.ok) {
-        btn.innerText = "Mensaje enviado ✅";
-        form.reset();
-      } else {
-        btn.innerText = "Error ❌";
-      }
-
-    } catch (err) {
-      console.error(err);
-      btn.innerText = "Error de conexión ❌";
-    }
-
-    setTimeout(() => {
-      btn.innerText = "Enviar mensaje";
-      btn.disabled = false;
-    }, 2000);
-  });
-}
 
 function initMisBoletos() {
   const form = document.getElementById("ticket-search-form");
