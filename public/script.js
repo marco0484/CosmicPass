@@ -139,8 +139,54 @@ function initMisBoletos() {
 
       console.log("RESULTADO:", result);
 
+      if (!result.success || !result.tickets?.length) {
+        container.innerHTML = `
+          <div class="ticket-item">
+            <p>No encontramos boletos con esos datos</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = "";
+
+      result.tickets.forEach(ticket => {
+        container.innerHTML += `
+          <div class="ticket-item">
+            <h3>${ticket.tipo_ticket || "Ticket"}</h3>
+
+            <p>
+              <strong>Nombre:</strong>
+              ${ticket.nombre_cliente || ""}
+            </p>
+
+            <p>
+              <strong>Folio:</strong>
+              ${ticket.folio || ""}
+            </p>
+
+            <p>
+              <strong>Estatus:</strong>
+              ${ticket.estatus || ""}
+            </p>
+
+            <img
+              src="${ticket.qr_code}"
+              alt="QR Ticket"
+              style="max-width: 220px; margin-top: 15px;"
+            />
+          </div>
+        `;
+      });
+
     } catch (error) {
       console.error("ERROR REAL:", error);
+
+      container.innerHTML = `
+        <div class="ticket-item">
+          <p>Ocurrió un error al consultar tus boletos</p>
+        </div>
+      `;
     }
   });
 }

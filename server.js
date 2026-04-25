@@ -359,24 +359,34 @@ app.post("/api/create-ticket", async (req, res) => {
 
     try {
   await transporter.sendMail({
-    from: '"Cosmic Pass" <cosmicpass0484@gmail.com>',
-    to: email,
-    subject: "Tu Ticket Cosmic Pass 🎟️",
-    html: `
-      <h1>Tu acceso fue generado correctamente</h1>
+  from: '"Cosmic Pass" <cosmicpass0484@gmail.com>',
+  to: email,
+  subject: "Tu Ticket Cosmic Pass 🎟️",
 
-      <p><strong>Evento:</strong> ${eventoData.name}</p>
-      <p><strong>Ciudad:</strong> ${eventoData.city}</p>
-      <p><strong>Fecha:</strong> ${eventoData.date}</p>
-      <p><strong>Folio:</strong> ${folio}</p>
+  html: `
+    <h1>Tu acceso fue generado correctamente</h1>
 
-      <p>Presenta este QR en acceso:</p>
+    <p><strong>Evento:</strong> ${eventoData.name}</p>
+    <p><strong>Ciudad:</strong> ${eventoData.city}</p>
+    <p><strong>Fecha:</strong> ${eventoData.date}</p>
+    <p><strong>Folio:</strong> ${folio}</p>
 
-      <img src="${qrImage}" width="250" />
+    <p>Presenta este QR en acceso:</p>
 
-      <p>Gracias por usar Cosmic Pass 🚀</p>
-    `
-  });
+    <img src="cid:ticketqr" width="250" />
+
+    <p>Gracias por usar Cosmic Pass 🚀</p>
+  `,
+
+ attachments: [
+  {
+    filename: "ticket-qr.png",
+    content: qrImage.split("base64,")[1],
+    encoding: "base64",
+    cid: "ticketqr"
+  }
+]
+});
 } catch (mailError) {
   console.error("Error enviando correo:", mailError);
 }
