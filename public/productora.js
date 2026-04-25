@@ -31,7 +31,15 @@ function scrollToEvents() {
 }
 
 function formatDate(date) {
-  return new Date(date).toLocaleDateString("es-MX", {
+  if (!date) return "Fecha por confirmar";
+
+  const parsedDate = new Date(date);
+
+  if (isNaN(parsedDate.getTime())) {
+    return "Fecha por confirmar";
+  }
+
+  return parsedDate.toLocaleDateString("es-MX", {
     day: "numeric",
     month: "short",
     year: "numeric"
@@ -67,8 +75,12 @@ function renderEvents(eventos) {
         <p class="price">$${evento.price}</p>
 
         <button onclick="openTicketModal('${evento.name}', ${evento.id})">
-        Pagar Mi Ticket
-        </button>
+  ${
+    Number(evento.price) === 0
+      ? "Free Access"
+      : "Pagar Mi Ticket"
+  }
+</button>
         </div>
     `;
 
@@ -340,6 +352,108 @@ function closeTicketModal() {
   }
 }
 
+function openUserDataModal() {
+  const modal = document.getElementById("user-data-modal");
+
+  if (modal) {
+    modal.classList.add("active");
+  }
+}
+
+function closeUserDataModal() {
+  const modal = document.getElementById("user-data-modal");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+}
+
+async function generateFreeTicket() {
+  const nombre = document
+    .getElementById("user-name")
+    .value
+    .trim();
+
+  const email = document
+    .getElementById("user-email")
+    .value
+    .trim();
+
+  const telefono = document
+    .getElementById("user-phone")
+    .value
+    .trim();
+
+  if (!nombre || !email || !telefono) {
+    alert("Todos los campos son obligatorios");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/api/create-ticket`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        evento_id: selectedEventId,
+        nombre,
+        email,
+        telefono
+      })
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw new Error(result.message || "Error");
+    }
+
+    alert("Tu Free Access fue generado correctamente 🎟️");
+
+    if (result.ticket?.qr_code) {
+      const link = document.createElement("a");
+      link.href = result.ticket.qr_code;
+      link.download = `ticket-${result.ticket.folio}.png`;
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    document.getElementById("user-name").value = "";
+    document.getElementById("user-email").value = "";
+    document.getElementById("user-phone").value = "";
+
+    closeUserDataModal();
+    closeTicketModal();
+
+  } catch (error) {
+    console.error(error);
+    alert("No pudimos generar tu acceso");
+  }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const btnFinal = document.querySelector(".btn-buy-final");
+
+  if (!btnFinal) return;
+
+  btnFinal.addEventListener("click", () => {
+    if (!selectedTicket) {
+      alert("Selecciona un tipo de boleto primero");
+      return;
+    }
+
+    if (Number(selectedTicket.precio) > 0) {
+      alert("Aquí irá Mercado Pago después");
+      return;
+    }
+
+    openUserDataModal();
+  });
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   const btnFinal = document.querySelector(".btn-buy-final");
 
@@ -355,46 +469,84 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Aquí irá Mercado Pago después");
       return;
     }
+closeTicketModal();
 
+function openUserDataModal() {
+  const modal = document.getElementById("user-data-modal");
 
-
-    if (!nombre || !email || !telefono) {
-      alert("Todos los campos son obligatorios");
-      return;
-    }
-
-    try {
-      const res = await fetch(`${API}/api/create-ticket`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          evento_id: selectedEventId,
-          nombre,
-          email,
-          telefono
-        })
-      });
-
-      const result = await res.json();
-
-      if (!res.ok) {
-        throw new Error(result.message || "Error");
-      }
-
-     alert("Tu Free Access fue generado correctamente 🎟️");
-
-if (result.ticket?.qr_code) {
-  const link = document.createElement("a");
-  link.href = result.ticket.qr_code;
-  link.download = `ticket-${result.ticket.folio}.png`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  if (modal) {
+    modal.classList.add("active");
+  }
 }
 
-closeTicketModal();
+function closeUserDataModal() {
+  const modal = document.getElementById("user-data-modal");
+
+  if (modal) {
+    modal.classList.remove("active");
+  }
+}
+
+async function generateFreeTicket() {
+  const nombre = document
+    .getElementById("user-name")
+    .value
+    .trim();
+
+  const email = document
+    .getElementById("user-email")
+    .value
+    .trim();
+
+  const telefono = document
+    .getElementById("user-phone")
+    .value
+    .trim();
+
+  if (!nombre || !email || !telefono) {
+    alert("Todos los campos son obligatorios");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/api/create-ticket`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        evento_id: selectedEventId,
+        nombre,
+        email,
+        telefono
+      })
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) {
+      throw new Error(result.message || "Error");
+    }
+
+    alert("Tu Free Access fue generado correctamente 🎟️");
+
+    if (result.ticket?.qr_code) {
+      const link = document.createElement("a");
+      link.href = result.ticket.qr_code;
+      link.download = `ticket-${result.ticket.folio}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    closeUserDataModal();
+    closeTicketModal();
+
+  } catch (error) {
+    console.error(error);
+    alert("No pudimos generar tu acceso");
+  }
+}
 
     } catch (error) {
       console.error(error);
