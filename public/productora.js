@@ -33,7 +33,8 @@ function scrollToEvents() {
 function formatDate(date) {
   if (!date) return "Fecha por confirmar";
 
-  const parsedDate = new Date(date);
+  const safeDate = String(date).replace(" ", "T");
+  const parsedDate = new Date(safeDate);
 
   if (isNaN(parsedDate.getTime())) {
     return "Fecha por confirmar";
