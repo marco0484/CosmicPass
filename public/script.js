@@ -156,23 +156,16 @@ function initMisBoletos() {
 
 async function cargarEventos() {
   try {
-    const cacheLocal = localStorage.getItem("eventos");
-    if (cacheLocal) {
-      const eventos = JSON.parse(cacheLocal);
-      eventosGlobal = eventos;
-      eventosCache = eventos;
-      renderEventos(eventos);
-      return;
-    }
-
     const res = await fetch(`${API}/events`);
     const eventos = await res.json();
+
     eventosGlobal = eventos;
     eventosCache = eventos;
-    localStorage.setItem("eventos", JSON.stringify(eventos));
+
     renderEventos(eventos);
 
   } catch (error) {
+    console.error(error);
   }
 }
 
