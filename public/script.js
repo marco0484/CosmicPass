@@ -7,17 +7,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   window.scrollTo(0, 0);
   initNavbar();
   initBotones();
-  initMisBoletos();
-  //await cargarEventos();
-  
+  initMisBoletos();  
   if (document.querySelector(".cards")) {
     await cargarEventos();
     initBuscador();
   }
 
   initBuscador(); 
-
-
   const items = document.querySelectorAll(".legal-item");
 
   items.forEach(item => {
@@ -32,7 +28,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
 });
-
 
 function initNavbar() {
   const toggle = document.querySelector(".menu-toggle");
@@ -60,7 +55,6 @@ function initNavbar() {
 }
 
 function initBotones() {
-
   const btnHome = document.getElementById("btnHome");
   if (btnHome) {
     btnHome.addEventListener("click", () => {
@@ -79,28 +73,18 @@ function initBotones() {
   }
 }
 
-
 function initMisBoletos() {
-  console.log("INIT MIS BOLETOS CARGÓ");
-
   const form = document.getElementById("ticket-search-form");
   const container = document.getElementById("tickets-container");
 
   if (!form) {
-    console.log("NO ENCONTRÓ EL FORM");
     return;
   }
 
   form.addEventListener("submit", async (e) => {
-    console.log("SUBMIT DETECTADO");
-
     e.preventDefault();
-
     const email = document.getElementById("email").value.trim();
     const telefono = document.getElementById("telefono").value.trim();
-
-    console.log("Datos:", email, telefono);
-
     container.innerHTML = `
       <div class="ticket-item">
         <p>Estamos validando tu información...</p>
@@ -108,8 +92,6 @@ function initMisBoletos() {
     `;
 
     try {
-      console.log("ANTES DEL FETCH");
-
       const res = await fetch(`${API}/mis-boletos`, {
         method: "POST",
         headers: {
@@ -120,12 +102,7 @@ function initMisBoletos() {
           telefono
         })
       });
-
-      console.log("FETCH RESPONDIÓ");
-
       const result = await res.json();
-
-      console.log("RESULTADO:", result);
 
       if (!result.success || !result.tickets?.length) {
         container.innerHTML = `
@@ -168,8 +145,6 @@ function initMisBoletos() {
       });
 
     } catch (error) {
-      console.error("ERROR REAL:", error);
-
       container.innerHTML = `
         <div class="ticket-item">
           <p>Ocurrió un error al consultar tus boletos</p>
@@ -187,11 +162,9 @@ async function cargarEventos() {
       eventosGlobal = eventos;
       eventosCache = eventos;
       renderEventos(eventos);
-     // console.log("⚡ eventos desde cache local");
       return;
     }
-// LOCAL ABAJO SUPABASE
-    //const res = await fetch("http://192.168.100.23:3000/events");
+
     const res = await fetch(`${API}/events`);
     const eventos = await res.json();
     eventosGlobal = eventos;
@@ -200,42 +173,23 @@ async function cargarEventos() {
     renderEventos(eventos);
 
   } catch (error) {
-   //console.error("Error cargando eventos:", error);
   }
 }
 
-
 function renderEventos(lista){
-
   const container = document.querySelector(".cards");
   if (!container) return;
-
   container.innerHTML = "";
-
   lista.forEach(evento => {
 
     const card = document.createElement("div");
     card.classList.add("card");
-
     const fecha = new Date(evento.event_date);
     const fechaFormateada = fecha.toLocaleDateString("es-MX", {
       day: "2-digit",
       month: "long",
       year: "numeric"
     });
-/*
-    card.innerHTML = `
-      <div class="card-content">
-        <div class="card-text">
-          <h3>
-            ${evento.name}
-            <span class="by">by: ${evento.productora_name}</span>
-          </h3>
-          <p>${evento.city} - ${fechaFormateada}</p>
-          <p>$${evento.price}</p>
-          <button class="btn-card">Comprar Boleto</button>
-        </div>
-        */
     card.innerHTML = `
   <div class="card-content">
     <div class="card-text">
@@ -306,12 +260,9 @@ function renderEventos(lista){
   });
 }
 
-
 function initBuscador(){
-
   const input = document.querySelector(".search");
   if (!input) return;
-
   input.addEventListener("input", (e) => {
     const texto = e.target.value.toLowerCase();
 

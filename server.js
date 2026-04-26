@@ -340,16 +340,12 @@ app.post("/api/create-ticket", async (req, res) => {
 
   html: `
     <h1>Tu acceso fue generado correctamente</h1>
-
     <p><strong>Evento:</strong> ${eventoData.name}</p>
     <p><strong>Ciudad:</strong> ${eventoData.city}</p>
     <p><strong>Fecha:</strong> ${eventoData.date}</p>
     <p><strong>Folio:</strong> ${folio}</p>
-
     <p>Presenta este QR en acceso:</p>
-
     <img src="cid:ticketqr" width="250" />
-
     <p>Gracias por usar Cosmic Pass 🚀</p>
   `,
 
