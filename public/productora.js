@@ -1,15 +1,3 @@
-//const API = "http://192.168.100.23:3000"; // 🔥 pruebas locales (Mac + celular misma red)
-
-/*
-const API =
-  window.location.hostname === "localhost" ||
-  window.location.hostname === "127.0.0.1" ||
-  window.location.hostname.startsWith("192.168.")
-    ? "http://192.168.100.23:3000" // local
-    : "https://cosmicpass.space"; // producción
-*/
-
-// PRE PRO
 const API = window.location.hostname === "localhost"
   || window.location.hostname === "127.0.0.1"
   ? "http://localhost:3000"
@@ -17,13 +5,10 @@ const API = window.location.hostname === "localhost"
 
 let selectedTicket = null;
 let selectedEventId = null;
-
 const params = new URLSearchParams(window.location.search);
 const idProductora = params.get("id");
 
-if (!idProductora) {
- // console.error("❌ No hay ID de productora");
-}
+if (!idProductora) { }
 
 function scrollToEvents() {
   document.querySelector(".producer-events-section")
@@ -72,9 +57,12 @@ function renderEvents(eventos) {
       <div class="info">
         <h3>${evento.name}</h3>
         <p>📍 ${evento.city || "México"}</p>
-        <p>📅 ${formatDate(evento.date)}</p>
+<p>📅 ${formatDate(
+  evento.event_date ||
+  evento.date ||
+  evento.fecha
+)}</p>
         <p class="price">$${evento.price}</p>
-
         <button onclick="openTicketModal('${evento.name}', ${evento.id})">
   ${
     Number(evento.price) === 0
@@ -210,11 +198,7 @@ async function loadData() {
     renderEvents(data.eventos);
     renderFeatures(data.features);
 
-    // console.log("🌐 productora desde API");
-
-  } catch (err) {
-    // console.error("❌ Error cargando datos:", err);
-  }
+  } catch (err) {}
 }
 
 function irEvento(id) {
@@ -233,7 +217,6 @@ async function openTicketModal(eventName, eventId) {
   const container = document.getElementById("ticket-options");
 
   if (!modal || !title || !container) {
-    //console.error("❌ No existe el modal en HTML");
     return;
   }
 
@@ -293,8 +276,6 @@ async function openTicketModal(eventName, eventId) {
 });
 
   } catch (error) {
-    //console.error(error);
-
     container.innerHTML = `
       <p>Error cargando boletos</p>
     `;
