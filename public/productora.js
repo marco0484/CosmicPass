@@ -178,6 +178,7 @@ function renderProducer(data, eventos) {
   setSocial("insta", data.instagram);
   setSocial("tiktok", data.tiktok);
   setSocial("x", data.x);
+  setSocial("fbevent", data.fbevent);
 }
 
 async function loadData() {
