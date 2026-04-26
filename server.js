@@ -17,7 +17,6 @@ const { createClient } = require("@supabase/supabase-js");
 const HOST = "0.0.0.0";
 const PORT = process.env.PORT || 3000;
 const app = express();
-
 const QRCode = require("qrcode");
 
 app.use(cors());
@@ -83,7 +82,6 @@ app.get("/events", async (req, res) => {
       cacheEventos[key] &&
       (now - cacheEventos[key].time < 300000)
     ) {
-      //console.log("⚡ cache backend:", key);
       return res.json(cacheEventos[key].data);
     }
 
