@@ -1,7 +1,7 @@
 const API = window.location.hostname === "localhost"
   || window.location.hostname === "127.0.0.1"
   ? "http://localhost:3000"
-  : "https://cosmic-base-sigma.vercel.app";
+  : "https://cosmic-base-ynjm.vercel.app";
 
 let selectedTicket = null;
 let selectedEventId = null;
