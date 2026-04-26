@@ -193,38 +193,9 @@ function renderProducer(data, eventos) {
 
 async function loadData() {
   try {
-    const cacheKey = `productora_${idProductora}`;
-
-    const prefetch = localStorage.getItem(
-      `prefetch_productora_${idProductora}`
+    const res = await fetch(
+      `${API}/productora-full/${idProductora}`
     );
-
-    if (prefetch) {
-     // console.log("⚡ prefetch encontrado");
-    }
-
-    const cacheLocal = localStorage.getItem(cacheKey);
-    const cacheTime = localStorage.getItem(`${cacheKey}_time`);
-    const now = Date.now();
-
-    // cache válida por 5 min
-    if (
-      cacheLocal &&
-      cacheTime &&
-      (now - cacheTime < 300000)
-    ) {
-      const data = JSON.parse(cacheLocal);
-
-      renderProducer(data.productora, data.eventos);
-      renderEvents(data.eventos);
-      renderFeatures(data.features);
-
-      //console.log("⚡ productora desde cache");
-      return;
-    }
-
-    // endpoint único (1 request)
-    const res = await fetch(`${API}/productora-full/${idProductora}`);
 
     if (!res.ok) {
       throw new Error("Error cargando productora");
@@ -238,28 +209,10 @@ async function loadData() {
     renderEvents(data.eventos);
     renderFeatures(data.features);
 
-    localStorage.setItem(cacheKey, JSON.stringify(data));
-    localStorage.setItem(`${cacheKey}_time`, now);
-
-   // console.log("🌐 productora desde API");
+    // console.log("🌐 productora desde API");
 
   } catch (err) {
-    //console.warn("⚠️ fallback:", err);
-
-    const cacheKey = `productora_${idProductora}`;
-    const cacheLocal = localStorage.getItem(cacheKey);
-
-    if (cacheLocal) {
-      const data = JSON.parse(cacheLocal);
-
-      renderProducer(data.productora, data.eventos);
-      renderEvents(data.eventos);
-      renderFeatures(data.features);
-
-      return;
-    }
-
-   // console.error("❌ Error cargando datos:", err);
+    // console.error("❌ Error cargando datos:", err);
   }
 }
 
