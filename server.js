@@ -251,7 +251,6 @@ app.get("/productoras/:id/features", async (req, res) => {
   }
 });
 
-/*
 app.get("/eventos/:id/tickets", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -274,13 +273,6 @@ app.get("/eventos/:id/tickets", async (req, res) => {
     });
   }
 });
-*/
-  const { data, error } = await supabase.rpc(
-  "get_ticket_types_by_event",
-  {
-    p_event_id: id
-  }
-);
 
 app.post("/api/create-ticket", async (req, res) => {
   try {
@@ -307,18 +299,22 @@ app.post("/api/create-ticket", async (req, res) => {
       errorCorrectionLevel: "H"
     });
 
-   const { data, error } = await supabase.rpc(
-  "create_free_ticket",
-  {
-    p_evento_id: evento_id,
-    p_nombre: nombre,
-    p_email: email,
-    p_telefono: telefono,
-    p_folio: folio,
-    p_ticket_token: ticketToken,
-    p_qr_code: qrImage
-  }
-);
+    const { data, error } = await supabase
+      .from("tickets")
+      .insert([
+        {
+          evento_id: evento_id,
+          nombre_cliente: nombre,
+          telefono: telefono,
+          correo: email,
+          tipo_ticket: "Free Access",
+          estatus: "activo",
+          ticket_token: ticketToken,
+          qr_code: qrImage,
+          folio: folio
+        }
+      ])
+      .select();
 
     if (error) throw error;
 
@@ -394,7 +390,6 @@ app.post("/api/create-ticket", async (req, res) => {
   }
 });
 
-/*
 app.post("/mis-boletos", async (req, res) => {
   try {
     const { email, telefono } = req.body;
@@ -422,57 +417,6 @@ app.post("/mis-boletos", async (req, res) => {
       `)
       .eq("correo", email)
       .like("telefono", `%${telefono}`);
-
-    if (error) {
-      console.error("Error Supabase:", error);
-
-      return res.status(500).json({
-        success: false,
-        message: "Error consultando tus boletos"
-      });
-    }
-
-    if (!data || data.length === 0) {
-      return res.json({
-        success: false,
-        message: "No encontramos boletos con esos datos"
-      });
-    }
-
-    return res.json({
-      success: true,
-      message: "Boletos encontrados",
-      tickets: data
-    });
-
-  } catch (error) {
-    console.error("Error /mis-boletos:", error);
-
-    return res.status(500).json({
-      success: false,
-      message: "Error interno del servidor"
-    });
-  }
-});
-*/
-app.post("/mis-boletos", async (req, res) => {
-  try {
-    const { email, telefono } = req.body;
-
-    if (!email || !telefono) {
-      return res.status(400).json({
-        success: false,
-        message: "Faltan datos para validar"
-      });
-    }
-
-    const { data, error } = await supabase.rpc(
-      "get_user_tickets",
-      {
-        p_email: email,
-        p_phone: telefono
-      }
-    );
 
     if (error) {
       console.error("Error Supabase:", error);
