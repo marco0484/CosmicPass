@@ -9,10 +9,8 @@
 .logo img {
   height: 45px;
   width: 45px;
-
   border-radius: 50%;      
   object-fit: cover;       
-
   transform: scale(1.1);   
   transition: 0.3s ease;
 }
@@ -51,25 +49,19 @@ body{
     linear-gradient(180deg, #071018 0%, #0b1220 45%, #111827 100%);
 }
 
-
 nav{
   position:fixed;
   width:100%;
   top:0;
   z-index:1000;
-
   display:flex;
   justify-content:space-between;
   align-items:center;
-
   padding:18px 45px;
-
   background: rgba(10, 10, 10, 0.55);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-
   border-bottom: 1px solid rgba(255,255,255,0.08);
-
   transition:0.3s ease;
 }
 
@@ -236,7 +228,6 @@ nav li a:hover::after{
   content:"";
   position:absolute;
   inset:0;
-
   background: radial-gradient(
     circle at center,
     rgba(255,255,255,0.05),
@@ -249,12 +240,9 @@ nav li a:hover::after{
 font-size: clamp(20px, 3.8vw, 26px);  
 font-weight: 600;
   color: #f5f5f5;
-
   letter-spacing: -0.3px;
   line-height: 1.2;
-
   max-width: 600px;
-
   text-shadow: 0 4px 20px rgba(0,0,0,0.6);
 }
 
@@ -295,13 +283,10 @@ font-weight: 600;
 
 .creators{
   padding:70px 30px;
-
   text-align:center;
-
   background:
     radial-gradient(circle at center, rgba(0,229,255,0.08), transparent 70%),
     linear-gradient(180deg, #050505, #0a0a0a);
-
   border-top:1px solid rgba(255,255,255,0.05);
   border-bottom:1px solid rgba(255,255,255,0.05);
 }
@@ -309,14 +294,12 @@ font-weight: 600;
 .creators h2{
   font-size:28px;
   margin-bottom:10px;
-
   text-shadow:0 0 10px rgba(0,229,255,0.2);
 }
 
 .creators p{
   opacity:0.7;
   font-size:15px;
-
   max-width:500px;
   margin:0 auto 20px;
 }
@@ -479,7 +462,6 @@ font-weight: 600;
   height: 100%;
   object-fit: cover;
   display: block;
-
   transition: transform 0.3s ease;
 }
 
@@ -560,11 +542,9 @@ font-weight: 600;
   justify-content:center;
   align-items:center;
   text-align:center;
-
   background:
   linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)),
   url('images/cosmic.jpg');
-
   background-size:cover;
   background-position:center;
 }
@@ -887,10 +867,8 @@ footer{
 
   background-clip: text;
   -webkit-background-clip: text;
-
   color: transparent;
   -webkit-text-fill-color: transparent;
-
   animation: fadeUp 0.8s ease;
 }
 
@@ -936,8 +914,6 @@ footer{
   font-weight: 800;
   letter-spacing: -1px;
 }
-
-
 
 .producer-story p {
   max-width: 750px;
@@ -1136,7 +1112,7 @@ footer{
   transition:all 0.3s ease;
 }
 
-.socials a:hover,
+.socials.icons a:hover,
 .contact-icons a:hover,
 .social-icons a:hover{
   background:rgba(0,229,255,0.15);
@@ -1256,13 +1232,14 @@ footer{
 .social-icons svg{
   width:22px;
   height:22px;
-  fill:#fff; /* 👈 color base */
+  fill:#fff;
   transition:0.3s ease;
 }
 
+.socials-icon a:hover svg,
 .contact-icons a:hover svg,
 .social-icons a:hover svg{
-  fill:#00e5ff;
+  fill: #00e5ff;
   filter: drop-shadow(0 0 6px rgba(0,229,255,0.6));
 }
 
@@ -1285,7 +1262,6 @@ footer{
   border-radius: 12px;
   font-weight: bold;
   border: none;
-
   box-shadow:0 0 25px rgba(0,255,204,0.4);
   transition:0.3s ease;
   cursor:pointer;
@@ -1343,7 +1319,7 @@ footer{
   width: 180px;
   transition: 0.4s ease;
   box-shadow: inset 0 0 5px rgba(0,234,255,0.2);
-  font-size: 16px; /* 🔥 ESTA ES LA CLAVE */
+  font-size: 16px
 }
 
 .search:focus {
@@ -1410,7 +1386,6 @@ nav::after {
   cursor: pointer;
 }
 
-
 .event-card .info {
   flex: 1;
 }
@@ -1459,7 +1434,6 @@ nav::after {
   transform: scale(0.97);
 }
 
-
 :root{
   --primary: #00e5ff;
   --primary-soft: rgba(0,229,255,0.2);
@@ -1499,7 +1473,6 @@ nav::after {
   border-radius: 20px;
   border: 1px solid rgba(255,255,255,0.08);
   backdrop-filter: blur(14px);
-
   box-shadow:
     0 10px 30px rgba(0,0,0,0.35),
     inset 0 1px 0 rgba(255,255,255,0.03);
@@ -1510,7 +1483,6 @@ nav::after {
 .trust-item:hover {
   transform: translateY(-8px);
   border-color: rgba(0,229,255,0.35);
-
   box-shadow:
     0 20px 50px rgba(0,0,0,0.45),
     0 0 20px rgba(0,229,255,0.12);
@@ -1534,13 +1506,9 @@ h2{
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 20px;
   width: 100%;
-  max-width: 1200px; /* 🔥 evita stretch gigante */
-  margin: 0 auto;    /* 🔥 centra todo */
+  max-width: 1200px; 
+  margin: 0 auto;
 }
-
-/* =========================
-   MODAL DE COMPRA MAMÓN
-========================= */
 
 .ticket-modal {
   position: fixed;
@@ -1552,8 +1520,6 @@ h2{
 .ticket-modal.active {
   display: block;
 }
-
-/* MODAL FORM PREMIUM */
 
 .ticket-content {
   width: min(92%, 1100px);
@@ -1596,8 +1562,6 @@ h2{
   margin-bottom: 36px;
 }
 
-/* inputs */
-
 .ticket-content input {
   width: 100%;
   height: 64px;
@@ -1621,8 +1585,6 @@ h2{
   box-shadow: 0 0 0 4px rgba(24,228,255,0.08);
 }
 
-/* botón principal */
-
 .btn-buy-final {
   width: 100%;
   height: 88px;
@@ -1640,8 +1602,6 @@ h2{
   transform: translateY(-2px);
   box-shadow: 0 20px 40px rgba(25,216,242,0.18);
 }
-
-/* botón cerrar */
 
 .ticket-close {
   position: absolute;
@@ -1662,8 +1622,6 @@ h2{
   opacity: 1;
   transform: scale(1.08);
 }
-
-/* responsive */
 
 @media (max-width: 768px) {
   .ticket-content {
@@ -1704,10 +1662,8 @@ h2{
   margin: 5vh auto;
   padding: 32px;
   border-radius: 24px;
-
   background: #0f1117;
   border: 1px solid rgba(255,255,255,0.08);
-
   box-shadow:
     0 20px 60px rgba(0,0,0,0.35),
     0 0 20px rgba(0,229,255,0.05);
@@ -1717,13 +1673,11 @@ h2{
   position: absolute;
   top: 18px;
   right: 18px;
-
   background: transparent;
   border: 0;
   color: #fff;
   font-size: 22px;
   cursor: pointer;
-
   transition: 0.2s ease;
 }
 
@@ -1800,7 +1754,6 @@ h2{
   font-weight: 700;
   font-size: 15px;
   cursor: pointer;
-
   transition: 0.25s ease;
 }
 
@@ -1964,8 +1917,6 @@ h2{
 
 }
 
-/* CSS aislado para Mis Boletos*/
-
 .tickets-page {
   padding: 140px 24px 80px;
   min-height: 100vh;
@@ -2062,7 +2013,6 @@ h2{
     flex-direction: column;
   }
 }
-/* FIN */
 
 @media (max-width: 600px){
 
