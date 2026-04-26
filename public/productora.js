@@ -184,9 +184,9 @@ function renderProducer(data, eventos) {
       el.style.display = "none";
     }
   }
-
-  setSocial("insta", data.instagram);
+  setSocial("whatsapp", data.whatsapp);
   setSocial("fb", data.facebook);
+  setSocial("insta", data.instagram);
   setSocial("tiktok", data.tiktok);
   setSocial("x", data.x);
 }

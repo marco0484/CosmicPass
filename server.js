@@ -93,18 +93,14 @@ app.get("/events", async (req, res) => {
 
     if (error) throw error;
 
-    // 💾 guardar en cache
     cacheEventos[key] = {
       data,
       time: now
     };
 
-    //console.log("🌐 supabase fetch:", key);
-
     res.json(data);
 
   } catch (error) {
-    //console.error("Error al obtener eventos:", error);
     res.status(500).json({ error: "Error en servidor" });
   }
 });
@@ -127,7 +123,6 @@ app.get("/events/:id", async (req, res) => {
     res.json(data[0]);
 
   } catch (error) {
-    //console.error("Error al obtener evento:", error);
     res.status(500).json({ error: "Error en servidor" });
   }
 });
@@ -150,7 +145,6 @@ app.get("/productoras/:id", async (req, res) => {
     res.json(data[0]);
 
   } catch (error) {
-   // console.error("Error al obtener productora:", error);
     res.status(500).json({ error: "Error en servidor" });
   }
 });
@@ -169,7 +163,6 @@ app.get("/productoras/:id/eventos", async (req, res) => {
     res.json(data);
 
   } catch (error) {
-    //console.error("Error al obtener eventos:", error);
     res.status(500).json({ error: "Error en servidor" });
   }
 });
@@ -194,7 +187,6 @@ app.get("/productoras/:id/detalle/:eventoId", async (req, res) => {
     res.json(data[0]);
 
   } catch (error) {
-   // console.error("Error detalle:", error);
     res.status(500).json({ error: "Error en servidor" });
   }
 });
@@ -219,7 +211,6 @@ app.post("/contacto", async (req, res) => {
     res.json({ ok: true, data });
 
   } catch (error) {
-    //console.error("Error en contacto:", error);
     res.status(500).json({ error: "Error del servidor" });
   }
 });
@@ -239,11 +230,9 @@ app.get("/eventos/buscar", async (req, res) => {
     res.json(data);
 
   } catch (error) {
-    //console.error("Error buscar:", error);
     res.status(500).send("Error");
   }
 });
-
 
 app.get("/productoras/:id/features", async (req, res) => {
   try {
@@ -258,11 +247,11 @@ app.get("/productoras/:id/features", async (req, res) => {
     res.json(data);
 
   } catch (error) {
-    //console.error("Error features:", error);
     res.status(500).json({ error: "Error en servidor" });
   }
 });
 
+/*
 app.get("/eventos/:id/tickets", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -279,15 +268,20 @@ app.get("/eventos/:id/tickets", async (req, res) => {
     res.json(data);
 
   } catch (error) {
-    //console.error("Error obteniendo tickets:", error);
 
     res.status(500).json({
       error: "Error en servidor"
     });
   }
 });
+*/
+  const { data, error } = await supabase.rpc(
+  "get_ticket_types_by_event",
+  {
+    p_event_id: id
+  }
+);
 
-// INICIO QR
 app.post("/api/create-ticket", async (req, res) => {
   try {
     const {
@@ -297,7 +291,6 @@ app.post("/api/create-ticket", async (req, res) => {
       telefono
     } = req.body;
 
-    // Validación básica
     if (!evento_id || !nombre || !email || !telefono) {
       return res.status(400).json({
         success: false,
@@ -305,44 +298,30 @@ app.post("/api/create-ticket", async (req, res) => {
       });
     }
 
-    // Folio visible para usuario
     const folio = `CP-${Date.now()}-${Math.floor(Math.random() * 9999)}`;
-
-    // Token interno seguro
     const ticketToken = `TK-${Date.now()}-${Math.random().toString(36).substring(2, 12)}`;
-
-    // QR que puede contener token o folio
     const qrContent = ticketToken;
-
-    // Imagen QR en base64
     const qrImage = await QRCode.toDataURL(qrContent, {
       width: 300,
       margin: 2,
       errorCorrectionLevel: "H"
     });
 
-    // Guardado real en Supabase
-    const { data, error } = await supabase
-      .from("tickets")
-      .insert([
-        {
-          evento_id: evento_id,
-          nombre_cliente: nombre,
-          telefono: telefono,
-          correo: email,
-          tipo_ticket: "Free Access",
-          estatus: "activo",
-          ticket_token: ticketToken,
-          qr_code: qrImage,
-          folio: folio
-        }
-      ])
-      .select();
+   const { data, error } = await supabase.rpc(
+  "create_free_ticket",
+  {
+    p_evento_id: evento_id,
+    p_nombre: nombre,
+    p_email: email,
+    p_telefono: telefono,
+    p_folio: folio,
+    p_ticket_token: ticketToken,
+    p_qr_code: qrImage
+  }
+);
 
     if (error) throw error;
 
-    // 👇 AQUÍ está el ajuste importante
-    // consultamos datos del evento para enriquecer el ticket
     const { data: eventoData, error: eventoError } = await supabase
       .from("cat_events")
       .select(`
@@ -391,7 +370,6 @@ app.post("/api/create-ticket", async (req, res) => {
   console.error("Error enviando correo:", mailError);
 }
 
-    // respuesta final enriquecida
     res.json({
       success: true,
       message: "Ticket generado correctamente",
@@ -416,6 +394,7 @@ app.post("/api/create-ticket", async (req, res) => {
   }
 });
 
+/*
 app.post("/mis-boletos", async (req, res) => {
   try {
     const { email, telefono } = req.body;
@@ -426,8 +405,6 @@ app.post("/mis-boletos", async (req, res) => {
         message: "Faltan datos para validar"
       });
     }
-
-    console.log("Consulta tickets:", email, telefono);
 
     const { data, error } = await supabase
       .from("tickets")
@@ -445,6 +422,57 @@ app.post("/mis-boletos", async (req, res) => {
       `)
       .eq("correo", email)
       .like("telefono", `%${telefono}`);
+
+    if (error) {
+      console.error("Error Supabase:", error);
+
+      return res.status(500).json({
+        success: false,
+        message: "Error consultando tus boletos"
+      });
+    }
+
+    if (!data || data.length === 0) {
+      return res.json({
+        success: false,
+        message: "No encontramos boletos con esos datos"
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: "Boletos encontrados",
+      tickets: data
+    });
+
+  } catch (error) {
+    console.error("Error /mis-boletos:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Error interno del servidor"
+    });
+  }
+});
+*/
+app.post("/mis-boletos", async (req, res) => {
+  try {
+    const { email, telefono } = req.body;
+
+    if (!email || !telefono) {
+      return res.status(400).json({
+        success: false,
+        message: "Faltan datos para validar"
+      });
+    }
+
+    const { data, error } = await supabase.rpc(
+      "get_user_tickets",
+      {
+        p_email: email,
+        p_phone: telefono
+      }
+    );
 
     if (error) {
       console.error("Error Supabase:", error);
