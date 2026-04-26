@@ -1074,10 +1074,6 @@ footer{
   color:#00e5ff;
 }
 
-.event-card:active{
-  transform: scale(0.97);
-}
-
 .card.active-click{
   transform: translateY(-4px) scale(1.04);
   box-shadow: 
@@ -1430,8 +1426,18 @@ nav::after {
   color:#00e5ff;
 }
 
-.event-card:active{
-  transform: scale(0.97);
+@media (max-width: 768px) {
+  .event-card:active {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow:
+      0 15px 35px rgba(0,0,0,0.6),
+      0 0 20px rgba(0,229,255,0.18);
+    border: 1px solid rgba(0,229,255,0.3);
+  }
+
+  .event-card:active h3 {
+    color: #00e5ff;
+  }
 }
 
 :root{
