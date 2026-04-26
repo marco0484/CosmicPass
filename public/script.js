@@ -1,19 +1,7 @@
-
-//const API = "http://192.168.100.23:3000"; // pruebas locales
-
-/*  CON VERCEL
 const API = window.location.hostname === "localhost"
   || window.location.hostname === "127.0.0.1"
   ? "http://localhost:3000"
   : "https://cosmicpass.space";
-*/
-
-// PRE PRO
-const API = window.location.hostname === "localhost"
-  || window.location.hostname === "127.0.0.1"
-  ? "http://localhost:3000"
-  : "https://cosmic-base-sigma.vercel.app";
-
 
 document.addEventListener("DOMContentLoaded", async () => {
   window.scrollTo(0, 0);
