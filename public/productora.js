@@ -1,8 +1,12 @@
-const API = window.location.hostname === "localhost"
+  const API = window.location.hostname === "localhost"
   || window.location.hostname === "127.0.0.1"
   ? "http://localhost:3000"
-  : "https://cosmic-base-ynjm-bklaaveks-antonio-yerenas-projects.vercel.app" // PRE
-  //: "https://www.cosmicpass.space"; PRO 
+  : "https://cosmic-base-ynjm-bklaaveks-antonio-yerenas-projects.vercel.app"
+  
+  /*const API = window.location.hostname === "localhost"
+  || window.location.hostname === "127.0.0.1"
+  ? "http://localhost:3000"
+  : "https://www.cosmicpass.space"; PRO */
 
 let selectedTicket = null;
 let selectedEventId = null;
