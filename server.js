@@ -76,8 +76,6 @@ app.get("/events", async (req, res) => {
     const key = id_productora || "all"; // 👈 clave única
 
     const now = Date.now();
-
-    // ⏱️ 5 minutos cache
     if (
       cacheEventos[key] &&
       (now - cacheEventos[key].time < 300000)

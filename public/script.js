@@ -1,12 +1,7 @@
-const API = window.location.hostname === "localhost"
+ const API = window.location.hostname === "localhost"
   || window.location.hostname === "127.0.0.1"
   ? "http://localhost:3000"
-  : "";
-
-/* const API = window.location.hostname === "localhost"
-  || window.location.hostname === "127.0.0.1"
-  ? "http://localhost:3000"
-  : "https://www.cosmicpass.space"; // PRODUCCIÓN */
+  : "https://www.cosmicpass.space";
 
 
 document.addEventListener("DOMContentLoaded", async () => {
