@@ -430,6 +430,42 @@ font-weight: 600;
   animation: fireRotate 3s linear infinite;
 }
 
+.tickets-box {
+  margin-top: 30px;
+  padding: 30px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  text-align: center;
+  line-height: 1.7;
+}
+
+.tickets-box p {
+  margin-bottom: 14px;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.tickets-box p:last-of-type {
+  margin-top: 20px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.tickets-box .whatsapp-btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 14px 28px;
+  border-radius: 14px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.tickets-box .whatsapp-btn:hover {
+  transform: translateY(-2px);
+}
+
 @keyframes fireRotate {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }

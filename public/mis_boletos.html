@@ -27,7 +27,8 @@
       <h1 class="tickets-title">Tus Boletos 🎟️</h1>
 
       <p class="tickets-subtitle">
-        Ingresa tu correo y los últimos 4 dígitos de tu teléfono para consultar tus boletos de forma segura
+        Consulta tus boletos de forma rápida, segura y con validación antifraude.
+        Ingresa el correo utilizado en tu compra y los últimos 4 dígitos de tu teléfono.
       </p>
 
       <form id="ticket-search-form" class="tickets-form">
@@ -52,25 +53,39 @@
         />
 
         <button type="submit" class="tickets-btn">
-          Buscar Boletos
+          Consultar Mis Boletos
         </button>
 
       </form>
 
       <div id="tickets-container" class="tickets-box">
-        <p>
-          Aquí aparecerán tus boletos o recibirás un acceso seguro en tu correo.
-        </p>
-      </div>
+  <p>
+    Por seguridad, tus boletos solo pueden consultarse con el correo electrónico utilizado durante la compra.
+  </p>
+
+  <p>
+    Si no encuentras tu boleto, revisa tu bandeja de entrada, spam o promociones.
+  </p>
+
+  <p>
+    ¿No encontraste tu boleto? Contáctanos y te ayudamos.
+  </p>
+
+  <a
+    href="https://wa.me/525580761435?text=Hola,%20no%20encuentro%20mi%20boleto%20en%20Cosmic%20Pass%20y%20necesito%20ayuda"
+    class="whatsapp-btn"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    Necesito ayuda por WhatsApp
+  </a>
+</div>
 
     </div>
   </main>
 
-  <!-- MODAL ELEGANTE -->
   <div id="custom-modal" class="ticket-modal">
-
     <div class="ticket-backdrop"></div>
-
     <div class="ticket-content">
 
       <button
@@ -88,10 +103,6 @@
       <h2 id="modal-title">
         Mensaje
       </h2>
-
-      <p id="modal-message" class="ticket-sub">
-        Aquí irá el contenido dinámico
-      </p>
 
       <button
         id="modal-action"
