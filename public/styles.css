@@ -359,6 +359,7 @@ font-weight: 600;
   justify-content:center;
   gap:12px;
   flex-wrap:wrap;
+  margin-bottom: 20px;
 }
 
 .creators .btn-primary{
@@ -1853,6 +1854,13 @@ h2{
   transform: translateY(-2px);
   box-shadow:
     0 10px 25px rgba(0,229,255,0.25);
+}
+
+
+.pilot-text{
+  margin-top: 24px;
+  font-size: 14px;
+  opacity: 0.8;
 }
 
 @media (max-width: 768px) {
