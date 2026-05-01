@@ -376,7 +376,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (Number(selectedTicket.precio) > 0) {
-      alert("Aquí irá Mercado Pago después");
+      alert("Manda tu comprobante de pago para poder validarlo al 5580761435");
       return;
     }
 
