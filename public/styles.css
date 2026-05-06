@@ -1085,13 +1085,13 @@ footer{
   transition: all 0.25s ease;
 }
 
-.event-card img{
+/*.event-card img{
   width:110px;
   height:150px;
   object-fit:cover;
   border-radius:12px;
   flex-shrink:0;
-}
+}*/
 
 .event-card .info{
   display:flex;
@@ -1473,13 +1473,13 @@ nav::after {
   flex: 1;
 }
 
-.event-card img {
+/*.event-card img {
   width: 120px;
   height: 160px;
   object-fit: cover;
   border-radius: 12px;
   flex-shrink: 0;
-}
+}*/
 
 .event-card::before{
   content:"";
