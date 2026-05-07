@@ -4,6 +4,7 @@ const API = window.location.hostname === "localhost"
   : "https://www.cosmicpass.space";
 
 let selectedTicket = null;
+let ticketQuantity = 1;
 let selectedEventId = null;
 const params = new URLSearchParams(window.location.search);
 const idProductora = params.get("id");
@@ -243,35 +244,87 @@ async function openTicketModal(eventName, eventId) {
     }
 
     container.innerHTML = "";
+tickets.forEach(ticket => {
 
-    tickets.forEach(ticket => {
   const div = document.createElement("div");
   div.classList.add("ticket-option");
+    div.innerHTML = `
+  <div>
+    <h3>${ticket.tipo_ticket}</h3>
+    <p>${ticket.desc_ticket || ""}</p>
+  </div>
 
-  div.innerHTML = `
-    <div>
-      <h3>${ticket.tipo_ticket}</h3>
-      <p>${ticket.desc_ticket || ""}</p>
-    </div>
+  <strong>
+    ${
+      Number(ticket.precio) === 0
+        ? "Free Access"
+        : `$${ticket.precio}`
+    }
+  </strong>
 
-    <strong>
-      ${
-        Number(ticket.precio) === 0
-          ? "Free Access"
-          : `$${ticket.precio}`
-      }
-    </strong>
-  `;
+  ${
+    Number(ticket.precio) > 0
+      ? `
+      <div class="qty-box">
+        <label>Cantidad:</label>
 
-  div.addEventListener("click", () => {
-    document.querySelectorAll(".ticket-option")
-      .forEach(el => el.classList.remove("selected"));
+        <select class="ticket-qty">
+          ${Array.from({ length: 10 }, (_, i) => `
+            <option value="${i + 1}">
+              ${i + 1}
+            </option>
+          `).join("")}
+        </select>
+      </div>
 
-    div.classList.add("selected");
+      <br>
 
-    selectedTicket = ticket;
-    selectedEventId = eventId;
-  });
+      <div class="ticket-total">
+        Total: $${ticket.precio}
+      </div>
+    `
+      : ""
+  }
+`;
+
+div.addEventListener("click", () => {
+
+  document.querySelectorAll(".ticket-option")
+    .forEach(el => el.classList.remove("selected"));
+
+  div.classList.add("selected");
+
+  selectedTicket = ticket;
+  selectedEventId = eventId;
+
+  const qtySelect = div.querySelector(".ticket-qty");
+  const totalDiv = div.querySelector(".ticket-total");
+
+  if (qtySelect && totalDiv) {
+
+    ticketQuantity = Number(qtySelect.value);
+
+    const updateTotal = () => {
+
+      const total =
+        Number(ticket.precio) * ticketQuantity;
+
+      totalDiv.innerHTML = `
+        Total: $${total}
+      `;
+    };
+
+    updateTotal();
+
+    qtySelect.onchange = () => {
+
+      ticketQuantity = Number(qtySelect.value);
+
+      updateTotal();
+    };
+  }
+
+});
 
   container.appendChild(div);
 });
@@ -365,21 +418,34 @@ async function generateFreeTicket() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+
   const btnFinal = document.querySelector(".btn-buy-final");
 
   if (!btnFinal) return;
 
   btnFinal.addEventListener("click", () => {
+
     if (!selectedTicket) {
       alert("Selecciona un tipo de boleto primero");
       return;
     }
 
     if (Number(selectedTicket.precio) > 0) {
-      alert("Manda tu comprobante de pago para poder validarlo al 5580761435");
+
+      const total =
+        Number(selectedTicket.precio) * ticketQuantity;
+
+      alert(`
+Debes depositar $${total} MXN
+
+y mandar tu comprobante de pago
+`);
+
       return;
     }
 
     openUserDataModal();
+
   });
+
 });
