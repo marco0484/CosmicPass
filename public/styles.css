@@ -1863,6 +1863,34 @@ h2{
   opacity: 0.8;
 }
 
+.qty-box {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qty-box label {
+  font-size: 14px;
+  color: #ccc;
+}
+
+.ticket-qty {
+  background: #111;
+  border: 1px solid #333;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.ticket-total {
+  margin-top: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #00e0ff;
+}
+
 @media (max-width: 768px) {
   .ticket-content {
     width: 94%;
