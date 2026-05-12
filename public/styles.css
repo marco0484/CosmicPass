@@ -1071,17 +1071,24 @@ footer{
 
 .event-card{
   display:flex;
-  gap:14px;
-  align-items:flex-start;
-  padding:14px;
-  max-width:480px;   
-  margin: 0 auto;
+  align-items:center;
+  gap:20px;
+
+  width:100%;
+  max-width:650px;
+
+  padding:20px;
+  margin:0 auto;
+
   background: linear-gradient(180deg, #111, #0a0a0a);
-  border-radius:16px;
+
+  border-radius:20px;
   border:1px solid rgba(255,255,255,0.05);
+
   cursor:pointer;
   position:relative;
   overflow:hidden;
+
   transition: all 0.25s ease;
 }
 
@@ -1090,7 +1097,8 @@ footer{
   flex-direction:column;
   gap:6px;
 
-  width:100%;
+  flex:1;
+  min-width:0;
 }
 
 .event-card .price{
@@ -1101,17 +1109,25 @@ footer{
 
 .event-card button{
   margin-top:auto;
-  width:100%;
-  padding:10px;
-  border-radius:10px;
+
+  width:auto;
+  min-width:180px;
+
+  align-self:flex-start;
+
+  padding:12px 18px;
+
+  border-radius:12px;
   background:#fff;
   color:#000;
+
   font-weight:600;
   font-size:14px;
+
   border:none;
+
   transition:0.2s ease;
 }
-
 .event-card button:hover{
   background:#f3f4f6;
   transform:translateY(-1px);
