@@ -2337,7 +2337,7 @@ h2{
 /* 💰 PRICE */
 /* ===================================== */
 
-.ticket-option strong{
+.ticket-option .ticket-price{
 
   display:block;
 
@@ -2360,7 +2360,7 @@ h2{
 /* 💵 PRICE LABEL */
 /* ===================================== */
 
-.ticket-option strong::before{
+.ticket-option .ticket-price::before{
 
   content:"MXN";
 
@@ -2454,22 +2454,12 @@ h2{
     font-size:16px;
   }
 
-  .ticket-option strong{
+  .ticket-option .ticket-price{
     font-size:28px;
   }
 
-}
-
-  .ticket-option strong{
-
-    font-size:34px;
-
-  }
-
   .ticket-total{
-
     font-size:24px;
-
   }
 
 }
