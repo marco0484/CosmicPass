@@ -2219,36 +2219,34 @@ h2{
 /* ===================================== */
 
 .ticket-option{
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
 
-  position:relative;
+.ticket-option h3,
+.ticket-option p,
+.ticket-option strong,
+.ticket-total{
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
 
-  overflow:hidden;
+.ticket-option h3{
+  line-height: 1.3;
+}
 
-  padding:24px;
+.ticket-option p{
+  width: 100%;
+}
 
-  border-radius:24px;
+.qty-box{
+  width: 100%;
+  flex-wrap: wrap;
+}
 
-  background:
-  linear-gradient(
-    180deg,
-    rgba(255,255,255,0.05),
-    rgba(255,255,255,0.02)
-  );
-
-  border:
-  1px solid rgba(255,255,255,0.08);
-
-  backdrop-filter:
-  blur(14px);
-
-  transition:
-  transform .28s ease,
-  border-color .28s ease,
-  box-shadow .28s ease;
-
-  box-shadow:
-  0 10px 30px rgba(0,0,0,.25);
-
+.ticket-total{
+  width: 100%;
 }
 
 /* ===================================== */
@@ -2449,18 +2447,18 @@ h2{
 @media(max-width:768px){
 
   .ticket-option{
-
-    padding:20px;
-
-    border-radius:20px;
-
+    padding:18px;
   }
 
   .ticket-option h3{
-
-    font-size:18px;
-
+    font-size:16px;
   }
+
+  .ticket-option strong{
+    font-size:28px;
+  }
+
+}
 
   .ticket-option strong{
 
