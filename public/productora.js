@@ -171,6 +171,7 @@ if(pastContainer){
 
   });
 }
+}
 
 function renderFeatures(features) {
   console.log("FEATURES:", features);
