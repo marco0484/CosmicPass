@@ -2214,9 +2214,7 @@ h2{
   font-weight: 600;
 }
 
-/* ===================================== */
-/* 🎟 PREMIUM TICKET CARDS */
-/* ===================================== */
+
 
 .ticket-option{
   width: 100%;
@@ -2249,9 +2247,7 @@ h2{
   width: 100%;
 }
 
-/* ===================================== */
-/* ✨ GLOW */
-/* ===================================== */
+
 
 .ticket-option::before{
 
@@ -2280,9 +2276,7 @@ h2{
   opacity:1;
 }
 
-/* ===================================== */
-/* ✨ HOVER */
-/* ===================================== */
+
 
 .ticket-option:hover{
 
@@ -2298,9 +2292,7 @@ h2{
 
 }
 
-/* ===================================== */
-/* 🎫 TITLE */
-/* ===================================== */
+
 
 .ticket-option h3{
 
@@ -2316,9 +2308,7 @@ h2{
 
 }
 
-/* ===================================== */
-/* 💬 DESCRIPTION */
-/* ===================================== */
+
 
 .ticket-option p{
 
@@ -2333,9 +2323,6 @@ h2{
 
 }
 
-/* ===================================== */
-/* 💰 PRICE */
-/* ===================================== */
 
 .ticket-option .ticket-price{
 
@@ -2356,9 +2343,7 @@ h2{
 
 }
 
-/* ===================================== */
-/* 💵 PRICE LABEL */
-/* ===================================== */
+
 
 .ticket-option .ticket-price::before{
 
@@ -2379,9 +2364,6 @@ h2{
 
 }
 
-/* ===================================== */
-/* 🔥 QTY BOX */
-/* ===================================== */
 
 .qty-box{
 
@@ -2395,9 +2377,7 @@ h2{
 
 }
 
-/* ===================================== */
-/* 🔢 SELECT */
-/* ===================================== */
+
 
 .ticket-qty{
 
@@ -2421,9 +2401,7 @@ h2{
 
 }
 
-/* ===================================== */
-/* 💎 TOTAL */
-/* ===================================== */
+
 
 .ticket-total{
 
@@ -2440,9 +2418,105 @@ h2{
 
 }
 
-/* ===================================== */
-/* 📱 MOBILE */
-/* ===================================== */
+
+.checkout-summary{
+  margin-top:24px;
+
+  padding:22px;
+
+  border-radius:22px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.04),
+      rgba(255,255,255,.02)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.25);
+}
+
+.checkout-qty{
+  display:flex;
+
+  align-items:center;
+
+  gap:14px;
+
+  margin-bottom:22px;
+}
+
+.checkout-qty label{
+  font-size:15px;
+
+  color:
+    rgba(255,255,255,.78);
+
+  font-weight:600;
+}
+
+#global-ticket-qty{
+  min-width:90px;
+
+  height:46px;
+
+  padding:0 14px;
+
+  border-radius:14px;
+
+  border:
+    1px solid rgba(255,255,255,.12);
+
+  background:
+    rgba(255,255,255,.05);
+
+  color:white;
+
+  font-size:15px;
+
+  outline:none;
+
+  transition:.25s ease;
+}
+
+#global-ticket-qty:focus{
+  border-color:
+    rgba(0,229,255,.35);
+
+  box-shadow:
+    0 0 12px rgba(0,229,255,.12);
+}
+
+.checkout-total{
+  font-size:38px;
+
+  font-weight:900;
+
+  line-height:1.1;
+
+  color:#00e5ff;
+
+  text-shadow:
+    0 0 18px rgba(0,229,255,.15);
+}
+
+@media(max-width:768px){
+
+  .checkout-summary{
+    padding:18px;
+
+    border-radius:18px;
+  }
+
+  .checkout-total{
+    font-size:30px;
+  }
+
+}
 
 @media(max-width:768px){
 
