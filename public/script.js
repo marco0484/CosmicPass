@@ -171,87 +171,193 @@ async function cargarEventos() {
 }
 
 function renderEventos(lista){
-  const container = document.querySelector(".cards");
+
+  const container =
+    document.querySelector(".cards");
+
+  const pastContainer =
+    document.querySelector(".past-cards");
+
   if (!container) return;
+
   container.innerHTML = "";
-  lista.forEach(evento => {
 
-    const card = document.createElement("div");
+  if (pastContainer) {
+    pastContainer.innerHTML = "";
+  }
+
+  const activeEvents =
+    lista.filter(
+      e => Number(e.estatus) === 1
+    );
+
+  const pastEvents =
+    lista.filter(
+      e => Number(e.estatus) === 0
+    );
+
+  /* ===================================== */
+  /* 🔥 ACTIVOS */
+  /* ===================================== */
+
+  activeEvents.forEach(evento => {
+
+    const card =
+      document.createElement("div");
+
     card.classList.add("card");
-    const fecha = new Date(evento.event_date);
-    const fechaFormateada = fecha.toLocaleDateString("es-MX", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric"
-    });
+
+    const fecha =
+      new Date(evento.event_date);
+
+    const fechaFormateada =
+      fecha.toLocaleDateString("es-MX", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric"
+      });
+
     card.innerHTML = `
-  <div class="card-content">
-    <div class="card-text">
-      <h3>
-        ${evento.name}
-        <span class="by">by: ${evento.productora_name}</span>
-      </h3>
 
-      <p>${evento.city} - ${fechaFormateada}</p>
+      <div class="card-content">
 
-      <p>
-        ${
-          Number(evento.price) === 0
-            ? "Free Access"
-            : `$${evento.price}`
-        }
-      </p>
+        <div class="card-text">
 
-      <button class="btn-card">
-        ${
-          Number(evento.price) === 0
-            ? "Obtener Ticket"
-            : "Comprar Ticket"
-        }
-      </button>
-    </div>
+          <h3>
+            ${evento.name}
 
-    <div class="card-img-container">
-      <img 
-        src="${evento.image}" 
-        alt="${evento.name}" 
-        class="card-img"
-        loading="lazy"
-      >
-    </div>
-  </div>
-`;
-    card.addEventListener('touchstart', () => {
-      card.classList.add('touch');
-    });
+            <span class="by">
+              by: ${evento.productora_name}
+            </span>
+          </h3>
 
-    card.addEventListener('touchend', () => {
-      setTimeout(() => {
-        card.classList.remove('touch');
-      }, 300);
-    });
+          <p>
+            ${evento.city}
+            - ${fechaFormateada}
+          </p>
+
+          <p>
+            ${
+              Number(evento.price) === 0
+                ? "Free Access"
+                : `$${evento.price}`
+            }
+          </p>
+
+          <button class="btn-card">
+
+            ${
+              Number(evento.price) === 0
+                ? "Obtener Ticket"
+                : "Comprar Ticket"
+            }
+
+          </button>
+
+        </div>
+
+        <div class="card-img-container">
+
+          <img 
+            src="${evento.image}" 
+            alt="${evento.name}" 
+            class="card-img"
+            loading="lazy"
+          >
+
+        </div>
+
+      </div>
+
+    `;
 
     card.addEventListener("click", () => {
-  card.classList.add("active-click");
 
-  localStorage.setItem(
-    `prefetch_productora_${evento.id_productora}`,
-    JSON.stringify(evento)
-  );
+      localStorage.setItem(
+        `prefetch_productora_${evento.id_productora}`,
+        JSON.stringify(evento)
+      );
 
-  setTimeout(() => {
-    window.location.href = `productora.html?id=${evento.id_productora}`;
-  }, 180);
-});
+      window.location.href =
+        `productora.html?id=${evento.id_productora}`;
 
-    const btn = card.querySelector(".btn-card");
-    btn.addEventListener("click", (e) => {
-      e.stopPropagation();
-      window.location.href = `productora.html?id=${evento.id_productora}`;
     });
 
     container.appendChild(card);
+
   });
+
+  /* ===================================== */
+  /* 🕰 PASADOS */
+  /* ===================================== */
+
+  if(pastContainer){
+
+    pastEvents.forEach(evento => {
+
+      const card =
+        document.createElement("div");
+
+      card.classList.add("card");
+
+      card.classList.add("past-event-card");
+
+      const fecha =
+        new Date(evento.event_date);
+
+      const fechaFormateada =
+        fecha.toLocaleDateString("es-MX", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric"
+        });
+
+      card.innerHTML = `
+
+        <div class="card-content">
+
+          <div class="card-text">
+
+            <h3>
+              ${evento.name}
+
+              <span class="by">
+                by: ${evento.productora_name}
+              </span>
+            </h3>
+
+            <p>
+              ${evento.city}
+              - ${fechaFormateada}
+            </p>
+
+            <span class="past-label">
+              Evento finalizado
+            </span>
+
+          </div>
+
+          <div class="card-img-container">
+
+            <img 
+              src="${evento.image}" 
+              alt="${evento.name}" 
+              class="card-img"
+              loading="lazy"
+            >
+
+          </div>
+
+        </div>
+
+      `;
+
+      pastContainer.appendChild(card);
+
+    });
+
+  }
+
 }
 
 function initBuscador(){

@@ -2499,6 +2499,50 @@ h2{
     0 0 18px rgba(0,229,255,.15);
 }
 
+.past-events-section{
+  margin-top:60px;
+}
+
+.past-event-card{
+
+  opacity:.72;
+
+  filter:
+    grayscale(.15);
+
+}
+
+.past-event-card:hover{
+
+  transform:none;
+
+  border-color:
+    rgba(255,255,255,.08);
+
+}
+
+.past-label{
+
+  display:inline-block;
+
+  margin-top:12px;
+
+  padding:8px 12px;
+
+  border-radius:999px;
+
+  background:
+    rgba(255,255,255,.08);
+
+  color:
+    rgba(255,255,255,.7);
+
+  font-size:12px;
+
+  font-weight:700;
+
+}
+
 @media(max-width:768px){
 
   .checkout-summary{
