@@ -186,15 +186,35 @@ function renderEventos(lista){
     pastContainer.innerHTML = "";
   }
 
-  const activeEvents =
-  lista.filter(
-    e => Number(e.ind_activo) === 1
-  );
+const now = new Date();
+
+const activeEvents =
+  lista.filter(e => {
+
+    const eventDate =
+      new Date(
+        e.event_date ||
+        e.date ||
+        e.fecha
+      );
+
+    return eventDate >= now;
+
+  });
 
 const pastEvents =
-  lista.filter(
-    e => Number(e.ind_activo) === 0
-  );
+  lista.filter(e => {
+
+    const eventDate =
+      new Date(
+        e.event_date ||
+        e.date ||
+        e.fecha
+      );
+
+    return eventDate < now;
+
+  });
 
   activeEvents.forEach(evento => {
 
