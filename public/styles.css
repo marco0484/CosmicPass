@@ -1705,13 +1705,7 @@ h2{
   margin-bottom: 18px;
 }
 
-#modal-event-name {
-  font-size: clamp(2.8rem, 5vw, 4.8rem);
-  font-weight: 800;
-  line-height: 1.05;
-  color: #ffffff;
-  margin: 0 0 18px;
-}
+
 
 .ticket-sub {
   font-size: 1.5rem;
@@ -1787,18 +1781,19 @@ h2{
   opacity: 1;
   transform: scale(1.08);
 }
-
 @media (max-width: 768px) {
   .ticket-content {
     padding: 36px 24px;
     border-radius: 22px;
   }
 
-#modal-event-name {
-  font-size: clamp(2rem, 9vw, 4rem);
-  line-height: 1;
-  word-break: break-word;
+  #modal-event-name{
+    font-size:
+      clamp(1.8rem, 10vw, 2.6rem);
+    line-height:0.92;
+  }
 }
+
 
   .ticket-sub {
     font-size: 1.1rem;
