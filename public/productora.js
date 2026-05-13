@@ -117,7 +117,7 @@ activeEvents.forEach(evento => {
   container.appendChild(card);
 
 });
-
+// load
 
 const pastContainer =
   document.querySelector(".past-cards");

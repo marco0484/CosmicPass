@@ -187,18 +187,14 @@ function renderEventos(lista){
   }
 
   const activeEvents =
-    lista.filter(
-      e => Number(e.estatus) === 1
-    );
+  lista.filter(
+    e => Number(e.ind_activo) === 1
+  );
 
-  const pastEvents =
-    lista.filter(
-      e => Number(e.estatus) === 0
-    );
-
-  /* ===================================== */
-  /* 🔥 ACTIVOS */
-  /* ===================================== */
+const pastEvents =
+  lista.filter(
+    e => Number(e.ind_activo) === 0
+  );
 
   activeEvents.forEach(evento => {
 
@@ -287,9 +283,6 @@ function renderEventos(lista){
 
   });
 
-  /* ===================================== */
-  /* 🕰 PASADOS */
-  /* ===================================== */
 
   if(pastContainer){
 
