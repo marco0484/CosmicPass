@@ -44,11 +44,99 @@ function renderEvents(eventos) {
     return;
   }
 
-  eventos.forEach(evento => {
-    const card = document.createElement("div");
+ const activeEvents =
+  eventos.filter(
+    e => Number(e.estatus) === 1
+  );
+
+const pastEvents =
+  eventos.filter(
+    e => Number(e.estatus) === 0
+  );
+
+/* ===================================== */
+/* 🔥 EVENTOS ACTIVOS */
+/* ===================================== */
+
+activeEvents.forEach(evento => {
+
+  const card =
+    document.createElement("div");
+
+  card.classList.add("event-card");
+
+  card.innerHTML = `
+
+    <img 
+      src="${evento.image}" 
+      alt="${evento.name}"
+      loading="lazy"
+    >
+
+    <div class="info">
+
+      <h3>${evento.name}</h3>
+
+      <p>
+        📍 ${evento.city || "México"}
+      </p>
+
+      <p>
+        📅 ${formatDate(
+          evento.event_date ||
+          evento.date ||
+          evento.fecha
+        )}
+      </p>
+
+      <p class="price">
+        $${evento.price}
+      </p>
+
+      <button
+        onclick="
+          openTicketModal(
+            '${evento.name}',
+            ${evento.id}
+          )
+        "
+      >
+
+        ${
+          Number(evento.price) === 0
+            ? "Free Access"
+            : "Pagar Mi Ticket"
+        }
+
+      </button>
+
+    </div>
+
+  `;
+
+  container.appendChild(card);
+
+});
+
+
+const pastContainer =
+  document.querySelector(".past-cards");
+
+if(pastContainer){
+
+  pastContainer.innerHTML = "";
+
+  pastEvents.forEach(evento => {
+
+    const card =
+      document.createElement("div");
+
     card.classList.add("event-card");
 
+    card.classList.add("past-event-card");
+
     card.innerHTML = `
+
       <img 
         src="${evento.image}" 
         alt="${evento.name}"
@@ -56,25 +144,31 @@ function renderEvents(eventos) {
       >
 
       <div class="info">
+
         <h3>${evento.name}</h3>
-        <p>📍 ${evento.city || "México"}</p>
-<p>📅 ${formatDate(
-  evento.event_date ||
-  evento.date ||
-  evento.fecha
-)}</p>
-        <p class="price">$${evento.price}</p>
-        <button onclick="openTicketModal('${evento.name}', ${evento.id})">
-  ${
-    Number(evento.price) === 0
-      ? "Free Access"
-      : "Pagar Mi Ticket"
-  }
-</button>
-        </div>
+
+        <p>
+          📍 ${evento.city || "México"}
+        </p>
+
+        <p>
+          📅 ${formatDate(
+            evento.event_date ||
+            evento.date ||
+            evento.fecha
+          )}
+        </p>
+
+        <span class="past-label">
+          Evento finalizado
+        </span>
+
+      </div>
+
     `;
 
-    container.appendChild(card);
+    pastContainer.appendChild(card);
+
   });
 }
 
