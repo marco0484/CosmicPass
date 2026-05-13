@@ -247,84 +247,80 @@ async function openTicketModal(eventName, eventId) {
 tickets.forEach(ticket => {
 
   const div = document.createElement("div");
+
   div.classList.add("ticket-option");
-    div.innerHTML = `
-  <div>
-    <h3>${ticket.tipo_ticket}</h3>
-    <p>${ticket.desc_ticket || ""}</p>
-  </div>
 
-  <strong>
-    ${
-      Number(ticket.precio) === 0
-        ? "Free Access"
-        : `$${ticket.precio}`
-    }
-  </strong>
+  div.innerHTML = `
 
-  ${
-    Number(ticket.precio) > 0
-      ? `
-      <div class="qty-box">
-        <label>Cantidad:</label>
+    <div>
 
-        <select class="ticket-qty">
-          ${Array.from({ length: 10 }, (_, i) => `
-            <option value="${i + 1}">
-              ${i + 1}
-            </option>
-          `).join("")}
-        </select>
-      </div>
+      <h3>
+        ${ticket.tipo_ticket}
+      </h3>
 
-      <br>
+      <p>
+        ${ticket.desc_ticket || ""}
+      </p>
 
-      <div class="ticket-total">
-        Total: $${ticket.precio}
-      </div>
-    `
-      : ""
-  }
-`;
+    </div>
 
-div.addEventListener("click", () => {
+    <strong class="ticket-price">
 
-  document.querySelectorAll(".ticket-option")
-    .forEach(el => el.classList.remove("selected"));
+      ${
+        Number(ticket.precio) === 0
+          ? "Free Access"
+          : `$${ticket.precio}`
+      }
 
-  div.classList.add("selected");
+    </strong>
 
-  selectedTicket = ticket;
-  selectedEventId = eventId;
+  `;
 
-  const qtySelect = div.querySelector(".ticket-qty");
-  const totalDiv = div.querySelector(".ticket-total");
+  div.addEventListener("click", () => {
 
-  if (qtySelect && totalDiv) {
+    document
+      .querySelectorAll(".ticket-option")
+      .forEach(el =>
+        el.classList.remove("selected")
+      );
 
-    ticketQuantity = Number(qtySelect.value);
+    div.classList.add("selected");
 
-    const updateTotal = () => {
+    selectedTicket = ticket;
+
+    selectedEventId = eventId;
+
+    const globalQty =
+      document.getElementById(
+        "global-ticket-qty"
+      );
+
+    const globalTotal =
+      document.getElementById(
+        "global-ticket-total"
+      );
+
+    const updateGlobalTotal = () => {
+
+      const qty =
+        Number(globalQty.value);
+
+      ticketQuantity = qty;
 
       const total =
-        Number(ticket.precio) * ticketQuantity;
+        Number(ticket.precio) * qty;
 
-      totalDiv.innerHTML = `
-        Total: $${total}
-      `;
+      globalTotal.innerHTML =
+        `Total: $${total}`;
+
     };
 
-    updateTotal();
+    updateGlobalTotal();
 
-    qtySelect.onchange = () => {
+    globalQty.onchange =
+      updateGlobalTotal;
 
-      ticketQuantity = Number(qtySelect.value);
-
-      updateTotal();
-    };
-  }
-
-});
+  });
 
   container.appendChild(div);
 });
