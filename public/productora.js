@@ -8,7 +8,7 @@ let ticketQuantity = 1;
 let selectedEventId = null;
 const params = new URLSearchParams(window.location.search);
 const idProductora = params.get("id");
-
+// reload
 if (!idProductora) { }
 
 function scrollToEvents() {
