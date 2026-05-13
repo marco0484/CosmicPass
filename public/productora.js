@@ -44,7 +44,9 @@ function renderEvents(eventos) {
     return;
   }
 
-const now = new Date();
+const today = new Date();
+
+today.setHours(0,0,0,0);
 
 const activeEvents =
   eventos.filter(e => {
@@ -56,7 +58,12 @@ const activeEvents =
         e.fecha
       );
 
-    return eventDate >= now;
+    eventDate.setHours(0,0,0,0);
+
+    return (
+      eventDate >= today &&
+      Number(e.ind_activo) !== 3
+    );
 
   });
 
@@ -70,7 +77,12 @@ const pastEvents =
         e.fecha
       );
 
-    return eventDate < now;
+    eventDate.setHours(0,0,0,0);
+
+    return (
+      eventDate < today &&
+      Number(e.ind_activo) !== 3
+    );
 
   });
 
