@@ -44,19 +44,35 @@ function renderEvents(eventos) {
     return;
   }
 
- const activeEvents =
-  eventos.filter(
-    e => Number(e.estatus) === 1
-  );
+const now = new Date();
+
+const activeEvents =
+  eventos.filter(e => {
+
+    const eventDate =
+      new Date(
+        e.event_date ||
+        e.date ||
+        e.fecha
+      );
+
+    return eventDate >= now;
+
+  });
 
 const pastEvents =
-  eventos.filter(
-    e => Number(e.estatus) === 0
-  );
+  eventos.filter(e => {
 
-/* ===================================== */
-/* 🔥 EVENTOS ACTIVOS */
-/* ===================================== */
+    const eventDate =
+      new Date(
+        e.event_date ||
+        e.date ||
+        e.fecha
+      );
+
+    return eventDate < now;
+
+  });
 
 activeEvents.forEach(evento => {
 
