@@ -1537,9 +1537,11 @@ nav::after {
 
 .event-card img {
   width:100%;
-  aspect-ratio: 3 / 4;
+  height:320px;
   object-fit:cover;
+  object-position:center;
   display:block;
+
 }
 
 .event-card::before{
@@ -2571,6 +2573,16 @@ h2{
   .tickets-page .tickets-form {
     flex-direction: column;
   }
+}
+
+@media(max-width:768px){
+
+  .event-card img{
+
+    height:280px;
+
+  }
+
 }
 
 @media (max-width: 600px){
