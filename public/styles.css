@@ -1595,14 +1595,6 @@ nav::after {
   cursor: pointer;
 }
 
-.event-card img {
-  width:100%;
-  height:320px;
-  object-fit:cover;
-  object-position:center;
-  display:block;
-
-}
 
 .event-card::before{
   content:"";
@@ -2451,6 +2443,24 @@ h2{
 
 }
 
+.event-card img{
+
+  width:100%;
+
+  object-fit:contain;
+
+  display:block;
+
+  padding:10px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.04),
+      rgba(255,255,255,.02)
+    );
+
+}
 
 .checkout-summary{
   margin-top:24px;
@@ -2629,23 +2639,13 @@ h2{
   }
 }
 
-@media(max-width:768px){
 
-  .event-card img{
-
-    height:280px;
-
-  }
-
-}
 
 @media (max-width: 600px){
-
   .page {
     margin: 40px 15px;
     padding: 15px;
   }
-
 }
 
 @media (max-width: 480px){
@@ -2653,7 +2653,6 @@ h2{
   .producer-hero {
     padding: 70px 15px 30px;
   }
-
   .producer-logo{
     width: 140px;
     height: 140px;
