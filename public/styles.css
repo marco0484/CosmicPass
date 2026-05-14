@@ -982,10 +982,25 @@ footer{
   border:1px solid rgba(0,229,255,0.2);
 }
 
-.producer-story {
-  padding: 80px 30px;
-  text-align: center;
-  background: linear-gradient(180deg, #000, #070707);
+.producer-story{
+
+  position:relative;
+
+  overflow:hidden;
+
+  background:
+    radial-gradient(
+      circle at top,
+      rgba(0,229,255,.10),
+      transparent 40%
+    ),
+
+    linear-gradient(
+      180deg,
+      #050816,
+      #02040a
+    );
+
 }
 
 .producer-story h2,
@@ -1039,12 +1054,36 @@ footer{
   gap: 25px;
 }
 
-.trust-item {
-  background: linear-gradient(145deg, #0a0a0a, #111);
-  padding:25px;
-  border-radius:15px;
-  border:1px solid rgba(255,255,255,0.05);
-  transition:0.3s;
+.story-kicker{
+  display:inline-block;
+  margin-bottom:16px;
+  color:#00e5ff;
+  font-size:12px;
+  letter-spacing:3px;
+  font-weight:800;
+
+}
+
+.trust-item{
+  padding:32px;
+  border-radius:24px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.05),
+      rgba(255,255,255,.02)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  backdrop-filter:blur(18px);
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.35);
+
+  transition:.3s ease;
+
 }
 
 .trust-item:hover{
@@ -1170,8 +1209,20 @@ footer{
 }
 
 .producer-socials{
-  text-align:center;
-  padding:70px 30px;
+  padding:120px 30px;
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(0,229,255,.08),
+      transparent 45%
+    ),
+
+    linear-gradient(
+      180deg,
+      #050816,
+      #091428
+    );
+
 }
 
 .socials-icon,
