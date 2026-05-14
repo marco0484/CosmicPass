@@ -983,11 +983,9 @@ footer{
 }
 
 .producer-story{
-
   position:relative;
-
   overflow:hidden;
-
+  padding:120px 24px;
   background:
     radial-gradient(
       circle at top,
@@ -1000,6 +998,13 @@ footer{
       #050816,
       #02040a
     );
+
+}
+
+.producer-story > *{
+  max-width:900px;
+  margin-left:auto;
+  margin-right:auto;
 
 }
 
@@ -2660,6 +2665,35 @@ h2{
   }
 
 }
+@media(max-width:768px){
+
+  .producer-story,
+  .trust,
+  .producer-socials{
+
+    padding:80px 20px;
+
+  }
+
+  .producer-story h2,
+  .trust h2,
+  .producer-socials h2{
+    font-size:38px;
+    line-height:1.1;
+    text-align:center;
+    margin-bottom:24px;
+
+  }
+
+  .producer-story p{
+    font-size:15px;
+    line-height:1.8;
+    text-align:left;
+
+  }
+
+}
+
 html,
 body{
   overflow-x: hidden;
