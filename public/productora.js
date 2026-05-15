@@ -259,51 +259,83 @@ const trust = features.filter(f => Number(f.level) === 3);
   }
 }
 
+
 function renderProducer(data, eventos) {
-  document.getElementById("producer-name").textContent = data.name;
+
+  document.getElementById("producer-name").textContent =
+    data.name;
 
   document.getElementById("historia").textContent =
-    data.historia || data.description || "";
+    data.historia ||
+    data.description ||
+    "";
 
-  document.title = `${data.name} | Cosmic Pass`;
+  document.title =
+    `${data.name} | Cosmic Pass`;
 
-  const cover = document.getElementById("producer-cover");
+  const cover =
+    document.getElementById("producer-cover");
 
   if (cover) {
-    cover.src = eventos?.[0]?.image || data.cover || "";
+
+    cover.src =
+      eventos?.[0]?.image ||
+      data.cover ||
+      "";
 
     cover.onerror = () => {
       cover.style.display = "none";
     };
+
   }
 
-  const logo = document.getElementById("producer-logo");
+  const logo =
+    document.getElementById("producer-logo");
 
   if (logo) {
-    logo.src = eventos?.[0]?.logo || data.logo || "";
+
+    logo.src =
+      eventos?.[0]?.logo ||
+      data.logo ||
+      "";
 
     logo.onerror = () => {
       logo.style.display = "none";
     };
+
   }
 
   function setSocial(id, value) {
-    const el = document.getElementById(id);
+
+    const el =
+      document.getElementById(id);
+
     if (!el) return;
 
     if (value) {
+
       el.href = value;
+
     } else {
+
       el.style.display = "none";
+
     }
+
   }
+
   setSocial("whatsapp", data.whatsapp);
   setSocial("fb", data.facebook);
   setSocial("insta", data.instagram);
   setSocial("tiktok", data.tiktok);
   setSocial("x", data.x);
   setSocial("fbevent", data.fbevent);
+
 }
+
+/* =========================
+   MOCK DATA LOCAL TESTING
+   =========================
 
 async function loadData() {
 
@@ -330,26 +362,6 @@ async function loadData() {
         price: 350,
         image:
           "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1200"
-      },
-
-      {
-        id: 2,
-        name: "Industrial Night",
-        city: "Monterrey",
-        event_date: "2026-07-12",
-        price: 0,
-        image:
-          "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=1200"
-      },
-
-      {
-        id: 3,
-        name: "Warehouse Experience",
-        city: "Guadalajara",
-        event_date: "2025-01-10",
-        price: 500,
-        image:
-          "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=1200"
       }
 
     ],
@@ -360,36 +372,6 @@ async function loadData() {
         level: 1,
         icon: "🔥",
         name: "Techno Underground"
-      },
-
-      {
-        level: 1,
-        icon: "⚡",
-        name: "Visuales inmersivos"
-      },
-
-      {
-        level: 2,
-        icon: "🎧",
-        name: "DJs internacionales"
-      },
-
-      {
-        level: 2,
-        icon: "🖤",
-        name: "Ambiente industrial"
-      },
-
-      {
-        level: 3,
-        icon: "✅",
-        name: "Acceso rápido"
-      },
-
-      {
-        level: 3,
-        icon: "🚀",
-        name: "Experiencia premium"
       }
 
     ]
@@ -411,6 +393,64 @@ async function loadData() {
 
 }
 
+========================= */
+
+
+/* =========================
+   REAL DATABASE LOADER
+   ========================= */
+
+async function loadData() {
+
+  try {
+
+    const res =
+      await fetch(
+        `${API}/api/productora/${idProductora}`
+      );
+
+    if (!res.ok) {
+
+      throw new Error(
+        "Error cargando productora"
+      );
+
+    }
+
+    const data =
+      await res.json();
+
+    console.log(
+      "PRODUCTORA DATA:",
+      data
+    );
+
+    renderProducer(
+      data.productora,
+      data.eventos || []
+    );
+
+    renderEvents(
+      data.eventos || []
+    );
+
+    renderFeatures(
+      data.features || []
+    );
+
+  } catch (err) {
+
+    console.error(
+      "ERROR LOAD DATA:",
+      err
+    );
+
+  }
+
+}
+
+loadData();
+
 function irEvento(id) {
   window.location.href = `evento.html?id=${id}`;
 }
@@ -419,7 +459,6 @@ function irHome() {
   window.location.href = "index.html";
 }
 
-loadData();
 
 async function openTicketModal(eventName, eventId) {
   const modal = document.getElementById("ticket-modal");
