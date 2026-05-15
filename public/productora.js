@@ -406,7 +406,7 @@ async function loadData() {
 
     const res =
       await fetch(
-        `${API}/api/productora/${idProductora}`
+        `${API}/productora-full/${idProductora}`
       );
 
     if (!res.ok) {
