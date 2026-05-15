@@ -306,24 +306,109 @@ function renderProducer(data, eventos) {
 }
 
 async function loadData() {
-  try {
-    const res = await fetch(
-      `${API}/productora-full/${idProductora}`
-    );
 
-    if (!res.ok) {
-      throw new Error("Error cargando productora");
-    }
+  const mockData = {
 
-    const data = await res.json();
+    productora: {
+      name: "Sefarán Events",
+      historia:
+        "Eventos underground de techno y hard groove en CDMX.",
+      instagram: "https://instagram.com/sefaran",
+      facebook: "https://facebook.com/sefaran",
+      whatsapp: "https://wa.me/525512345678",
+      logo:
+        "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200",
+    },
 
-    if (!data.productora) return;
+    eventos: [
 
-    renderProducer(data.productora, data.eventos);
-    renderEvents(data.eventos);
-    renderFeatures(data.features);
+      {
+        id: 1,
+        name: "Hard Techno Ritual",
+        city: "CDMX",
+        event_date: "2026-06-20",
+        price: 350,
+        image:
+          "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1200"
+      },
 
-  } catch (err) {}
+      {
+        id: 2,
+        name: "Industrial Night",
+        city: "Monterrey",
+        event_date: "2026-07-12",
+        price: 0,
+        image:
+          "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?q=80&w=1200"
+      },
+
+      {
+        id: 3,
+        name: "Warehouse Experience",
+        city: "Guadalajara",
+        event_date: "2025-01-10",
+        price: 500,
+        image:
+          "https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?q=80&w=1200"
+      }
+
+    ],
+
+    features: [
+
+      {
+        level: 1,
+        icon: "🔥",
+        name: "Techno Underground"
+      },
+
+      {
+        level: 1,
+        icon: "⚡",
+        name: "Visuales inmersivos"
+      },
+
+      {
+        level: 2,
+        icon: "🎧",
+        name: "DJs internacionales"
+      },
+
+      {
+        level: 2,
+        icon: "🖤",
+        name: "Ambiente industrial"
+      },
+
+      {
+        level: 3,
+        icon: "✅",
+        name: "Acceso rápido"
+      },
+
+      {
+        level: 3,
+        icon: "🚀",
+        name: "Experiencia premium"
+      }
+
+    ]
+
+  };
+
+  renderProducer(
+    mockData.productora,
+    mockData.eventos
+  );
+
+  renderEvents(
+    mockData.eventos
+  );
+
+  renderFeatures(
+    mockData.features
+  );
+
 }
 
 function irEvento(id) {

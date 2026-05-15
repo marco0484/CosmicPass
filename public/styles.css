@@ -202,6 +202,94 @@ nav li a:hover::after{
   margin-bottom: 40px;
   font-size: 16px;
 }
+.scan-badge{
+
+  display:inline-block;
+
+  margin-bottom:18px;
+
+  padding:10px 14px;
+
+  border-radius:14px;
+
+  background:
+    rgba(255,255,255,.06);
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  font-size:13px;
+
+  font-weight:700;
+}
+
+.scan-mode{
+
+  display:inline-block;
+
+  margin-top:18px;
+
+  color:#00e5ff;
+
+  font-size:12px;
+
+  letter-spacing:2px;
+
+  font-weight:700;
+}
+
+.scanner-card{
+
+  position:relative;
+
+  overflow:hidden;
+}
+
+.scanner-card::before{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  background:
+    radial-gradient(circle at top right,
+    rgba(0,229,255,.08),
+    transparent 45%);
+
+  opacity:0;
+
+  transition:.3s ease;
+}
+
+.scanner-card:hover::before{
+  opacity:1;
+}
+
+.scanner-card.success{
+  border-color:
+    rgba(0,255,157,.2);
+}
+
+.scanner-card.danger{
+  border-color:
+    rgba(255,80,80,.2);
+}
+
+
+.alert-card{
+
+  border-color:
+    rgba(255,170,0,.18);
+}
+
+.alert-card:hover{
+
+  box-shadow:
+    0 20px 45px rgba(0,0,0,.35),
+    0 0 25px rgba(255,170,0,.12);
+}
 
 .why-grid {
   display: grid;
@@ -235,6 +323,345 @@ nav li a:hover::after{
   opacity: 0.8;
   line-height: 1.6;
   font-size: 14px;
+}
+
+.cashless-section{
+  padding:120px 60px;
+  display:grid;
+
+  grid-template-columns:
+    1.1fr .9fr;
+  gap:40px;
+  align-items:center;
+  max-width:1400px;
+  margin:0 auto;
+  background:
+    radial-gradient(circle at top,
+    rgba(123,44,255,.12),
+    transparent 55%),
+
+    linear-gradient(
+      180deg,
+      #070707,
+      #0b1220
+    );
+}
+
+.cashless-kicker{
+
+  display:inline-block;
+
+  margin-bottom:18px;
+
+  color:#b388ff;
+
+  font-size:12px;
+
+  font-weight:700;
+
+  letter-spacing:4px;
+}
+.cashless-left{
+
+  position:relative;
+
+  z-index:2;
+}
+
+
+.cashless-left h2{
+
+  font-size:
+    clamp(54px, 6vw, 82px);
+
+  line-height:.92;
+
+  letter-spacing:-3px;
+
+  margin-bottom:30px;
+
+  max-width:700px;
+}
+
+.cashless-sub{
+
+  opacity:.72;
+
+  line-height:1.8;
+
+  font-size:17px;
+
+  max-width:540px;
+
+  margin-bottom:34px;
+}
+
+.cashless-features{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:16px;
+}
+
+.cashless-feature{
+
+  width:fit-content;
+
+  padding:16px 18px;
+
+  border-radius:18px;
+
+  background:
+    rgba(255,255,255,.04);
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  backdrop-filter:blur(12px);
+
+  transition:.3s ease;
+}
+
+.cashless-feature:hover{
+
+  transform:translateY(-4px);
+
+  border-color:
+    rgba(179,136,255,.35);
+
+  box-shadow:
+    0 0 20px rgba(179,136,255,.12);
+}
+
+.cashless-note{
+
+  margin-top:28px;
+
+  display:inline-block;
+
+  padding:12px 18px;
+
+  border-radius:16px;
+
+  background:
+    rgba(179,136,255,.08);
+
+  border:
+    1px solid rgba(179,136,255,.18);
+
+  color:#d7c2ff;
+
+  font-size:14px;
+
+  font-weight:600;
+}
+
+.cashless-right{
+
+  display:flex;
+
+  justify-content:center;
+}
+
+.wallet-card{
+
+  position:relative;
+
+  width:460px;
+
+  padding:32px;
+
+  border-radius:36px;
+
+  overflow:hidden;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(24,16,40,.96),
+      rgba(5,5,10,.98)
+    );
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  box-shadow:
+    0 40px 100px rgba(0,0,0,.55),
+    0 0 40px rgba(179,136,255,.16);
+
+  transform:
+    perspective(1400px)
+    rotateY(-10deg);
+
+  transition:.45s ease;
+}
+
+.wallet-card:hover{
+
+  transform:
+    perspective(1400px)
+    rotateY(0deg)
+    translateY(-10px);
+}
+
+.wallet-glow{
+
+  position:absolute;
+
+  top:-100px;
+  right:-100px;
+
+  width:240px;
+  height:240px;
+
+  border-radius:50%;
+
+  background:
+    rgba(179,136,255,.18);
+
+  filter:blur(80px);
+}
+
+.wallet-top{
+
+  position:relative;
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  margin-bottom:40px;
+
+  z-index:2;
+}
+
+.wallet-top span{
+
+  color:#d7c2ff;
+
+  font-size:13px;
+
+  letter-spacing:2px;
+
+  font-weight:700;
+}
+
+.wallet-top strong{
+
+  font-size:34px;
+
+  color:#fff;
+}
+
+.wallet-transactions{
+
+  position:relative;
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:16px;
+
+  z-index:2;
+}
+
+.wallet-item{
+
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  padding:18px;
+
+  border-radius:18px;
+
+  background:
+    rgba(255,255,255,.04);
+
+  border:
+    1px solid rgba(255,255,255,.06);
+}
+
+.wallet-item span{
+
+  color:#ff8aa8;
+
+  font-weight:700;
+}
+
+.wallet-item .positive{
+
+  color:#7dffb3;
+}
+
+.wallet-footer{
+
+  position:relative;
+
+  margin-top:40px;
+
+  display:flex;
+
+  align-items:center;
+
+  gap:14px;
+
+  z-index:2;
+}
+
+.wallet-chip{
+
+  width:42px;
+  height:30px;
+
+  border-radius:8px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #b388ff,
+      #7c4dff
+    );
+}
+
+.wallet-footer span{
+
+  color:#b388ff;
+
+  font-size:13px;
+
+  letter-spacing:2px;
+
+  font-weight:700;
+}
+
+@media(max-width:768px){
+
+  .cashless-section{
+
+    padding:90px 20px;
+
+    gap:50px;
+  }
+
+  .cashless-left h2{
+
+    font-size:38px;
+  }
+
+  .wallet-card{
+
+    width:100%;
+    max-width:360px;
+  }
+
 }
 
 .btn-back{
@@ -1134,6 +1561,7 @@ footer{
 }
 
 .event-card{
+<<<<<<< HEAD
   position:relative;
   display:flex;
   flex-direction:column;
@@ -1142,12 +1570,22 @@ footer{
   margin:0 auto;
   overflow:hidden;
   border-radius:24px;
+=======
+
+  position:relative;
+
+  overflow:hidden;
+
+  border-radius:24px;
+
+>>>>>>> 3aeeb7d (agregamos cashless)
   background:
     linear-gradient(
       180deg,
       rgba(255,255,255,.04),
       rgba(255,255,255,.02)
     );
+<<<<<<< HEAD
   border:
     1px solid rgba(255,255,255,.08);
   backdrop-filter:blur(14px);
@@ -1168,6 +1606,29 @@ footer{
   font-weight:800;
   line-height:1.2;
   word-break:break-word;
+=======
+
+  border:
+    1px solid rgba(255,255,255,.08);
+
+  transition:.3s ease;
+
+  padding:0;
+
+  max-width:360px;
+
+}
+
+.event-card .info{
+
+  padding:18px;
+
+  display:flex;
+  flex-direction:column;
+
+  gap:10px;
+
+>>>>>>> 3aeeb7d (agregamos cashless)
 }
 
 .event-card .price{
@@ -1228,6 +1689,20 @@ footer{
   left:100%;
 }
 
+<<<<<<< HEAD
+=======
+.event-card:hover{
+
+  transform:
+    translateY(-8px);
+
+  box-shadow:
+    0 25px 60px rgba(0,0,0,.45),
+    0 0 25px rgba(0,229,255,.12);
+
+}
+
+>>>>>>> 3aeeb7d (agregamos cashless)
 .event-card:hover h3{
   color:#00e5ff;
 }
@@ -1613,6 +2088,78 @@ nav::after {
   cursor: pointer;
 }
 
+<<<<<<< HEAD
+=======
+.event-card .info {
+  flex: 1;
+}
+
+.event-card img{
+
+  width:100%;
+
+  aspect-ratio: 3 / 4;
+
+  object-fit:cover;
+
+  display:block;
+
+}
+
+.event-card .info{
+
+  padding:20px;
+
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+
+}
+
+.event-card h3{
+
+  font-size:24px;
+  font-weight:800;
+
+}
+
+.event-card .price{
+
+  font-size:32px;
+
+  font-weight:900;
+
+  color:#00e5ff;
+
+}
+
+.event-card button{
+
+  width:100%;
+
+  margin-top:10px;
+
+  height:54px;
+
+  border:none;
+
+  border-radius:16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #00e5ff,
+      #00bcd4
+    );
+
+  color:black;
+
+  font-weight:800;
+
+  cursor:pointer;
+
+}
+>>>>>>> 3aeeb7d (agregamos cashless)
 
 .event-card::before{
   content:"";
@@ -1634,6 +2181,11 @@ nav::after {
   left:100%;
 }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 3aeeb7d (agregamos cashless)
 .event-card:hover h3{
   color:#00e5ff;
 }
@@ -1695,6 +2247,7 @@ nav::after {
     0 0 20px rgba(0,229,255,0.12);
 }
 
+<<<<<<< HEAD
 .event-card:hover{
   transform:
     translateY(-8px);
@@ -1702,6 +2255,10 @@ nav::after {
     0 25px 60px rgba(0,0,0,.45),
     0 0 25px rgba(0,229,255,.12);
 }
+=======
+
+
+>>>>>>> 3aeeb7d (agregamos cashless)
 h2{
   letter-spacing:1px;
 }
