@@ -713,6 +713,21 @@ nav li a:hover::after{
     gap:40px;
   }
 
+@media(max-width:768px){
+
+  .hero h1{
+    font-size:1.8rem !important;
+    line-height:.95;
+    letter-spacing:-1px;
+  }
+
+  .rocket{
+    font-size:.7em;
+    margin:0 2px;
+  }
+
+}
+
   .cashless-left h2{
     font-size:56px;
     line-height:0.95;
@@ -786,7 +801,7 @@ nav li a:hover::after{
 }
 
 .hero h1{
-  font-size:clamp(29px, 8vw, 78px);
+  font-size:clamp(36px, 5vw, 78px);
   font-weight:900;
   line-height:.95;
   letter-spacing:-2px;
