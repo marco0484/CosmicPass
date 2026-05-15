@@ -3319,8 +3319,19 @@ h2{
 }
 
 .metric-box{
+
+  min-height:180px;
+
   padding:28px;
+
   border-radius:24px;
+
+  display:flex;
+
+  flex-direction:column;
+
+  justify-content:space-between;
+
   background:
     linear-gradient(
       180deg,
@@ -3329,17 +3340,29 @@ h2{
     );
 
   border:1px solid rgba(255,255,255,.08);
+
 }
 
 .metric-box span{
+
   display:block;
+
   opacity:.7;
+
   margin-bottom:12px;
+
 }
 
 .metric-box strong{
+
   font-size:32px;
+
+  line-height:1.05;
+
+  word-break:break-word;
+
   color:#00e5ff;
+
 }
 
 .metric-box.alert strong{
@@ -3355,6 +3378,15 @@ h2{
 
   .metrics-left h2{
     font-size:2.4rem;
+  }
+
+  .metric-box{
+    min-height:160px;
+    padding:22px;
+  }
+
+  .metric-box strong{
+    font-size:2rem;
   }
 
 }

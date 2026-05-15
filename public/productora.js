@@ -499,29 +499,49 @@ tickets.forEach(ticket => {
 
   div.innerHTML = `
 
-    <div>
+  <div>
 
-      <h3>
-        ${ticket.tipo_ticket}
-      </h3>
+    <h3>
+      ${ticket.tipo_ticket}
+    </h3>
 
-      <p>
-        ${ticket.desc_ticket || ""}
-      </p>
+    <p>
+      ${ticket.desc_ticket || ""}
+    </p>
 
-    </div>
+    ${
+      ticket.stock_disponible
+        ? `
+          <span class="ticket-mini-info">
+            🎫 ${ticket.stock_disponible} disponibles
+          </span>
+        `
+        : ""
+    }
 
-    <strong class="ticket-price">
+    ${
+      ticket.fecha_fin
+        ? `
+          <span class="ticket-mini-info">
+            ⏳ Hasta ${formatDate(ticket.fecha_fin)}
+          </span>
+        `
+        : ""
+    }
 
-      ${
-        Number(ticket.precio) === 0
-          ? "Free Access"
-          : `$${ticket.precio}`
-      }
+  </div>
 
-    </strong>
+  <strong class="ticket-price">
 
-  `;
+    ${
+      Number(ticket.precio) === 0
+        ? "Free Access"
+        : `$${ticket.precio}`
+    }
+
+  </strong>
+
+`;
 
   div.addEventListener("click", () => {
 
