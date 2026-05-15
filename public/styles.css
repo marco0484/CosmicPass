@@ -328,9 +328,7 @@ nav li a:hover::after{
 .cashless-section{
   padding:120px 60px;
   display:grid;
-
-  grid-template-columns:
-    1.1fr .9fr;
+  grid-template-columns:1.1fr .9fr;
   gap:40px;
   align-items:center;
   max-width:1400px;
@@ -339,12 +337,40 @@ nav li a:hover::after{
     radial-gradient(circle at top,
     rgba(123,44,255,.12),
     transparent 55%),
-
     linear-gradient(
       180deg,
       #070707,
       #0b1220
     );
+}
+
+@media(max-width:768px){
+
+  .cashless-section{
+    grid-template-columns:1fr;
+    padding:70px 20px;
+    gap:40px;
+  }
+
+  .cashless-left h2{
+    font-size:56px;
+    line-height:0.95;
+    letter-spacing:-2px;
+    max-width:100%;
+  }
+
+  .cashless-sub{
+    max-width:100%;
+    font-size:16px;
+    line-height:1.7;
+  }
+
+  .wallet-card{
+    width:100%;
+    max-width:100%;
+    transform:none;
+  }
+
 }
 
 .cashless-kicker{
@@ -369,19 +395,6 @@ nav li a:hover::after{
 }
 
 
-.cashless-left h2{
-
-  font-size:
-    clamp(54px, 6vw, 82px);
-
-  line-height:.92;
-
-  letter-spacing:-3px;
-
-  margin-bottom:30px;
-
-  max-width:700px;
-}
 
 .cashless-sub{
 
@@ -645,16 +658,26 @@ nav li a:hover::after{
 @media(max-width:768px){
 
   .cashless-section{
-
-    padding:90px 20px;
-
-    gap:50px;
+    grid-template-columns:1fr;
+    padding:70px 20px;
+    gap:40px;
   }
 
   .cashless-left h2{
-
-    font-size:38px;
+    font-size:56px;
+    line-height:0.95;
+    letter-spacing:-2px;
+    max-width:100%;
   }
+
+  .cashless-sub{
+    max-width:100%;
+    font-size:16px;
+    line-height:1.7;
+  }
+
+}
+
 
   .wallet-card{
 
@@ -662,7 +685,6 @@ nav li a:hover::after{
     max-width:360px;
   }
 
-}
 
 .btn-back{
   padding:8px 14px;
@@ -1561,52 +1583,17 @@ footer{
 }
 
 .event-card{
-<<<<<<< HEAD
-  position:relative;
-  display:flex;
-  flex-direction:column;
-  width:100%;
-  max-width:360px;
-  margin:0 auto;
-  overflow:hidden;
-  border-radius:24px;
-=======
-
   position:relative;
 
   overflow:hidden;
 
   border-radius:24px;
-
->>>>>>> 3aeeb7d (agregamos cashless)
   background:
     linear-gradient(
       180deg,
       rgba(255,255,255,.04),
       rgba(255,255,255,.02)
     );
-<<<<<<< HEAD
-  border:
-    1px solid rgba(255,255,255,.08);
-  backdrop-filter:blur(14px);
-  transition:.3s ease;
-  padding:0;
-}
-
-.event-card .info{
-  padding:18px;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-
-}
-
-.event-card h3{
-  font-size:24px;
-  font-weight:800;
-  line-height:1.2;
-  word-break:break-word;
-=======
 
   border:
     1px solid rgba(255,255,255,.08);
@@ -1627,8 +1614,6 @@ footer{
   flex-direction:column;
 
   gap:10px;
-
->>>>>>> 3aeeb7d (agregamos cashless)
 }
 
 .event-card .price{
@@ -1689,20 +1674,6 @@ footer{
   left:100%;
 }
 
-<<<<<<< HEAD
-=======
-.event-card:hover{
-
-  transform:
-    translateY(-8px);
-
-  box-shadow:
-    0 25px 60px rgba(0,0,0,.45),
-    0 0 25px rgba(0,229,255,.12);
-
-}
-
->>>>>>> 3aeeb7d (agregamos cashless)
 .event-card:hover h3{
   color:#00e5ff;
 }
@@ -2088,79 +2059,6 @@ nav::after {
   cursor: pointer;
 }
 
-<<<<<<< HEAD
-=======
-.event-card .info {
-  flex: 1;
-}
-
-.event-card img{
-
-  width:100%;
-
-  aspect-ratio: 3 / 4;
-
-  object-fit:cover;
-
-  display:block;
-
-}
-
-.event-card .info{
-
-  padding:20px;
-
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-
-}
-
-.event-card h3{
-
-  font-size:24px;
-  font-weight:800;
-
-}
-
-.event-card .price{
-
-  font-size:32px;
-
-  font-weight:900;
-
-  color:#00e5ff;
-
-}
-
-.event-card button{
-
-  width:100%;
-
-  margin-top:10px;
-
-  height:54px;
-
-  border:none;
-
-  border-radius:16px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #00e5ff,
-      #00bcd4
-    );
-
-  color:black;
-
-  font-weight:800;
-
-  cursor:pointer;
-
-}
->>>>>>> 3aeeb7d (agregamos cashless)
-
 .event-card::before{
   content:"";
   position:absolute;
@@ -2181,11 +2079,6 @@ nav::after {
   left:100%;
 }
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 3aeeb7d (agregamos cashless)
 .event-card:hover h3{
   color:#00e5ff;
 }
@@ -2247,18 +2140,6 @@ nav::after {
     0 0 20px rgba(0,229,255,0.12);
 }
 
-<<<<<<< HEAD
-.event-card:hover{
-  transform:
-    translateY(-8px);
-  box-shadow:
-    0 25px 60px rgba(0,0,0,.45),
-    0 0 25px rgba(0,229,255,.12);
-}
-=======
-
-
->>>>>>> 3aeeb7d (agregamos cashless)
 h2{
   letter-spacing:1px;
 }
@@ -2688,10 +2569,12 @@ h2{
     color: white;
   }
 
-  nav{
-    flex-direction:column;
-    gap:10px;
-    padding:15px 20px;
+ nav{
+    padding:12px 16px;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
   }
 
   .about-preview {
@@ -3198,6 +3081,21 @@ h2{
 
     padding:120px 18px 60px;
 
+  }
+
+}
+
+@media(max-width:768px){
+
+  .nav-search{
+    flex:1;
+    max-width:180px;
+  }
+
+  .search,
+  .search:focus{
+    width:100%;
+    max-width:100%;
   }
 
 }
