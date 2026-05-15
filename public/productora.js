@@ -497,31 +497,74 @@ tickets.forEach(ticket => {
 
   div.classList.add("ticket-option");
 
-  div.innerHTML = `
+const stock =
+  Number(ticket.stock_disponible || 0);
 
-    <div>
+const endDate =
+  ticket.fecha_fin
+    ? new Date(ticket.fecha_fin)
+    : null;
 
-      <h3>
-        ${ticket.tipo_ticket}
-      </h3>
+const today =
+  new Date();
 
-      <p>
-        ${ticket.desc_ticket || ""}
-      </p>
+const diffDays =
+  endDate
+    ? Math.ceil(
+        (endDate - today)
+        / (1000 * 60 * 60 * 24)
+      )
+    : null;
 
-    </div>
+div.innerHTML = `
 
-    <strong class="ticket-price">
+  <div>
 
-      ${
-        Number(ticket.precio) === 0
-          ? "Free Access"
-          : `$${ticket.precio}`
-      }
+    <h3>
+      ${ticket.tipo_ticket}
+    </h3>
 
-    </strong>
+    <p>
+      ${ticket.desc_ticket || ""}
+    </p>
 
-  `;
+    ${
+      stock <= 10
+        ? `
+          <span class="ticket-badge danger">
+            🔥 Últimos ${stock} boletos
+          </span>
+        `
+        : `
+          <span class="ticket-badge">
+            🎫 ${stock} disponibles
+          </span>
+        `
+    }
+
+    ${
+      diffDays !== null && diffDays >= 0
+        ? `
+          <span class="ticket-badge countdown">
+            ⏳ Preventa termina en ${diffDays} días
+          </span>
+        `
+        : ""
+    }
+
+  </div>
+
+  <strong class="ticket-price">
+
+    ${
+      Number(ticket.precio) === 0
+        ? "Free Access"
+        : `$${ticket.precio}`
+    }
+
+  </strong>
+
+`;
 
   div.addEventListener("click", () => {
 

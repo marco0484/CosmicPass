@@ -713,21 +713,6 @@ nav li a:hover::after{
     gap:40px;
   }
 
-@media(max-width:768px){
-
-  .hero h1{
-    font-size:1.8rem !important;
-    line-height:.95;
-    letter-spacing:-1px;
-  }
-
-  .rocket{
-    font-size:.7em;
-    margin:0 2px;
-  }
-
-}
-
   .cashless-left h2{
     font-size:56px;
     line-height:0.95;
@@ -3266,6 +3251,165 @@ h2{
     text-align:left;
 
   }
+
+}
+
+@media(max-width:768px){
+
+  .hero h1{
+    font-size:1.55rem !important;
+    line-height:1.05;
+    letter-spacing:-1px;
+  }
+
+  .rocket{
+    font-size:.55em;
+    margin:0 1px;
+    vertical-align:middle;
+  }
+
+}
+
+.metrics-section{
+  padding:120px 60px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:40px;
+  align-items:center;
+  max-width:1400px;
+  margin:0 auto;
+}
+
+.metrics-kicker{
+  color:#00e5ff;
+  letter-spacing:3px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.metrics-left h2{
+  font-size:clamp(38px,5vw,64px);
+  margin:18px 0;
+  line-height:.95;
+}
+
+.metrics-sub{
+  opacity:.75;
+  line-height:1.7;
+  margin-bottom:30px;
+}
+
+.metrics-features{
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.metrics-feature{
+  padding:16px 18px;
+  border-radius:18px;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.metrics-card{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:18px;
+}
+
+.metric-box{
+  padding:28px;
+  border-radius:24px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255,255,255,.05),
+      rgba(255,255,255,.02)
+    );
+
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.metric-box span{
+  display:block;
+  opacity:.7;
+  margin-bottom:12px;
+}
+
+.metric-box strong{
+  font-size:32px;
+  color:#00e5ff;
+}
+
+.metric-box.alert strong{
+  color:#ff8a65;
+}
+
+@media(max-width:768px){
+
+  .metrics-section{
+    grid-template-columns:1fr;
+    padding:80px 20px;
+  }
+
+  .metrics-left h2{
+    font-size:2.4rem;
+  }
+
+}
+
+.ticket-badge{
+
+  display:inline-flex;
+
+  align-items:center;
+
+  gap:6px;
+
+  margin-top:10px;
+
+  margin-right:8px;
+
+  padding:8px 12px;
+
+  border-radius:999px;
+
+  background:
+    rgba(0,229,255,.08);
+
+  border:
+    1px solid rgba(0,229,255,.18);
+
+  color:#9befff;
+
+  font-size:12px;
+
+  font-weight:700;
+
+}
+
+.ticket-badge.danger{
+
+  background:
+    rgba(255,80,80,.08);
+
+  border:
+    1px solid rgba(255,80,80,.18);
+
+  color:#ff9d9d;
+
+}
+
+.ticket-badge.countdown{
+
+  background:
+    rgba(255,170,0,.08);
+
+  border:
+    1px solid rgba(255,170,0,.18);
+
+  color:#ffd27a;
 
 }
 
