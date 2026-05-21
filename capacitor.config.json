@@ -1,0 +1,9 @@
+{
+  "appId": "com.cosmicpass.app",
+  "appName": "Cosmic Pass",
+  "webDir": "public",
+  "server": {
+    "url": "https://www.cosmicpass.space",
+    "cleartext": false
+  }
+}
