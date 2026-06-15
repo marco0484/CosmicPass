@@ -839,22 +839,6 @@ nav li a:hover::after{
   animation-delay:1s;
 }
 
-.rocket:last-child{
-  animation-delay:1s;
-}
-
-.hero-sub{
-  max-width:700px;
-
-  margin:20px auto 30px;
-
-  font-size:20px;
-  line-height:1.6;
-
-  opacity:.85;
-
-  text-align:center;
-}
 .hero button{
   margin-top: 8px;
   padding: 10px 18px;
@@ -1252,10 +1236,6 @@ footer{
   animation:rocketLaunch 2.5s infinite ease-in-out;
 }
 
-.rocket:last-child{
-  animation-delay:1s;
-}
-
 @keyframes rocketLaunch{
   0%{transform:translateY(0) scale(1) rotate(0);opacity:1;}
   30%{transform:translateY(-10px) scale(1.1) rotate(-8deg);}
@@ -1325,8 +1305,9 @@ footer{
 
 .cashless-left h2,
 .metrics-left h2{
-  font-size:25px;
-  line-height:1.1;
+  font-size:32px;
+  line-height:1.15;
+  max-width:650px;
 }
 
 @keyframes fadeUp{
@@ -2152,22 +2133,6 @@ nav::after {
   cursor: pointer;
 }
 
-.event-card::before{
-  content:"";
-  position:absolute;
-  top:0;
-  left:-100%;
-  width:100%;
-  height:100%;
-  background:linear-gradient(
-    120deg,
-    transparent,
-    rgba(0,229,255,0.3),
-    transparent
-  );
-  transition:0.5s;
-}
-
 .event-card:hover::before{
   left:100%;
 }
@@ -2328,22 +2293,18 @@ h2{
   box-shadow: 0 0 0 4px rgba(24,228,255,0.08);
 }
 
-.btn-buy-final {
-  width: 100%;
-  height: 88px;
-  border: none;
-  border-radius: 24px;
-  background: #19d8f2;
-  color: #071018;
-  font-size: 2rem;
-  font-weight: 800;
-  cursor: pointer;
-  transition: 0.25s ease;
-}
-
-.btn-buy-final:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 20px 40px rgba(25,216,242,0.18);
+.btn-buy-final{
+  width:100%;
+  height:64px;
+  margin-top:24px;
+  border:0;
+  border-radius:16px;
+  background:#00e5ff;
+  color:#000;
+  font-weight:700;
+  font-size:16px;
+  cursor:pointer;
+  transition:.25s ease;
 }
 
 .ticket-close {
@@ -2608,7 +2569,7 @@ h2{
   }
 
  nav{
-    padding:12px 16px;
+    padding:14px 18px;
     flex-direction:row;
     align-items:center;
     justify-content:space-between;
@@ -3214,7 +3175,7 @@ h2{
   .producer-story h2,
   .trust h2,
   .producer-socials h2{
-    font-size:38px;
+    font-size:clamp(28px,7vw,34px);
     line-height:1.1;
     text-align:center;
     margin-bottom:24px;
