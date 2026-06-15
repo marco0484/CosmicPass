@@ -835,15 +835,6 @@ nav li a:hover::after{
   animation:fadeUp .8s ease;
 }
 
-.rocket{
-  display:inline-block;
-  margin:0 10px;
-  filter:
-    drop-shadow(0 0 10px rgba(0,229,255,.55));
-  animation:
-    rocketLaunch 2.5s infinite ease-in-out;
-}
-
 .rocket:last-child{
   animation-delay:1s;
 }
@@ -1331,6 +1322,12 @@ footer{
   font-size:16px;
 }
 
+
+.cashless-left h2,
+.metrics-left h2{
+  font-size:25px;
+  line-height:1.1;
+}
 
 @keyframes fadeUp{
   from{
@@ -2381,22 +2378,6 @@ h2{
   }
 }
 
-
-  .ticket-sub {
-    font-size: 1.1rem;
-  }
-
-  .btn-buy-final {
-    height: 72px;
-    font-size: 1.35rem;
-    border-radius: 18px;
-  }
-
-  .ticket-content input {
-    height: 58px;
-  }
-}
-
 .ticket-backdrop {
   position: absolute;
   inset: 0;
@@ -2418,39 +2399,14 @@ h2{
     0 0 20px rgba(0,229,255,0.05);
 }
 
-.ticket-close {
-  position: absolute;
-  top: 18px;
-  right: 18px;
-  background: transparent;
-  border: 0;
-  color: #fff;
-  font-size: 22px;
-  cursor: pointer;
-  transition: 0.2s ease;
-}
-
 .ticket-close:hover {
   transform: scale(1.1);
   opacity: 0.8;
 }
 
-.ticket-kicker {
-  font-size: 12px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: #00e5ff;
-  margin-bottom: 10px;
-}
-
 .ticket-content h2 {
   font-size: 2rem;
   margin-bottom: 10px;
-}
-
-.ticket-sub {
-  color: rgba(255,255,255,0.7);
-  margin-bottom: 28px;
 }
 
 .ticket-options {
@@ -2491,20 +2447,6 @@ h2{
 .ticket-option strong {
   font-size: 1.1rem;
   color: #00e5ff;
-}
-
-.btn-buy-final {
-  width: 100%;
-  margin-top: 24px;
-  padding: 16px;
-  border: 0;
-  border-radius: 16px;
-  background: #00e5ff;
-  color: #000;
-  font-weight: 700;
-  font-size: 15px;
-  cursor: pointer;
-  transition: 0.25s ease;
 }
 
 .btn-buy-final:hover {
