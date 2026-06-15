@@ -1331,50 +1331,6 @@ footer{
   font-size:16px;
 }
 
-.contact-form{
-  max-width:500px;
-  margin:auto;
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-  position:relative;
-  z-index:1;
-}
-
-.contact-form input,
-.contact-form textarea{
-  padding:14px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.08);
-  background:rgba(255,255,255,0.04);
-  color:white;
-  transition:0.25s ease;
-}
-
-.contact-form input:focus,
-.contact-form textarea:focus{
-  outline:none;
-  border-color:#00e5ff;
-  box-shadow:0 0 10px rgba(0,229,255,0.15);
-  transform:translateY(-1px);
-}
-
-.contact-form button{
-  padding:14px;
-  border:none;
-  border-radius:12px;
-  background:#00e5ff;
-  color:black;
-  font-weight:bold;
-  cursor:pointer;
-  transition:0.3s ease;
-}
-
-.contact-form button:hover{
-  background:white;
-  transform:scale(1.03);
-  box-shadow:0 10px 20px rgba(0,229,255,0.15);
-}
 
 @keyframes fadeUp{
   from{
