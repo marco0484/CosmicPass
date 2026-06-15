@@ -652,59 +652,69 @@ nav li a:hover::after{
   z-index:2;
 }
 
-.wallet-item{
+.producer-story,
+.trust,
+.producer-socials{
+  text-align:center;
+}
 
+.trust-grid,
+.socials-icon{
+  max-width:1200px;
+  margin:0 auto;
+}
+
+.producer-socials h2{
+  margin-bottom:40px;
+}
+
+.producer-story,
+.trust,
+.producer-socials{
+  padding:80px 24px;
+}
+
+.producer-socials{
   display:flex;
-
-  justify-content:space-between;
-
+  flex-direction:column;
   align-items:center;
+  text-align:center;
+}
 
+.wallet-item{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
   padding:18px;
-
   border-radius:18px;
-
   background:
     rgba(255,255,255,.04);
-
   border:
     1px solid rgba(255,255,255,.06);
 }
 
 .wallet-item span{
-
   color:#ff8aa8;
-
   font-weight:700;
 }
 
 .wallet-item .positive{
-
   color:#7dffb3;
 }
 
 .wallet-footer{
-
   position:relative;
-
   margin-top:40px;
-
   display:flex;
-
   align-items:center;
-
   gap:14px;
-
   z-index:2;
 }
 
 .wallet-chip{
-
   width:42px;
   height:30px;
-
   border-radius:8px;
-
   background:
     linear-gradient(
       135deg,
@@ -1583,6 +1593,43 @@ footer{
   font-weight: 800;
   letter-spacing: -1px;
 }
+
+.producer-story h2,
+.trust h2,
+.producer-socials h2{
+  position:relative;
+  display:inline-block;
+  margin-bottom:50px;
+}
+
+.producer-story h2::after,
+.trust h2::after,
+.producer-socials h2::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-14px;
+  transform:translateX(-50%);
+  width:70px;
+  height:3px;
+  border-radius:999px;
+  background:linear-gradient(
+    90deg,
+    #00e5ff,
+    #7b2cff
+  );
+}
+
+.section-kicker{
+  display:block;
+  text-align:center;
+  color:#00e5ff;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:4px;
+  margin-bottom:12px;
+}
+
 
 .producer-story p {
   max-width: 750px;
