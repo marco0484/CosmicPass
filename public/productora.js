@@ -693,19 +693,38 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    if (Number(selectedTicket.precio) > 0) {
+  if (Number(selectedTicket.precio) > 0) {
 
-      const total =
-        Number(selectedTicket.precio) * ticketQuantity;
+  try {
 
-      alert(`
-Debes depositar $${total} MXN
+    const res = await fetch(
+      `${API}/crear-pago-ticket`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
 
-y mandar tu comprobante de pago
-`);
+    const data = await res.json();
 
-      return;
+    if (data.init_point) {
+      window.location.href = data.init_point;
     }
+
+  } catch (err) {
+
+    console.error(err);
+
+    alert(
+      "Error conectando con Mercado Pago"
+    );
+
+  }
+
+  return;
+}
 
     openUserDataModal();
 
