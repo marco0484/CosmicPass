@@ -693,8 +693,51 @@ btnFinal.addEventListener("click", async () => {
     return;
   }
 
-  alert(JSON.stringify(selectedTicket, null, 2));
+const metodo =
+  (selectedTicket.desc_ticket || "")
+    .toLowerCase();
+
+if (metodo.includes("mercado pago")) {
+
+  try {
+
+    const res = await fetch(
+      `${API}/crear-pago-ticket`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.init_point) {
+      window.location.href = data.init_point;
+    }
+
+  } catch (err) {
+
+    console.error(err);
+    alert("Error Mercado Pago");
+
+  }
+
   return;
+}
+
+if (metodo.includes("transferencia")) {
+
+  alert(selectedTicket.desc_ticket
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]*>/g, "")
+  );
+
+  return;
+}
+
+openUserDataModal();
 
 });
 });
