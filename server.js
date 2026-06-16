@@ -23,6 +23,23 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
 
+app.use(express.static("public"));
+
+require("dotenv").config();
+
+const {
+  MercadoPagoConfig,
+  Preference
+} = require("mercadopago");
+
+const mpClient = new MercadoPagoConfig({
+  accessToken: process.env.MP_TOKEN
+});
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -440,6 +457,57 @@ app.post("/mis-boletos", async (req, res) => {
       message: "Error interno del servidor"
     });
   }
+});
+
+app.post("/crear-pago-ticket", async (req, res) => {
+
+  try {
+
+    const preference = new Preference(mpClient);
+
+    const result = await preference.create({
+
+      body: {
+
+        items: [
+
+          {
+            title: "Ticket Cosmic Pass",
+            quantity: 1,
+            unit_price: 100,
+            currency_id: "MXN"
+          }
+
+        ],
+
+        back_urls: {
+
+          success: "https://www.cosmicpass.space",
+          failure: "https://www.cosmicpass.space",
+          pending: "https://www.cosmicpass.space"
+
+        },
+
+        auto_return: "approved"
+
+      }
+
+    });
+
+    res.json({
+      init_point: result.init_point
+    });
+
+  } catch (err) {
+
+    console.error("MP ERROR:", err);
+
+    res.status(500).json({
+      error: err.message
+    });
+
+  }
+
 });
 
 module.exports = app;

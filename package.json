@@ -16,7 +16,9 @@
     "@capacitor/core": "^8.3.4",
     "@supabase/supabase-js": "^2.103.3",
     "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
     "express": "^5.2.1",
+    "mercadopago": "^3.1.0",
     "nodemailer": "^8.0.6",
     "pg": "^8.20.0",
     "qrcode": "^1.5.4"
