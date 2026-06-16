@@ -2475,32 +2475,21 @@ h2{
 
 .section-kicker{
 
-  display:inline-block;
+  display:block !important;
 
-  margin-bottom:18px;
+  width:max-content;
 
-  color:#00e5ff;
-
-  font-size:12px;
-
-  font-weight:800;
-
-  letter-spacing:4px;
-
-  text-transform:uppercase;
-
-  padding:10px 16px;
-
-  border-radius:999px;
-
-  background:
-    rgba(0,229,255,.08);
-
-  border:
-    1px solid rgba(0,229,255,.18);
+  margin:0 auto 20px;
 
 }
 
+.producer-story,
+.trust,
+.producer-socials{
+
+  text-align:center;
+
+}
 
 @media (max-width: 768px) {
   .ticket-content {

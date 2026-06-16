@@ -693,51 +693,51 @@ btnFinal.addEventListener("click", async () => {
     return;
   }
 
-const metodo =
-  (selectedTicket.desc_ticket || "")
-    .toLowerCase();
+  const metodo =
+    (selectedTicket.desc_ticket || "")
+      .toLowerCase();
 
-if (metodo.includes("mercado pago")) {
+  if (metodo.includes("mercado pago")) {
 
-  try {
+    try {
 
-    const res = await fetch(
-      `${API}/crear-pago-ticket`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
+      const res = await fetch(
+        `${API}/crear-pago-ticket`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          }
         }
+      );
+
+      const data = await res.json();
+
+      if (data.init_point) {
+        window.location.href =
+          data.init_point;
       }
-    );
 
-    const data = await res.json();
+    } catch (err) {
 
-    if (data.init_point) {
-      window.location.href = data.init_point;
+      console.error(err);
+      alert("Error Mercado Pago");
+
     }
 
-  } catch (err) {
-
-    console.error(err);
-    alert("Error Mercado Pago");
-
+    return;
   }
 
-  return;
-}
+  if (metodo.includes("transferencia")) {
 
-if (metodo.includes("transferencia")) {
+    alert(
+      selectedTicket.desc_ticket
+        .replace(/<br\s*\/?>/gi, "\n")
+        .replace(/<[^>]*>/g, "")
+    );
 
-  alert(selectedTicket.desc_ticket
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]*>/g, "")
-  );
-
-  return;
-}
-
-openUserDataModal();
+    return;
+  }
 
 });
 });
