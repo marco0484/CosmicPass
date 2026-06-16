@@ -828,9 +828,9 @@ nav li a:hover::after{
 
   color:#fff;
 
-  text-shadow:
-    0 0 12px rgba(255,255,255,.12),
-    0 0 35px rgba(0,229,255,.18);
+ text-shadow:
+  0 0 10px rgba(0,229,255,.15),
+  0 0 20px rgba(0,229,255,.08);
 
   animation:fadeUp .8s ease;
 }
@@ -1533,38 +1533,61 @@ footer{
 
 }
 
+.producer-events-section h2,
 .producer-story h2,
 .trust h2,
 .producer-socials h2{
-  font-size: clamp(34px, 5vw, 52px);
-  font-weight: 900;
-  letter-spacing: -2px;
-  line-height: 1.05;
 
-  position: relative;
-  display: inline-block;
-  margin-bottom: 50px;
+  font-size: clamp(34px,4vw,56px);
+
+  font-weight:800;
+
+  letter-spacing:-2px;
+
+  line-height:1.15;
+
+  margin:0 auto 40px;
+
+  text-align:center;
+
+  color:#fff;
 
   text-shadow:
-    0 0 25px rgba(0,229,255,.08);
+    0 0 10px rgba(0,229,255,.12),
+    0 0 20px rgba(0,229,255,.06);
 }
 
 .producer-story h2::after,
 .trust h2::after,
-.producer-socials h2::after{
+.producer-socials h2::after,
+.why-cosmic h2::after,
+.events h2::after{
+
   content:"";
+
   position:absolute;
+
   left:50%;
-  bottom:-14px;
+  bottom:-18px;
+
   transform:translateX(-50%);
-  width:70px;
-  height:3px;
+
+  width:140px;
+  height:4px;
+
   border-radius:999px;
-  background:linear-gradient(
-    90deg,
-    #00e5ff,
-    #7b2cff
-  );
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      #00e5ff,
+      #7b2cff,
+      transparent
+    );
+
+  box-shadow:
+    0 0 25px rgba(0,229,255,.6);
 }
 
 .producer-story p {
@@ -1638,6 +1661,7 @@ footer{
 }
 
 .producer-events-section{
+  text-align:center;
   padding:80px 30px;
 }
 
@@ -2190,9 +2214,6 @@ nav::after {
     0 0 20px rgba(0,229,255,0.12);
 }
 
-h2{
-  letter-spacing:1px;
-}
 .hero-inner{
   animation: fadeUp 0.8s ease;
 }
@@ -2475,12 +2496,30 @@ h2{
 
 .section-kicker{
 
-  display:block !important;
+  display:inline-flex;
 
-  width:max-content;
+  align-items:center;
+  justify-content:center;
 
-  margin:0 auto 20px;
+  margin:0 auto 24px;
 
+  padding:12px 28px;
+
+  border-radius:999px;
+
+  background:rgba(0,229,255,.05);
+
+  border:1px solid rgba(0,229,255,.15);
+
+  color:#7ef9ff;
+
+  font-size:12px;
+
+  font-weight:800;
+
+  letter-spacing:4px;
+
+  text-transform:uppercase;
 }
 
 .producer-story,
