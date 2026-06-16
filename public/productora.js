@@ -687,11 +687,16 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!btnFinal) return;
 
 btnFinal.addEventListener("click", async () => {
-     if (!selectedTicket) {
+
+  if (!selectedTicket) {
     alert("Selecciona un tipo de boleto primero");
     return;
   }
 
+  alert(JSON.stringify(selectedTicket, null, 2));
+  return;
+
+});
   console.log("TIPO TICKET:", selectedTicket.tipo_ticket);
   console.log("DESC TICKET:", selectedTicket.desc_ticket);
 
