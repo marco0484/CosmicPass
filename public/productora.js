@@ -686,8 +686,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!btnFinal) return;
 
-  btnFinal.addEventListener("click", () => {
-
+btnFinal.addEventListener("click", async () => {
     if (!selectedTicket) {
       alert("Selecciona un tipo de boleto primero");
       return;
