@@ -687,12 +687,18 @@ document.addEventListener("DOMContentLoaded", () => {
   if (!btnFinal) return;
 
 btnFinal.addEventListener("click", async () => {
-    if (!selectedTicket) {
-      alert("Selecciona un tipo de boleto primero");
-      return;
-    }
+     if (!selectedTicket) {
+    alert("Selecciona un tipo de boleto primero");
+    return;
+  }
 
-  if (Number(selectedTicket.precio) > 0) {
+  console.log("TIPO TICKET:", selectedTicket.tipo_ticket);
+  console.log("DESC TICKET:", selectedTicket.desc_ticket);
+
+ const tipo =
+  selectedTicket.tipo_ticket.toLowerCase();
+
+if (tipo.includes("mercado pago")) {
 
   try {
 
@@ -715,12 +721,28 @@ btnFinal.addEventListener("click", async () => {
   } catch (err) {
 
     console.error(err);
-
-    alert(
-      "Error conectando con Mercado Pago"
-    );
+    alert("Error Mercado Pago");
 
   }
+
+  return;
+}
+
+if (tipo.includes("transferencia")) {
+
+  const total =
+    Number(selectedTicket.precio) *
+    ticketQuantity;
+
+  alert(`
+Debes depositar $${total} MXN
+
+Banco: BBVA
+Cuenta: XXXXX
+CLABE: XXXXX
+
+Envía tu comprobante para validar tu acceso.
+`);
 
   return;
 }
