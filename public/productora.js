@@ -501,35 +501,35 @@ tickets.forEach(ticket => {
 
   <div>
 
-    <h3>
-      ${ticket.tipo_ticket}
-    </h3>
+  <h3>
+    ${ticket.tipo_ticket}
+  </h3>
 
-    <p>
-      ${ticket.desc_ticket || ""}
-    </p>
+  <p>
+    ${ticket.desc_ticket || ""}
+  </p>
 
-    ${
-      ticket.stock_disponible
-        ? `
-          <span class="ticket-mini-info">
-            🎫 ${ticket.stock_disponible} disponibles
-          </span>
-        `
-        : ""
-    }
+  ${
+    ticket.stock_disponible
+      ? `
+        <span class="ticket-mini-info">
+          🎫 ${ticket.stock_disponible} disponibles
+        </span>
+      `
+      : ""
+  }
 
-    ${
-      ticket.fecha_fin
-        ? `
-          <span class="ticket-mini-info">
-            ⏳ Hasta ${formatDate(ticket.fecha_fin)}
-          </span>
-        `
-        : ""
-    }
+  ${
+    ticket.fecha_fin
+      ? `
+        <span class="ticket-mini-info">
+          ⏳ Hasta ${formatDate(ticket.fecha_fin)}
+        </span>
+      `
+      : ""
+  }
 
-  </div>
+</div>
 
   <strong class="ticket-price">
 
@@ -727,11 +727,14 @@ if (metodo === "mercado pago") {
 
 if (metodo === "transferencia") {
 
-  alert(
-    selectedTicket.desc_ticket
-      .replace(/<br\s*\/?>/gi, "\n")
-      .replace(/<[^>]*>/g, "")
-  );
+  document.getElementById("modal-event-name").innerText =
+    "Datos para transferencia";
+
+  document.getElementById("ticket-options").innerHTML =
+    selectedTicket.desc_ticket;
+
+  document.querySelector(".checkout-summary").style.display =
+    "none";
 
   return;
 }
