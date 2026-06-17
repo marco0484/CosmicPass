@@ -3,6 +3,8 @@ const API = window.location.hostname === "localhost"
   ? "http://localhost:3000"
   : "https://www.cosmicpass.space";
 
+  /** Re deploy **/ 
+
 let selectedTicket = null;
 let ticketQuantity = 1;
 let selectedEventId = null;
