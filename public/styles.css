@@ -2244,10 +2244,10 @@ nav::after {
 .ticket-content {
   position: relative;
   z-index: 2;
-  width: calc(100% - 16px);
-  max-width: 560px;
+  width: calc(100% - 24px);
+  max-width: 480px;
   margin: 20px auto;
-  padding: 18px;
+  padding: 16px;
   border-radius: 20px;
   background: #0f1117;
   border: 1px solid rgba(255,255,255,0.08);
@@ -2267,6 +2267,15 @@ nav::after {
   margin-bottom: 18px;
 }
 
+.modal-step{
+  display:block;
+  margin-bottom:8px;
+  font-size:.8rem;
+  font-weight:600;
+  color:#00e5ff;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
 
 
 .ticket-sub {
@@ -2472,17 +2481,12 @@ nav::after {
 
 
 .ticket-option.selected{
-
   border:2px solid #00e5ff !important;
-
   background:
     rgba(0,229,255,.12) !important;
-
   box-shadow:
     0 0 25px rgba(0,229,255,.25);
-
   transform:scale(1.02);
-
 }
 
 .ticket-option.selected h3{
