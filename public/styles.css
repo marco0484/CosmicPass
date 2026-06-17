@@ -1675,11 +1675,8 @@ footer{
 }
 
 .event-card .price{
-  font-size:26px;
-  font-weight:900;
-  color:#00e5ff;
-  text-shadow:
-    0 0 18px rgba(0,229,255,.25);
+  font-size:16px;
+  font-weight:700;
 }
 
 .event-card button{
@@ -2815,16 +2812,15 @@ footer{
 
   display:block;
 
-  margin-bottom:6px;
-
-  font-size:11px;
+  font-size:10px;
 
   letter-spacing:2px;
 
-  font-weight:700;
+  font-weight:600;
 
-  color:
-  rgba(255,255,255,.45);
+  color:rgba(255,255,255,.45);
+
+  margin:0;
 
 }
 
@@ -3090,7 +3086,7 @@ footer{
   }
 
   .ticket-option .ticket-price{
-    font-size:28px;
+    font-size:22px;
   }
 
   .ticket-total{
