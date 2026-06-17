@@ -3,8 +3,6 @@ const API = window.location.hostname === "localhost"
   ? "http://localhost:3000"
   : "https://www.cosmicpass.space";
 
-  /** Re deploy **/ 
-
 let selectedTicket = null;
 let ticketQuantity = 1;
 let selectedEventId = null;
@@ -546,7 +544,6 @@ tickets.forEach(ticket => {
 `;
 
   div.addEventListener("click", () => {
-  console.log("CLICK TICKET", ticket.tipo_ticket);
     document
       .querySelectorAll(".ticket-option")
       .forEach(el =>
@@ -697,8 +694,6 @@ btnFinal.addEventListener("click", async () => {
 const metodo =
   (selectedTicket.tipo_ticket || "")
     .toLowerCase();
-
-alert(metodo);
 
 if (metodo === "mercado pago") {
 
