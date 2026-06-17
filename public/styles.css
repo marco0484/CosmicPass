@@ -2420,18 +2420,15 @@ nav::after {
 
 
 .ticket-option.selected{
-  border:1px solid rgba(255,255,255,.18) !important;
-  background:rgba(255,255,255,.06) !important;
-  box-shadow:none;
+  border:2px solid #ffffff;
 }
-
 .ticket-option.selected h3{
   color:#00e5ff;
 }
 
 .ticket-option{
-  cursor:pointer;
-  transition:.25s ease;
+  background:#171922;
+  border:1px solid rgba(255,255,255,.08);
 }
 
 .section-kicker{
@@ -2689,13 +2686,6 @@ nav::after {
 }
 
 
-
-.ticket-option{
-  width: 100%;
-  min-width: 0;
-  overflow: hidden;
-}
-
 .ticket-option h3,
 .ticket-option p,
 .ticket-option strong,
@@ -2719,31 +2709,6 @@ nav::after {
 
 .ticket-total{
   width: 100%;
-}
-
-
-
-.ticket-option::before{
-
-  content:"";
-
-  position:absolute;
-
-  inset:0;
-
-  background:
-  radial-gradient(
-    circle at top right,
-    rgba(0,229,255,.12),
-    transparent 45%
-  );
-
-  opacity:0;
-
-  transition:.3s ease;
-
-  pointer-events:none;
-
 }
 
 .ticket-option:hover::before{
