@@ -697,6 +697,9 @@ btnFinal.addEventListener("click", async () => {
     (selectedTicket.desc_ticket || "")
       .toLowerCase();
 
+      alert(metodo);
+      
+
   if (metodo.includes("mercado pago")) {
 
     try {
