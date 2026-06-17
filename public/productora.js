@@ -513,7 +513,7 @@ tickets.forEach(ticket => {
     ticket.stock_disponible
       ? `
         <span class="ticket-mini-info">
-          🎫 ${ticket.stock_disponible} disponibles
+           ${ticket.stock_disponible} disponibles
         </span>
       `
       : ""
@@ -523,7 +523,7 @@ tickets.forEach(ticket => {
     ticket.fecha_fin
       ? `
         <span class="ticket-mini-info">
-          ⏳ Hasta ${formatDate(ticket.fecha_fin)}
+          Hasta ${formatDate(ticket.fecha_fin)}
         </span>
       `
       : ""
@@ -531,15 +531,13 @@ tickets.forEach(ticket => {
 
 </div>
 
-  <strong class="ticket-price">
-
-    ${
-      Number(ticket.precio) === 0
-        ? "Free Access"
-        : `$${ticket.precio}`
-    }
-
-  </strong>
+  <div class="ticket-price">
+  ${
+    Number(ticket.precio) === 0
+      ? "Free Access"
+      : `$${ticket.precio}`
+  }
+</div>
 
 `;
 

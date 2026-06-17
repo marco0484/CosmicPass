@@ -2458,10 +2458,6 @@ footer{
 
 }
 
-.ticket-option{
-  background:#171922;
-  border:1px solid rgba(255,255,255,.08);
-}
 
 .section-kicker{
   display:inline-flex;
@@ -2795,33 +2791,43 @@ footer{
 }
 
 
-.ticket-option .ticket-price{
-  display:block;
-  font-size:42px;
+.ticket-price{
+
+  display:flex;
+  flex-direction:column;
+
+  align-items:flex-start;
+
+  margin-top:18px;
+
+  font-size:52px;
+
   font-weight:900;
-  line-height:1;
-   color:#ffffff;
-  margin-bottom:20px;
+
+  line-height:.9;
+
+  color:#fff;
+
 }
 
-
-
-.ticket-option .ticket-price::before{
-
+.ticket-price::before{
   content:"MXN";
-
   display:block;
-
-  font-size:10px;
-
-  letter-spacing:2px;
-
-  font-weight:600;
-
+  margin-bottom:8px;
+  font-size:11px;
+  letter-spacing:4px;
+  font-weight:700;
   color:rgba(255,255,255,.45);
 
+}
+.ticket-option{
+  content:"MXN";
+  display:block;
+  font-size:10px;
+  letter-spacing:2px;
+  font-weight:600;
+  color:rgba(255,255,255,.45);
   margin:0;
-
 }
 
 
