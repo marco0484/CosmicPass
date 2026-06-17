@@ -544,7 +544,7 @@ tickets.forEach(ticket => {
 `;
 
   div.addEventListener("click", () => {
-
+  console.log("CLICK TICKET", ticket.tipo_ticket);
     document
       .querySelectorAll(".ticket-option")
       .forEach(el =>
@@ -554,7 +554,6 @@ tickets.forEach(ticket => {
     div.classList.add("selected");
 
     selectedTicket = ticket;
-
     selectedEventId = eventId;
 
     const globalQty =
