@@ -2795,23 +2795,25 @@ footer{
   flex-shrink:0;
   display:flex;
   flex-direction:column;
-  align-items:flex-end;
-  min-width:auto;
+  align-items:center;
+  justify-content:center;
+  min-width:120px;
+  text-align:center;
   font-size:28px;
   font-weight:800;
   line-height:1;
 }
 
+
 .ticket-price::before{
   content:"MXN";
   display:block;
-  margin-bottom:6px;
+  margin-bottom:8px;
   font-size:11px;
   letter-spacing:2px;
   font-weight:700;
   color:rgba(255,255,255,.45);
 }
-
 .ticket-option{
   display:flex;
   flex-direction:row;
