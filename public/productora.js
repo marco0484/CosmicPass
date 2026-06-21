@@ -687,32 +687,78 @@ if (metodo === "mercado pago") {
 
   try {
 
-    console.log("Ticket seleccionado:", selectedTicket);
+    console.log(
+      "Ticket seleccionado:",
+      selectedTicket
+    );
 
     const res = await fetch(
-  `${API}/crear-pago-ticket`,
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      ticket_id: selectedTicket.id,
-      cantidad: ticketQuantity
-    })
-  }
-);
+      `${API}/crear-pago-ticket`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ticket_id: selectedTicket.id,
+          cantidad: ticketQuantity
+        })
+      }
+    );
 
     const data = await res.json();
 
     if (data.init_point) {
-      window.location.href = data.init_point;
+      window.location.href =
+        data.init_point;
     }
 
   } catch (err) {
 
     console.error(err);
+
     alert("Error Mercado Pago");
+
+  }
+
+  return;
+}
+
+if (metodo === "stripe") {
+
+  try {
+
+    console.log(
+      "Ticket Stripe:",
+      selectedTicket
+    );
+
+    const res = await fetch(
+      `${API}/crear-pago-stripe`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ticket_id: selectedTicket.id,
+          cantidad: ticketQuantity
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.checkout_url) {
+      window.location.href =
+        data.checkout_url;
+    }
+
+  } catch (err) {
+
+    console.error(err);
+
+    alert("Error Stripe");
 
   }
 
@@ -721,13 +767,19 @@ if (metodo === "mercado pago") {
 
 if (metodo === "transferencia") {
 
-  document.getElementById("modal-event-name").innerText =
+  document.getElementById(
+    "modal-event-name"
+  ).innerText =
     "Datos para transferencia";
 
-  document.getElementById("ticket-options").innerHTML =
+  document.getElementById(
+    "ticket-options"
+  ).innerHTML =
     selectedTicket.desc_ticket;
 
-  document.querySelector(".checkout-summary").style.display =
+  document.querySelector(
+    ".checkout-summary"
+  ).style.display =
     "none";
 
   return;

@@ -36,6 +36,12 @@ const mpClient = new MercadoPagoConfig({
   accessToken: process.env.MP_TOKEN
 });
 
+const Stripe = require('stripe');
+
+const stripe = Stripe(
+  process.env.STRIPE_TOKEN
+);
+
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
@@ -83,6 +89,35 @@ app.get("/productora-full/:id", async (req, res) => {
       error: "Error en servidor"
     });
   }
+});
+
+
+app.post("/crear-pago-stripe", async (req, res) => {
+
+  const session =
+    await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "mxn",
+            product_data: {
+              name: "Boleto"
+            },
+            unit_amount: 50000
+          },
+          quantity: 1
+        }
+      ],
+      mode: "payment",
+      success_url: "https://tusitio.com/exito",
+      cancel_url: "https://tusitio.com/cancelado"
+    });
+
+  res.json({
+    url: session.url
+  });
+
 });
 
 
