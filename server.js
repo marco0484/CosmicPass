@@ -463,7 +463,11 @@ app.post("/crear-pago-ticket", async (req, res) => {
 
   try {
 
-    const { ticket_id } = req.body;
+const {
+  ticket_id,
+  cantidad = 1
+} = req.body;
+
 
     if (!ticket_id) {
       return res.status(400).json({
@@ -530,7 +534,7 @@ app.post("/crear-pago-ticket", async (req, res) => {
         items: [
           {
             title: ticket.tipo_ticket,
-            quantity: 1,
+            quantity: Number(cantidad),
             unit_price: Number(ticket.precio),
             currency_id: "MXN"
           }

@@ -700,17 +700,18 @@ if (metodo === "mercado pago") {
     console.log("Ticket seleccionado:", selectedTicket);
 
     const res = await fetch(
-      `${API}/crear-pago-ticket`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          ticket_id: selectedTicket.id
-        })
-      }
-    );
+  `${API}/crear-pago-ticket`,
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      ticket_id: selectedTicket.id,
+      cantidad: ticketQuantity
+    })
+  }
+);
 
     const data = await res.json();
 
