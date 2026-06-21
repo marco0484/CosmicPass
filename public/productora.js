@@ -62,7 +62,7 @@ const activeEvents =
 
     return (
       eventDate >= today &&
-      Number(e.ind_activo) !== 3
+      Number(e.ind_activo) === 1
     );
 
   });
@@ -81,7 +81,7 @@ const pastEvents =
 
     return (
       eventDate < today &&
-      Number(e.ind_activo) !== 3
+      Number(e.ind_activo) === 1
     );
 
   });
