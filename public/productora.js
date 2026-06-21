@@ -48,43 +48,33 @@ const today = new Date();
 
 today.setHours(0,0,0,0);
 
-const activeEvents =
-  eventos.filter(e => {
+const activeEvents = eventos.filter(e => {
 
-    const eventDate =
-      new Date(
-        e.event_date ||
-        e.date ||
-        e.fecha
-      );
+  const eventDate = new Date(
+    e.event_date ||
+    e.date ||
+    e.fecha
+  );
 
-    eventDate.setHours(0,0,0,0);
+  eventDate.setHours(0,0,0,0);
 
-    return (
-      eventDate >= today &&
-      Number(e.ind_activo) === 1
-    );
+  return eventDate >= today;
 
-  });
+});
 
-const pastEvents =
-  eventos.filter(e => {
+const pastEvents = eventos.filter(e => {
 
-    const eventDate =
-      new Date(
-        e.event_date ||
-        e.date ||
-        e.fecha
-      );
+  const eventDate = new Date(
+    e.event_date ||
+    e.date ||
+    e.fecha
+  );
 
-    eventDate.setHours(0,0,0,0);
+  eventDate.setHours(0,0,0,0);
 
-    return (
-      eventDate < today &&
-      Number(e.ind_activo) === 1
-    );
+  return eventDate < today;
 
-  });
+});
 
 activeEvents.forEach(evento => {
 
