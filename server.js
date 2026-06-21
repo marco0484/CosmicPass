@@ -94,29 +94,86 @@ app.get("/productora-full/:id", async (req, res) => {
 
 app.post("/crear-pago-stripe", async (req, res) => {
 
-  const session =
-    await stripe.checkout.sessions.create({
-      payment_method_types: ["card"],
-      line_items: [
-        {
-          price_data: {
-            currency: "mxn",
-            product_data: {
-              name: "Boleto"
+  try {
+
+    const {
+      ticket_id,
+      cantidad = 1
+    } = req.body;
+
+    const { data: ticket, error } =
+      await supabase
+        .from("ticket_types")
+        .select(`
+          id,
+          tipo_ticket,
+          precio
+        `)
+        .eq("id", ticket_id)
+        .single();
+
+    if (error || !ticket) {
+
+      return res.status(404).json({
+        error: "Ticket no encontrado"
+      });
+
+    }
+
+    const session =
+      await stripe.checkout.sessions.create({
+
+        payment_method_types: ["card"],
+
+        line_items: [
+          {
+            price_data: {
+
+              currency: "mxn",
+
+              product_data: {
+                name: ticket.tipo_ticket
+              },
+
+              unit_amount:
+                Math.round(
+                  Number(ticket.precio) * 100
+                )
+
             },
-            unit_amount: 50000
-          },
-          quantity: 1
-        }
-      ],
-      mode: "payment",
-      success_url: "https://tusitio.com/exito",
-      cancel_url: "https://tusitio.com/cancelado"
+
+            quantity:
+              Number(cantidad)
+
+          }
+        ],
+
+        mode: "payment",
+
+        success_url:
+          "https://www.cosmicpass.space",
+
+        cancel_url:
+          "https://www.cosmicpass.space"
+
+      });
+
+    res.json({
+      checkout_url: session.url
     });
 
-res.json({
-  checkout_url: session.url
-});
+  } catch (err) {
+
+    console.error(
+      "STRIPE ERROR:",
+      err
+    );
+
+    res.status(500).json({
+      error: err.message
+    });
+
+  }
 
 });
 
