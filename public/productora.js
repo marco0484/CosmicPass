@@ -749,11 +749,10 @@ if (metodo === "stripe") {
 
     const data = await res.json();
 
-    if (data.checkout_url) {
-      window.location.href =
-        data.checkout_url;
-    }
-
+   if (data.checkout_url) {
+  window.location.href =
+    data.checkout_url;
+}
   } catch (err) {
 
     console.error(err);

@@ -114,9 +114,9 @@ app.post("/crear-pago-stripe", async (req, res) => {
       cancel_url: "https://tusitio.com/cancelado"
     });
 
-  res.json({
-    url: session.url
-  });
+res.json({
+  checkout_url: session.url
+});
 
 });
 
@@ -612,5 +612,6 @@ const {
   }
 
 });
+
 
 module.exports = app;
