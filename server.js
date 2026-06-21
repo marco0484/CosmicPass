@@ -22,7 +22,6 @@ const QRCode = require("qrcode");
 app.use(cors());
 app.use(express.json());
 app.use(express.static("public"));
-
 app.use(express.static("public"));
 
 require("dotenv").config();
@@ -41,6 +40,59 @@ const Stripe = require('stripe');
 const stripe = Stripe(
   process.env.STRIPE_TOKEN
 );
+
+const endpointSecret =
+  process.env.STRIPE_WEBHOOK_SECRET;
+
+
+  app.post(
+  "/webhook-stripe",
+  express.raw({
+    type: "application/json"
+  }),
+  (req, res) => {
+
+    const sig =
+      req.headers["stripe-signature"];
+
+    let event;
+
+    try {
+
+      event =
+        stripe.webhooks.constructEvent(
+          req.body,
+          sig,
+          endpointSecret
+        );
+
+    } catch (err) {
+
+      console.error(
+        "Webhook signature error:",
+        err.message
+      );
+
+      return res
+        .status(400)
+        .send(
+          `Webhook Error: ${err.message}`
+        );
+
+    }
+
+    console.log(
+      "Evento recibido:",
+      event.type
+    );
+
+    res.json({
+      received: true
+    });
+
+  }
+);
+
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
