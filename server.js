@@ -463,6 +463,64 @@ app.post("/crear-pago-ticket", async (req, res) => {
 
   try {
 
+    const { ticket_id } = req.body;
+
+    if (!ticket_id) {
+      return res.status(400).json({
+        error: "ticket_id es requerido"
+      });
+    }
+
+    const { data: ticket, error } = await supabase
+      .from("ticket_types")
+      .select(`
+        id,
+        tipo_ticket,
+        precio,
+        stock_disponible,
+        fecha_inicio,
+        fecha_fin,
+        ind_activo
+      `)
+      .eq("id", ticket_id)
+      .eq("ind_activo", 1)
+      .single();
+
+    if (error || !ticket) {
+      return res.status(404).json({
+        error: "Ticket no encontrado"
+      });
+    }
+
+    const ahora = new Date();
+
+    if (
+      ticket.fecha_inicio &&
+      new Date(ticket.fecha_inicio) > ahora
+    ) {
+      return res.status(400).json({
+        error: "Este ticket aún no está disponible"
+      });
+    }
+
+    if (
+      ticket.fecha_fin &&
+      new Date(ticket.fecha_fin) < ahora
+    ) {
+      return res.status(400).json({
+        error: "Este ticket ya expiró"
+      });
+    }
+
+    if (
+      ticket.stock_disponible !== null &&
+      ticket.stock_disponible <= 0
+    ) {
+      return res.status(400).json({
+        error: "Boletos agotados"
+      });
+    }
+
     const preference = new Preference(mpClient);
 
     const result = await preference.create({
@@ -470,31 +528,36 @@ app.post("/crear-pago-ticket", async (req, res) => {
       body: {
 
         items: [
-
           {
-            title: "Ticket Cosmic Pass",
+            title: ticket.tipo_ticket,
             quantity: 1,
-            unit_price: 100,
+            unit_price: Number(ticket.precio),
             currency_id: "MXN"
           }
-
         ],
 
         back_urls: {
-
           success: "https://www.cosmicpass.space",
           failure: "https://www.cosmicpass.space",
           pending: "https://www.cosmicpass.space"
-
         },
 
-        auto_return: "approved"
+        auto_return: "approved",
+
+        external_reference: String(ticket.id)
 
       }
 
     });
 
+    console.log(
+      "MP Ticket:",
+      ticket.tipo_ticket,
+      "$" + ticket.precio
+    );
+
     res.json({
+      success: true,
       init_point: result.init_point
     });
 
@@ -503,6 +566,7 @@ app.post("/crear-pago-ticket", async (req, res) => {
     console.error("MP ERROR:", err);
 
     res.status(500).json({
+      success: false,
       error: err.message
     });
 
