@@ -600,6 +600,17 @@ function closeUserDataModal() {
 }
 
 async function generateFreeTicket() {
+
+   console.log(
+    "pendingPaymentMethod:",
+    pendingPaymentMethod
+  );
+
+  alert(
+    "pendingPaymentMethod = " +
+    pendingPaymentMethod
+  );
+  
   const nombre = document
     .getElementById("user-name")
     .value
