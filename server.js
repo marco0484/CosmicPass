@@ -896,7 +896,19 @@ const {
 
 app.post("/webhook-mp", async (req, res) => {
 
-  console.log("MP WEBHOOK:", req.body);
+  console.log(
+    "MP WEBHOOK:",
+    req.body
+  );
+
+  const paymentId =
+    req.body.data?.id ||
+    req.body.resource;
+
+  console.log(
+    "PAYMENT ID:",
+    paymentId
+  );
 
   res.sendStatus(200);
 
