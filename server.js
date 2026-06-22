@@ -125,9 +125,13 @@ const { error } =
         session.customer_details?.name ||
         "Cliente Stripe",
 
-      correo:
-        session.customer_details?.email ||
-        null,
+     correo:
+  session.customer_details?.email ||
+  null,
+
+telefono:
+  session.customer_details?.phone ||
+  null,
 
       cantidad:
         Number(
@@ -337,47 +341,45 @@ if (
 
 }
     const session =
-      await stripe.checkout.sessions.create({
+  await stripe.checkout.sessions.create({
 
-        metadata: {
+    metadata: {
       ticket_id: String(ticket.id),
       evento_id: String(ticket.id_evento),
       cantidad: String(cantidad)
     },
-        payment_method_types: ["card"],
 
-        line_items: [
-          {
-            price_data: {
+    payment_method_types: ["card"],
 
-              currency: "mxn",
+    phone_number_collection: {
+      enabled: true
+    },
 
-              product_data: {
-                name: ticket.tipo_ticket
-              },
+  line_items: [
+  {
+    price_data: {
+      currency: "mxn",
+      product_data: {
+        name: ticket.tipo_ticket
+      },
+      unit_amount:
+        Math.round(
+          Number(ticket.precio) * 100
+        )
+    },
+    quantity:
+      Number(cantidad)
+  }
+],
+    mode: "payment",
 
-              unit_amount:
-                Math.round(
-                  Number(ticket.precio) * 100
-                )
+    success_url:
+      "https://www.cosmicpass.space/successful.html",
 
-            },
+    cancel_url:
+      "https://www.cosmicpass.space/error.html"
 
-            quantity:
-              Number(cantidad)
-
-          }
-        ],
-
-        mode: "payment",
-
-        success_url:
-          "https://www.cosmicpass.space/successful.html",
-
-        cancel_url:
-          "https://www.cosmicpass.space/error.html"
-
-      });
+  });
 
     res.json({
       checkout_url: session.url
