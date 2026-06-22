@@ -20,9 +20,15 @@ const app = express();
 const QRCode = require("qrcode");
 
 app.use(cors());
-app.use(express.json());
-app.use(express.static("public"));
-app.use(express.static("public"));
+app.use((req, res, next) => {
+
+  if (req.originalUrl === "/webhook-stripe") {
+    next();
+  } else {
+    express.json()(req, res, next);
+  }
+
+});
 
 require("dotenv").config();
 
@@ -45,7 +51,7 @@ const endpointSecret =
   process.env.STRIPE_WEBHOOK_SECRET;
 
 
-  app.post(
+app.post(
   "/webhook-stripe",
   express.raw({
     type: "application/json"
