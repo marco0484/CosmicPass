@@ -619,40 +619,50 @@ async function generateFreeTicket() {
     alert("Todos los campos son obligatorios");
     return;
   }
+  if (
+  pendingPaymentMethod ===
+  "mercado_pago"
+) {
 
   try {
-    const res = await fetch(`${API}/api/create-ticket`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        evento_id: selectedEventId,
-        nombre,
-        email,
-        telefono
-      })
-    });
 
-    const result = await res.json();
+    const res = await fetch(
+      `${API}/crear-pago-ticket`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ticket_id: selectedTicket.id,
+          cantidad: ticketQuantity,
+          nombre,
+          correo: email,
+          telefono
+        })
+      }
+    );
 
-    if (!res.ok) {
-      throw new Error(result.message || "Error");
+    const data =
+      await res.json();
+
+    if (data.init_point) {
+
+      window.location.href =
+        data.init_point;
+
     }
 
-    alert("Tu Free Access fue generado correctamente 🎟️");
-    alert("Tu ticket será enviado a tu correo electrónico 📩");
+  } catch (err) {
 
-    document.getElementById("user-name").value = "";
-    document.getElementById("user-email").value = "";
-    document.getElementById("user-phone").value = "";
+    alert(
+      "Error Mercado Pago"
+    );
 
-    closeUserDataModal();
-    closeTicketModal();
-
-  } catch (error) {
-    alert("No pudimos generar tu acceso");
   }
+
+  return;
+}
 }
 
 document.addEventListener("DOMContentLoaded", () => {
