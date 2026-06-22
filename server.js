@@ -36,7 +36,8 @@ require("dotenv").config();
 
 const {
   MercadoPagoConfig,
-  Preference
+  Preference,
+  Payment
 } = require("mercadopago");
 
 const mpClient = new MercadoPagoConfig({
@@ -896,21 +897,55 @@ const {
 
 app.post("/webhook-mp", async (req, res) => {
 
-  console.log(
-    "MP WEBHOOK:",
-    req.body
-  );
+  try {
 
-  const paymentId =
-    req.body.data?.id ||
-    req.body.resource;
+    console.log(
+      "MP WEBHOOK:",
+      JSON.stringify(req.body, null, 2)
+    );
 
-  console.log(
-    "PAYMENT ID:",
-    paymentId
-  );
+    const paymentId =
+      req.body.data?.id ||
+      req.body.resource;
 
-  res.sendStatus(200);
+    console.log(
+      "PAYMENT ID:",
+      paymentId
+    );
+
+    if (!paymentId) {
+      return res.sendStatus(200);
+    }
+
+    const payment =
+      new Payment(mpClient);
+
+    const pago =
+      await payment.get({
+        id: paymentId
+      });
+
+    console.log(
+      "PAGO COMPLETO:",
+      JSON.stringify(
+        pago,
+        null,
+        2
+      )
+    );
+
+    res.sendStatus(200);
+
+  } catch (err) {
+
+    console.error(
+      "ERROR WEBHOOK MP:",
+      err
+    );
+
+    res.sendStatus(200);
+
+  }
 
 });
 
