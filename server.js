@@ -175,6 +175,19 @@ if (error) {
     "TICKET GUARDADO"
   );
 
+  console.log(
+  "DESCONTAR STOCK",
+  {
+    ticket_id: Number(
+      session.metadata.ticket_id
+    ),
+    cantidad: Number(
+      session.metadata.cantidad
+    ),
+    metadata: session.metadata
+  }
+);
+
   const { data: nuevoStock, error: stockError } =
   await supabase.rpc(
     "descontar_stock",
