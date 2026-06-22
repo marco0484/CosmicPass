@@ -945,7 +945,7 @@ console.log(
         //id: paymentId
       //});
 
-    console.log(
+   /* console.log(
       "PAGO COMPLETO:",
       JSON.stringify(
         pago,
@@ -953,7 +953,7 @@ console.log(
         2
       )
     );
-
+*/
     console.log("STATUS:", pago.status);
 console.log("TICKET ID:", pago.external_reference);
 
