@@ -893,5 +893,13 @@ const {
 
 });
 
+app.post("/webhook-mp", async (req, res) => {
+
+  console.log("MP WEBHOOK:", req.body);
+
+  res.sendStatus(200);
+
+});
+
 
 module.exports = app;
