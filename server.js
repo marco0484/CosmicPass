@@ -18,6 +18,7 @@ const HOST = "0.0.0.0";
 const PORT = process.env.PORT || 3000;
 const app = express();
 const QRCode = require("qrcode");
+const crypto = require("crypto");
 
 
 app.use(cors());
@@ -55,7 +56,7 @@ const endpointSecret =
 app.post(
   "/webhook-stripe",
   express.raw({ type: "*/*" }),
-  (req, res) => {
+ async (req, res) => {
 
     const sig =
       req.headers["stripe-signature"];
