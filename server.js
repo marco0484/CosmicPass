@@ -904,9 +904,29 @@ app.post("/webhook-mp", async (req, res) => {
       JSON.stringify(req.body, null, 2)
     );
 
-    const paymentId =
-      req.body.data?.id ||
-      req.body.resource;
+ console.log(
+  "BODY COMPLETO:",
+  JSON.stringify(req.body, null, 2)
+);
+
+const paymentId =
+  req.body.data?.id ||
+  req.body.resource;
+
+console.log(
+  "TIPO:",
+  req.body.type || req.body.topic
+);
+
+console.log(
+  "RESOURCE:",
+  req.body.resource
+);
+
+console.log(
+  "DATA:",
+  req.body.data
+);
 
     console.log(
       "PAYMENT ID:",
@@ -917,13 +937,13 @@ app.post("/webhook-mp", async (req, res) => {
       return res.sendStatus(200);
     }
 
-    const payment =
-      new Payment(mpClient);
+    //const payment =
+      //new Payment(mpClient);
 
-    const pago =
-      await payment.get({
-        id: paymentId
-      });
+    //const pago =
+      //await payment.get({
+        //id: paymentId
+      //});
 
     console.log(
       "PAGO COMPLETO:",
