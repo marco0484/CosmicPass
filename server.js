@@ -284,10 +284,10 @@ app.post("/crear-pago-stripe", async (req, res) => {
         mode: "payment",
 
         success_url:
-          "https://www.cosmicpass.space",
+          "https://www.cosmicpass.space/successful.html",
 
         cancel_url:
-          "https://www.cosmicpass.space"
+          "https://www.cosmicpass.space/error.html"
 
       });
 
