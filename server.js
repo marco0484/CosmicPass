@@ -57,38 +57,49 @@ app.post(
   express.raw({ type: "*/*" }),
   (req, res) => {
 
-    console.log("BODY:", typeof req.body);
-    console.log("IS BUFFER:", Buffer.isBuffer(req.body));
-
-    const sig = req.headers["stripe-signature"];
+    const sig =
+      req.headers["stripe-signature"];
 
     try {
 
-      const event = stripe.webhooks.constructEvent(
-        req.body,
-        sig,
-        endpointSecret
-      );
+      const event =
+        stripe.webhooks.constructEvent(
+          req.body,
+          sig,
+          endpointSecret
+        );
 
-      console.log(event.type);
+      if (
+        event.type ===
+        "checkout.session.completed"
+      ) {
 
-      res.json({ received: true });
+        const session =
+          event.data.object;
+
+        console.log(
+          "PAGO OK",
+          session.metadata
+        );
+
+      }
+
+      return res.json({
+        received: true
+      });
 
     } catch (err) {
 
       console.error(err);
 
-      res.status(400).send(err.message);
+      return res
+        .status(400)
+        .send(err.message);
 
     }
 
   }
 );
-
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
 
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
@@ -96,7 +107,7 @@ app.get("/", (req, res) => {
 
 const supabase = createClient(
   "https://uqrbykxgsarsfyyvmibr.supabase.co",
-  "sb_publishable_8K6sVOFwsLbVOUGUr6a-5A_ldVlLQxu" // ⚠️
+  "sb_publishable_8K6sVOFwsLbVOUGUr6a-5A_ldVlLQxu" 
 );
 
 app.get("/productora-full/:id", async (req, res) => {
@@ -146,15 +157,16 @@ app.post("/crear-pago-stripe", async (req, res) => {
     } = req.body;
 
     const { data: ticket, error } =
-      await supabase
-        .from("ticket_types")
-        .select(`
-          id,
-          tipo_ticket,
-          precio
-        `)
-        .eq("id", ticket_id)
-        .single();
+  await supabase
+    .from("ticket_types")
+    .select(`
+      id,
+      id_evento,
+      tipo_ticket,
+      precio
+    `)
+    .eq("id", ticket_id)
+    .single();
 
     if (error || !ticket) {
 
@@ -167,6 +179,11 @@ app.post("/crear-pago-stripe", async (req, res) => {
     const session =
       await stripe.checkout.sessions.create({
 
+        metadata: {
+      ticket_id: String(ticket.id),
+      evento_id: String(ticket.id_evento),
+      cantidad: String(cantidad)
+    },
         payment_method_types: ["card"],
 
         line_items: [
