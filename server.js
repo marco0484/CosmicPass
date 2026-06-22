@@ -954,6 +954,14 @@ console.log(
       )
     );
 
+    console.log("STATUS:", pago.status);
+console.log("TICKET ID:", pago.external_reference);
+
+console.log(
+  "CANTIDAD:",
+  pago.additional_info?.items?.[0]?.quantity
+);
+
     res.sendStatus(200);
 
   } catch (err) {
