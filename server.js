@@ -19,6 +19,7 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 const QRCode = require("qrcode");
 
+
 app.use(cors());
 app.use((req, res, next) => {
 
@@ -53,48 +54,33 @@ const endpointSecret =
 
 app.post(
   "/webhook-stripe",
-  express.raw({
-    type: "application/json"
-  }),
+  express.raw({ type: "*/*" }),
   (req, res) => {
 
-    const sig =
-      req.headers["stripe-signature"];
+    console.log("BODY:", typeof req.body);
+    console.log("IS BUFFER:", Buffer.isBuffer(req.body));
 
-    let event;
+    const sig = req.headers["stripe-signature"];
 
     try {
 
-      event =
-        stripe.webhooks.constructEvent(
-          req.body,
-          sig,
-          endpointSecret
-        );
+      const event = stripe.webhooks.constructEvent(
+        req.body,
+        sig,
+        endpointSecret
+      );
+
+      console.log(event.type);
+
+      res.json({ received: true });
 
     } catch (err) {
 
-      console.error(
-        "Webhook signature error:",
-        err.message
-      );
+      console.error(err);
 
-      return res
-        .status(400)
-        .send(
-          `Webhook Error: ${err.message}`
-        );
+      res.status(400).send(err.message);
 
     }
-
-    console.log(
-      "Evento recibido:",
-      event.type
-    );
-
-    res.json({
-      received: true
-    });
 
   }
 );
