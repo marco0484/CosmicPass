@@ -78,9 +78,80 @@ app.post(
           event.data.object;
 
         console.log(
-          "PAGO OK",
-          session.metadata
-        );
+  "PAGO OK",
+  session.metadata
+);
+
+const ticketToken =
+  crypto.randomUUID();
+
+const folio =
+  `CP-${Date.now()}`;
+
+const { error } =
+  await supabase
+    .from("tickets")
+    .insert([{
+
+      evento_id:
+        Number(
+          session.metadata.evento_id
+        ),
+
+      nombre_cliente:
+        session.customer_details?.name ||
+        "Cliente Stripe",
+
+      correo:
+        session.customer_details?.email ||
+        null,
+
+      cantidad:
+        Number(
+          session.metadata.cantidad
+        ),
+
+      monto:
+        session.amount_total / 100,
+
+      metodo_pago:
+        "STRIPE",
+
+      payment_id:
+        session.payment_intent,
+
+      payment_status:
+        "paid",
+
+      fecha_pago:
+        new Date(),
+
+      estatus:
+        "pendiente",
+
+      ticket_type_id:
+        Number(
+          session.metadata.ticket_id
+        ),
+
+      ticket_token:
+        ticketToken,
+
+      folio:
+        folio
+
+    }]);
+
+if (error) {
+  console.error(
+    "ERROR INSERT TICKET:",
+    error
+  );
+} else {
+  console.log(
+    "TICKET GUARDADO"
+  );
+}
 
       }
 
