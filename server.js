@@ -78,6 +78,28 @@ app.post(
         const session =
           event.data.object;
 
+          const { data: existe } =
+  await supabase
+    .from("tickets")
+    .select("id")
+    .eq(
+      "payment_id",
+      session.payment_intent
+    )
+    .maybeSingle();
+
+if (existe) {
+
+  console.log(
+    "PAGO YA REGISTRADO"
+  );
+
+  return res.json({
+    received: true
+  });
+
+}
+
         console.log(
   "PAGO OK",
   session.metadata
@@ -152,6 +174,35 @@ if (error) {
   console.log(
     "TICKET GUARDADO"
   );
+
+  const { data: nuevoStock, error: stockError } =
+  await supabase.rpc(
+    "descontar_stock",
+    {
+      p_ticket_id: Number(
+        session.metadata.ticket_id
+      ),
+      p_cantidad: Number(
+        session.metadata.cantidad
+      )
+    }
+  );
+
+if (stockError) {
+
+  console.error(
+    "ERROR STOCK:",
+    stockError
+  );
+
+} else {
+
+  console.log(
+    "STOCK ACTUALIZADO:",
+    nuevoStock
+  );
+
+}
 }
 
       }
@@ -235,7 +286,8 @@ app.post("/crear-pago-stripe", async (req, res) => {
       id,
       id_evento,
       tipo_ticket,
-      precio
+      precio,
+      stock_disponible
     `)
     .eq("id", ticket_id)
     .single();
@@ -247,7 +299,16 @@ app.post("/crear-pago-stripe", async (req, res) => {
       });
 
     }
+if (
+  ticket.stock_disponible !== null &&
+  ticket.stock_disponible < Number(cantidad)
+) {
 
+  return res.status(400).json({
+    error: "Stock insuficiente"
+  });
+
+}
     const session =
       await stripe.checkout.sessions.create({
 
