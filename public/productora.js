@@ -192,7 +192,6 @@ if(pastContainer){
 }
 
 function renderFeatures(features) {
-  console.log("FEATURES:", features);
 
   const tag = document.getElementById("producer-tag");
 
@@ -410,11 +409,6 @@ async function loadData() {
     const data =
       await res.json();
 
-    console.log(
-      "PRODUCTORA DATA:",
-      data
-    );
-
     renderProducer(
       data.productora,
       data.eventos || []
@@ -429,11 +423,6 @@ async function loadData() {
     );
 
   } catch (err) {
-
-    console.error(
-      "ERROR LOAD DATA:",
-      err
-    );
 
   }
 
@@ -661,7 +650,6 @@ async function generateFreeTicket() {
     closeTicketModal();
 
   } catch (error) {
-    console.error(error);
     alert("No pudimos generar tu acceso");
   }
 }
@@ -687,11 +675,6 @@ if (metodo === "mercado pago") {
 
   try {
 
-    console.log(
-      "Ticket seleccionado:",
-      selectedTicket
-    );
-
     const res = await fetch(
       `${API}/crear-pago-ticket`,
       {
@@ -714,9 +697,6 @@ if (metodo === "mercado pago") {
     }
 
   } catch (err) {
-
-    console.error(err);
-
     alert("Error Mercado Pago");
 
   }
@@ -727,11 +707,6 @@ if (metodo === "mercado pago") {
 if (metodo === "stripe") {
 
   try {
-
-    console.log(
-      "Ticket Stripe:",
-      selectedTicket
-    );
 
     const res = await fetch(
       `${API}/crear-pago-stripe`,
@@ -754,8 +729,6 @@ if (metodo === "stripe") {
     data.checkout_url;
 }
   } catch (err) {
-
-    console.error(err);
 
     alert("Error Stripe");
 
