@@ -6,6 +6,7 @@ const API = window.location.hostname === "localhost"
 let selectedTicket = null;
 let ticketQuantity = 1;
 let selectedEventId = null;
+let pendingPaymentMethod = null;
 const params = new URLSearchParams(window.location.search);
 const idProductora = params.get("id");
 // reload
@@ -673,33 +674,10 @@ const metodo =
 
 if (metodo === "mercado pago") {
 
-  try {
+  pendingPaymentMethod =
+    "mercado_pago";
 
-    const res = await fetch(
-      `${API}/crear-pago-ticket`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          ticket_id: selectedTicket.id,
-          cantidad: ticketQuantity
-        })
-      }
-    );
-
-    const data = await res.json();
-
-    if (data.init_point) {
-      window.location.href =
-        data.init_point;
-    }
-
-  } catch (err) {
-    alert("Error Mercado Pago");
-
-  }
+  openUserDataModal();
 
   return;
 }

@@ -781,8 +781,20 @@ app.post("/crear-pago-ticket", async (req, res) => {
 
 const {
   ticket_id,
-  cantidad = 1
+  cantidad = 1,
+  nombre,
+  correo,
+  telefono
 } = req.body;
+
+console.log(
+  "DATOS CLIENTE MP:",
+  {
+    nombre,
+    correo,
+    telefono
+  }
+);
 
 
     if (!ticket_id) {
@@ -1061,34 +1073,20 @@ if (insertError) {
 
   console.error(
     "ERROR INSERT MP:",
-    insertError
+    JSON.stringify(
+      insertError,
+      null,
+      2
+    )
   );
 
-} else {
-
-  console.log(
-    "TICKET MP GUARDADO"
-  );
+  return res.sendStatus(200);
 
 }
 
-   /* console.log(
-      "PAGO COMPLETO:",
-      JSON.stringify(
-        pago,
-        null,
-        2
-      )
-    );
-
-    console.log("STATUS:", pago.status);
-console.log("TICKET ID:", pago.external_reference);
-
 console.log(
-  "CANTIDAD:",
-  pago.additional_info?.items?.[0]?.quantity
-);*/
-
+  "TICKET MP GUARDADO"
+);
     res.sendStatus(200);
 
   } catch (err) {
