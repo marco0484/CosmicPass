@@ -865,8 +865,7 @@ const {
 
         auto_return: "approved",
 
-        external_reference: String(ticket.id)
-
+      external_reference: String(ticket.id)
       }
 
     });
@@ -937,13 +936,141 @@ console.log(
       return res.sendStatus(200);
     }
 
-    //const payment =
-      //new Payment(mpClient);
+    const payment =
+      new Payment(mpClient);
 
-    //const pago =
-      //await payment.get({
-        //id: paymentId
-      //});
+    const pago =
+      await payment.get({
+        id: paymentId
+      });
+
+      const { data: existe } =
+  await supabase
+    .from("tickets")
+    .select("id")
+    .eq("payment_id", String(pago.id))
+    .maybeSingle();
+
+if (existe) {
+  console.log("PAGO YA REGISTRADO");
+  return res.sendStatus(200);
+}
+
+if (pago.status !== "approved") {
+  console.log("PAGO NO APROBADO");
+  return res.sendStatus(200);
+}
+
+const ticketId =
+  Number(pago.external_reference);
+
+const cantidad =
+  Number(
+    pago.additional_info?.items?.[0]?.quantity || 1
+  );
+
+const { data: ticketInfo, error: ticketError } =
+  await supabase
+    .from("ticket_types")
+    .select("*")
+    .eq("id", ticketId)
+    .single();
+
+if (ticketError || !ticketInfo) {
+
+  console.error(
+    "TICKET NO ENCONTRADO",
+    ticketError
+  );
+
+  return res.sendStatus(200);
+}
+
+const ticketToken =
+  crypto.randomUUID();
+
+const folio =
+  `CP-${Date.now()}`;
+
+const { error: insertError } =
+  await supabase
+    .from("tickets")
+    .insert([{
+
+      evento_id:
+        ticketInfo.id_evento,
+
+      nombre_cliente:
+        "Cliente Mercado Pago",
+
+      correo:
+        pago.payer?.email || null,
+
+      telefono:
+        null,
+
+      cantidad:
+        cantidad,
+
+      monto:
+        pago.transaction_amount,
+
+      metodo_pago:
+        "MERCADO_PAGO",
+
+      payment_id:
+        String(pago.id),
+
+      payment_status:
+        pago.status,
+
+      fecha_pago:
+        new Date(),
+
+      estatus:
+        "pendiente",
+
+      ticket_type_id:
+        ticketInfo.id,
+
+      ticket_token:
+        ticketToken,
+
+      folio:
+        folio
+
+    }]);
+
+    if (!insertError) {
+
+  await supabase.rpc(
+    "descontar_stock",
+    {
+      p_ticket_id: ticketInfo.id,
+      p_cantidad: cantidad
+    }
+  );
+
+  console.log(
+    "TICKET MP GUARDADO"
+  );
+
+}
+
+if (insertError) {
+
+  console.error(
+    "ERROR INSERT MP:",
+    insertError
+  );
+
+} else {
+
+  console.log(
+    "TICKET MP GUARDADO"
+  );
+
+}
 
    /* console.log(
       "PAGO COMPLETO:",
@@ -953,14 +1080,14 @@ console.log(
         2
       )
     );
-*/
+
     console.log("STATUS:", pago.status);
 console.log("TICKET ID:", pago.external_reference);
 
 console.log(
   "CANTIDAD:",
   pago.additional_info?.items?.[0]?.quantity
-);
+);*/
 
     res.sendStatus(200);
 
