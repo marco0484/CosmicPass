@@ -188,7 +188,7 @@ if (error) {
   }
 );
 
-  const { data: nuevoStock, error: stockError } =
+ const rpcResult =
   await supabase.rpc(
     "descontar_stock",
     {
@@ -200,6 +200,20 @@ if (error) {
       )
     }
   );
+
+console.log(
+  "RPC RESULT:",
+  JSON.stringify(
+    rpcResult,
+    null,
+    2
+  )
+);
+
+const {
+  data: nuevoStock,
+  error: stockError
+} = rpcResult;
 
 if (stockError) {
 
@@ -243,7 +257,7 @@ app.get("/", (req, res) => {
 
 const supabase = createClient(
   "https://uqrbykxgsarsfyyvmibr.supabase.co",
-  "sb_publishable_8K6sVOFwsLbVOUGUr6a-5A_ldVlLQxu" 
+   process.env.SUPABASE_SECRET_KEY
 );
 
 app.get("/productora-full/:id", async (req, res) => {
