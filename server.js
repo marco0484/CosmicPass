@@ -854,7 +854,8 @@ const {
             currency_id: "MXN"
           }
         ],
-
+ notification_url:
+      "https://www.cosmicpass.space/webhook-mp",
         back_urls: {
           success: "https://www.cosmicpass.space",
           failure: "https://www.cosmicpass.space",
