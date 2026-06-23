@@ -448,8 +448,32 @@ async function openTicketModal(eventName, eventId) {
   if (!modal || !title || !container) {
     return;
   }
+  document.querySelector(
+  ".ticket-kicker"
+).style.display = "";
 
-  title.textContent = eventName;
+document.querySelector(
+  ".modal-step"
+).style.display = "";
+
+document.querySelector(
+  ".ticket-sub"
+).innerText =
+  "Selecciona el método de pago que prefieras.";
+
+document.querySelector(
+  ".checkout-summary"
+).style.display =
+  "";
+
+document.querySelector(
+  ".btn-buy-final"
+).innerText =
+  "Continuar compra";
+
+title.textContent =
+  "Elige cómo pagar tu acceso";
+
   container.innerHTML = "<p>Cargando boletos...</p>";
 
   modal.classList.add("active");
@@ -729,6 +753,21 @@ if (metodo === "transferencia") {
   ).innerText =
     "Datos para transferencia";
 
+  document.querySelector(
+    ".ticket-kicker"
+  ).style.display =
+    "none";
+
+  document.querySelector(
+    ".modal-step"
+  ).style.display =
+    "none";
+
+  document.querySelector(
+    ".ticket-sub"
+  ).innerText =
+    "Realiza la transferencia y envía tu comprobante para validar tu acceso.";
+
   document.getElementById(
     "ticket-options"
   ).innerHTML =
@@ -738,6 +777,11 @@ if (metodo === "transferencia") {
     ".checkout-summary"
   ).style.display =
     "none";
+
+  document.querySelector(
+    ".btn-buy-final"
+  ).innerText =
+    "Ya realicé mi transferencia";
 
   return;
 }
