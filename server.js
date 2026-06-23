@@ -1036,14 +1036,16 @@ const { error: insertError } =
       evento_id:
         ticketInfo.id_evento,
 
-      nombre_cliente:
-        "Cliente Mercado Pago",
+     nombre_cliente:
+  pago.metadata?.nombre || "Cliente Mercado Pago",
 
-      correo:
-        pago.payer?.email || null,
+correo:
+  pago.metadata?.correo ||
+  pago.payer?.email ||
+  null,
 
-      telefono:
-        null,
+telefono:
+  pago.metadata?.telefono || null,
 
       cantidad:
         cantidad,
