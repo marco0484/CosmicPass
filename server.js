@@ -91,20 +91,12 @@ app.post(
 
 if (existe) {
 
-  console.log(
-    "PAGO YA REGISTRADO"
-  );
-
   return res.json({
     received: true
   });
 
 }
 
-        console.log(
-  "PAGO OK",
-  session.metadata
-);
 
 const ticketToken =
   crypto.randomUUID();
@@ -170,29 +162,6 @@ telefono:
 
     }]);
 
-if (error) {
-  console.error(
-    "ERROR INSERT TICKET:",
-    error
-  );
-} else {
-  console.log(
-    "TICKET GUARDADO"
-  );
-
-  console.log(
-  "DESCONTAR STOCK",
-  {
-    ticket_id: Number(
-      session.metadata.ticket_id
-    ),
-    cantidad: Number(
-      session.metadata.cantidad
-    ),
-    metadata: session.metadata
-  }
-);
-
  const rpcResult =
   await supabase.rpc(
     "descontar_stock",
@@ -206,14 +175,6 @@ if (error) {
     }
   );
 
-console.log(
-  "RPC RESULT:",
-  JSON.stringify(
-    rpcResult,
-    null,
-    2
-  )
-);
 
 const {
   data: nuevoStock,
@@ -222,21 +183,10 @@ const {
 
 if (stockError) {
 
-  console.error(
-    "ERROR STOCK:",
-    stockError
-  );
-
 } else {
 
-  console.log(
-    "STOCK ACTUALIZADO:",
-    nuevoStock
-  );
-
 }
 }
-
       }
 
       return res.json({
@@ -244,8 +194,6 @@ if (stockError) {
       });
 
     } catch (err) {
-
-      console.error(err);
 
       return res
         .status(400)
@@ -294,7 +242,6 @@ app.get("/productora-full/:id", async (req, res) => {
     });
 
   } catch (error) {
-    //console.error("Error en /productora-full:", error);
     res.status(500).json({
       error: "Error en servidor"
     });
@@ -387,11 +334,6 @@ if (
     });
 
   } catch (err) {
-
-    console.error(
-      "STRIPE ERROR:",
-      err
-    );
 
     res.status(500).json({
       error: err.message
@@ -688,7 +630,6 @@ app.post("/api/create-ticket", async (req, res) => {
 ]
 });
 } catch (mailError) {
-  console.error("Error enviando correo:", mailError);
 }
 
     res.json({
@@ -705,7 +646,6 @@ app.post("/api/create-ticket", async (req, res) => {
     });
 
   } catch (error) {
-    console.error("ERROR CREATE TICKET:", error);
 
     res.status(500).json({
       success: false,
@@ -744,7 +684,6 @@ app.post("/mis-boletos", async (req, res) => {
       .like("telefono", `%${telefono}`);
 
     if (error) {
-      console.error("Error Supabase:", error);
 
       return res.status(500).json({
         success: false,
@@ -766,7 +705,6 @@ app.post("/mis-boletos", async (req, res) => {
     });
 
   } catch (error) {
-    console.error("Error /mis-boletos:", error);
 
     return res.status(500).json({
       success: false,
@@ -786,15 +724,6 @@ const {
   correo,
   telefono
 } = req.body;
-
-console.log(
-  "DATOS CLIENTE MP:",
-  {
-    nombre,
-    correo,
-    telefono
-  }
-);
 
 
     if (!ticket_id) {
@@ -889,19 +818,6 @@ external_reference: String(ticket.id)
       }
 
     });
-console.log(
-  "MP RESULT:",
-  JSON.stringify(
-    result,
-    null,
-    2
-  )
-);
-    console.log(
-      "MP Ticket:",
-      ticket.tipo_ticket,
-      "$" + ticket.precio
-    );
 
     res.json({
       success: true,
@@ -909,8 +825,6 @@ console.log(
     });
 
   } catch (err) {
-
-    console.error("MP ERROR:", err);
 
     res.status(500).json({
       success: false,
@@ -925,39 +839,18 @@ app.post("/webhook-mp", async (req, res) => {
 
   try {
 
-    console.log(
-      "MP WEBHOOK:",
-      JSON.stringify(req.body, null, 2)
-    );
+if (
+  (req.body.type || req.body.topic)
+  !== "payment"
+) {
 
- console.log(
-  "BODY COMPLETO:",
-  JSON.stringify(req.body, null, 2)
-);
+  return res.sendStatus(200);
+
+}
 
 const paymentId =
   req.body.data?.id ||
   req.body.resource;
-
-console.log(
-  "TIPO:",
-  req.body.type || req.body.topic
-);
-
-console.log(
-  "RESOURCE:",
-  req.body.resource
-);
-
-console.log(
-  "DATA:",
-  req.body.data
-);
-
-    console.log(
-      "PAYMENT ID:",
-      paymentId
-    );
 
     if (!paymentId) {
       return res.sendStatus(200);
@@ -971,15 +864,6 @@ console.log(
     id: paymentId
   });
 
-console.log(
-  "PAGO COMPLETO:",
-  JSON.stringify(
-    pago,
-    null,
-    2
-  )
-);
-
       const { data: existe } =
   await supabase
     .from("tickets")
@@ -988,12 +872,10 @@ console.log(
     .maybeSingle();
 
 if (existe) {
-  console.log("PAGO YA REGISTRADO");
   return res.sendStatus(200);
 }
 
 if (pago.status !== "approved") {
-  console.log("PAGO NO APROBADO");
   return res.sendStatus(200);
 }
 
@@ -1013,11 +895,6 @@ const { data: ticketInfo, error: ticketError } =
     .single();
 
 if (ticketError || !ticketInfo) {
-
-  console.error(
-    "TICKET NO ENCONTRADO",
-    ticketError
-  );
 
   return res.sendStatus(200);
 }
@@ -1089,38 +966,17 @@ telefono:
     }
   );
 
-  console.log(
-    "TICKET MP GUARDADO"
-  );
-
 }
 
 if (insertError) {
-
-  console.error(
-    "ERROR INSERT MP:",
-    JSON.stringify(
-      insertError,
-      null,
-      2
-    )
-  );
 
   return res.sendStatus(200);
 
 }
 
-console.log(
-  "TICKET MP GUARDADO"
-);
     res.sendStatus(200);
 
   } catch (err) {
-
-    console.error(
-      "ERROR WEBHOOK MP:",
-      err
-    );
 
     res.sendStatus(200);
 
