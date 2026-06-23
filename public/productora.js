@@ -601,16 +601,6 @@ function closeUserDataModal() {
 
 async function generateFreeTicket() {
 
-   console.log(
-    "pendingPaymentMethod:",
-    pendingPaymentMethod
-  );
-
-  alert(
-    "pendingPaymentMethod = " +
-    pendingPaymentMethod
-  );
-
   const nombre = document
     .getElementById("user-name")
     .value
@@ -654,25 +644,9 @@ async function generateFreeTicket() {
       }
     );
 
-    
+
 const data = await res.json();
 
-console.log("RESPUESTA MP:", data);
-
-console.log(
-  "ENVIANDO A MP",
-  {
-    ticket_id: selectedTicket.id,
-    cantidad: ticketQuantity,
-    nombre,
-    correo: email,
-    telefono
-  }
-);
-
-alert(
-  JSON.stringify(data, null, 2)
-);
     if (data.init_point) {
 
       window.location.href =
@@ -681,10 +655,6 @@ alert(
     }
 
   } catch (err) {
-
-    alert(
-      "Error Mercado Pago"
-    );
 
   }
 
