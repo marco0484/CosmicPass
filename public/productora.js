@@ -732,7 +732,7 @@ if (metodo === "transferencia") {
   document.getElementById(
     "ticket-options"
   ).innerHTML =
-    selectedTicket.desc_ticket;
+    selectedTicket.detalle_pago || "";
 
   document.querySelector(
     ".checkout-summary"
