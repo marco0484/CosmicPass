@@ -623,7 +623,7 @@ function closeUserDataModal() {
   }
 }
 
-async function generateFreeTicket() {
+async function generatepago() {
 
   const nombre = document
     .getElementById("user-name")
