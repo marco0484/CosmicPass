@@ -859,29 +859,44 @@ console.log(
 
       body: {
 
-        items: [
-          {
-            title: ticket.tipo_ticket,
-            quantity: Number(cantidad),
-            unit_price: Number(ticket.precio),
-            currency_id: "MXN"
-          }
-        ],
- notification_url:
-      "https://www.cosmicpass.space/webhook-mp",
-        back_urls: {
-          success: "https://www.cosmicpass.space",
-          failure: "https://www.cosmicpass.space",
-          pending: "https://www.cosmicpass.space"
-        },
+       items: [
+  {
+    title: ticket.tipo_ticket,
+    quantity: Number(cantidad),
+    unit_price: Number(ticket.precio),
+    currency_id: "MXN"
+  }
+],
 
-        auto_return: "approved",
+metadata: {
+  nombre,
+  correo,
+  telefono
+},
 
-      external_reference: String(ticket.id)
+notification_url:
+  "https://www.cosmicpass.space/webhook-mp",
+
+back_urls: {
+  success: "https://www.cosmicpass.space",
+  failure: "https://www.cosmicpass.space",
+  pending: "https://www.cosmicpass.space"
+},
+
+auto_return: "approved",
+
+external_reference: String(ticket.id)
       }
 
     });
-
+console.log(
+  "MP RESULT:",
+  JSON.stringify(
+    result,
+    null,
+    2
+  )
+);
     console.log(
       "MP Ticket:",
       ticket.tipo_ticket,
@@ -952,9 +967,18 @@ console.log(
       new Payment(mpClient);
 
     const pago =
-      await payment.get({
-        id: paymentId
-      });
+  await payment.get({
+    id: paymentId
+  });
+
+console.log(
+  "PAGO COMPLETO:",
+  JSON.stringify(
+    pago,
+    null,
+    2
+  )
+);
 
       const { data: existe } =
   await supabase
