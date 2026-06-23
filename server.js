@@ -176,34 +176,6 @@ telefono:
   );
 
 
-const {
-  data: nuevoStock,
-  error: stockError
-} = rpcResult;
-
-if (stockError) {
-
-} else {
-
-}
-}
-      }
-
-      return res.json({
-        received: true
-      });
-
-    } catch (err) {
-
-      return res
-        .status(400)
-        .send(err.message);
-
-    }
-
-  }
-);
-
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
