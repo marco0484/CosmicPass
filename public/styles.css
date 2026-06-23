@@ -2793,16 +2793,7 @@ footer{
 
 
 .ticket-price{
-  flex-shrink:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  min-width:120px;
-  text-align:center;
-  font-size:28px;
-  font-weight:800;
-  line-height:1;
+  display:none;
 }
 
 
