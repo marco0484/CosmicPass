@@ -791,7 +791,7 @@ nav li a:hover::after{
   gap: 3px;
   background:
     linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.9)), 
-    url('images/cosmic.webp');
+    url('../images/cosmic.webp');
   background-size: cover;
   background-position: center;
   overflow: hidden;
@@ -1161,7 +1161,7 @@ nav li a:hover::after{
   text-align:center;
   background:
   linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)),
-  url('images/cosmic.jpg');
+  url('../images/cosmic.webp');
   background-size:cover;
   background-position:center;
 }
