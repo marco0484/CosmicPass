@@ -3009,7 +3009,54 @@ footer{
   font-weight:700;
 
 }
+.cashless-hero{
+  min-height:72vh;
+}
 
+.cashless-extra-section{
+  padding:110px 8%;
+  background:var(--bg);
+}
+
+.cashless-banner{
+  margin:80px 8%;
+  padding:42px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  background:linear-gradient(135deg,var(--card),var(--card-hover));
+}
+
+.cashless-banner span{
+  color:var(--primary);
+  font-size:.8rem;
+  font-weight:800;
+  letter-spacing:.12em;
+}
+
+.cashless-banner h2{
+  margin:10px 0;
+  font-size:clamp(1.7rem,3vw,2.5rem);
+}
+
+.cashless-banner p{
+  color:var(--muted);
+  max-width:620px;
+}
+
+@media(max-width:768px){
+  .cashless-banner{
+    margin:50px 5%;
+    padding:28px;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+}
+
+/* R */
 @media(max-width:768px){
 
   .checkout-summary{
