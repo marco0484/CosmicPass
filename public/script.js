@@ -404,3 +404,84 @@ function initBuscador(){
     }
   });
 }
+
+const ticketAmount = document.getElementById("ticketAmount");
+const ticketQty = document.getElementById("ticketQty");
+const mpFee = document.getElementById("mpFee");
+const mpNet = document.getElementById("mpNet");
+const stripeFee = document.getElementById("stripeFee");
+const stripeNet = document.getElementById("stripeNet");
+const bestOption = document.getElementById("bestOption");
+const differenceText = document.getElementById("differenceText");
+
+const FEES = {
+  mercadoPago:{percent:0.0349,fixed:4},
+  stripe:{percent:0.036,fixed:3}
+};
+
+function moneyComision(value){
+  return Number(value || 0).toLocaleString("es-MX",{
+    style:"currency",
+    currency:"MXN",
+    minimumFractionDigits:2
+  });
+}
+
+function calcularComisiones(){
+  if(!ticketAmount || !ticketQty || !mpFee || !mpNet || !stripeFee || !stripeNet || !bestOption || !differenceText) return;
+
+  const precio = Number(ticketAmount.value || 0);
+  const cantidad = Number(ticketQty.value || 1);
+  const total = precio * cantidad;
+
+  if(precio <= 0){
+    mpFee.textContent = "$0.00";
+    mpNet.textContent = "$0.00";
+    stripeFee.textContent = "$0.00";
+    stripeNet.textContent = "$0.00";
+    bestOption.textContent = "Ingresa un monto";
+    differenceText.textContent = "El simulador calculará automáticamente el monto neto.";
+    return;
+  }
+
+  const mpComision = ((precio * FEES.mercadoPago.percent) + FEES.mercadoPago.fixed) * cantidad;
+  const stripeComision = ((precio * FEES.stripe.percent) + FEES.stripe.fixed) * cantidad;
+
+  const mpFinal = total - mpComision;
+  const stripeFinal = total - stripeComision;
+  const diferencia = Math.abs(mpFinal - stripeFinal);
+
+  mpFee.textContent = moneyComision(mpComision);
+  mpNet.textContent = moneyComision(mpFinal);
+  stripeFee.textContent = moneyComision(stripeComision);
+  stripeNet.textContent = moneyComision(stripeFinal);
+
+  if(mpFinal > stripeFinal){
+    bestOption.textContent = "Mercado Pago deja un mayor monto neto";
+    differenceText.textContent = `La diferencia aproximada es de ${moneyComision(diferencia)} para ${cantidad} boleto(s).`;
+  }else if(stripeFinal > mpFinal){
+    bestOption.textContent = "Stripe deja un mayor monto neto";
+    differenceText.textContent = `La diferencia aproximada es de ${moneyComision(diferencia)} para ${cantidad} boleto(s).`;
+  }else{
+    bestOption.textContent = "Ambas opciones son prácticamente iguales";
+    differenceText.textContent = "No existe una diferencia significativa.";
+  }
+}
+
+if(ticketAmount && ticketQty){
+  ticketAmount.addEventListener("input", calcularComisiones);
+  ticketQty.addEventListener("input", calcularComisiones);
+  ticketAmount.addEventListener("change", calcularComisiones);
+  ticketQty.addEventListener("change", calcularComisiones);
+
+  [ticketAmount,ticketQty].forEach(input=>{
+    if(!input) return;
+
+    input.addEventListener("keydown",e=>{
+      if(e.key==="Enter"){
+        e.preventDefault();
+        calcularComisiones();
+      }
+    });
+  });
+}
