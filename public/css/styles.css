@@ -84,9 +84,11 @@ nav{
 }
 
 .logo{
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: 1px;
+  font-size:28px;
+  font-weight:800;
+  letter-spacing:1px;
+  color:#00e5ff;
+  text-decoration:none;
 }
 
 .logo a{
@@ -362,34 +364,7 @@ nav li a:hover::after{
     );
 }
 
-@media(max-width:768px){
 
-  .cashless-section{
-    grid-template-columns:1fr;
-    padding:70px 20px;
-    gap:40px;
-  }
-
-  .cashless-left h2{
-    font-size:56px;
-    line-height:0.95;
-    letter-spacing:-2px;
-    max-width:100%;
-  }
-
-  .cashless-sub{
-    max-width:100%;
-    font-size:16px;
-    line-height:1.7;
-  }
-
-  .wallet-card{
-    width:100%;
-    max-width:100%;
-    transform:none;
-  }
-
-}
 
 .cashless-kicker{
 
@@ -719,46 +694,17 @@ nav li a:hover::after{
 }
 
 .wallet-footer span{
-
   color:#b388ff;
-
   font-size:13px;
-
   letter-spacing:2px;
-
   font-weight:700;
 }
-
-@media(max-width:768px){
-
-  .cashless-section{
-    grid-template-columns:1fr;
-    padding:70px 20px;
-    gap:40px;
-  }
-
-  .cashless-left h2{
-    font-size:56px;
-    line-height:0.95;
-    letter-spacing:-2px;
-    max-width:100%;
-  }
-
-  .cashless-sub{
-    max-width:100%;
-    font-size:16px;
-    line-height:1.7;
-  }
-
-}
-
 
   .wallet-card{
 
     width:100%;
     max-width:360px;
   }
-
 
 .btn-back{
   padding:8px 14px;
@@ -771,12 +717,6 @@ nav li a:hover::after{
   backdrop-filter: blur(8px);
   cursor:pointer;
   transition: all 0.25s ease;
-}
-
-.logo{
-  color:#00e5ff;
-  text-decoration:none;
-  font-weight:700;
 }
 
 .hero{
@@ -1957,29 +1897,6 @@ footer{
 
 }
 
-
-
-@media(max-width:768px){
-
-  #producer-tag{
-
-    gap:10px;
-
-  }
-
-  .feature-header-card{
-
-    width:100%;
-
-    justify-content:center;
-
-    padding:14px 16px;
-
-    border-radius:16px;
-
-  }
-
-}
 .sticky-cta button {
   padding: 15px 25px;
   background: linear-gradient(135deg, #00e5ff, #00ffcc);
@@ -2106,19 +2023,6 @@ footer{
   color:#00e5ff;
 }
 
-@media (max-width: 768px) {
-  .event-card:active {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow:
-      0 15px 35px rgba(0,0,0,0.6),
-      0 0 20px rgba(0,229,255,0.18);
-    border: 1px solid rgba(0,229,255,0.3);
-  }
-
-  .event-card:active h3 {
-    color: #00e5ff;
-  }
-}
 
 :root{
   --primary: #00e5ff;
@@ -2498,31 +2402,6 @@ footer{
 }
 
 
-@media (max-width: 768px) {
-  .ticket-content {
-     width: min(92%, 720px);
-    padding: 24px;
-    margin: 4vh auto;
-  }
-
-  .ticket-content h2 {
-    font-size: 1.5rem;
-  }
-
-  .ticket-option {
-    padding: 14px;
-  }
-
-  .ticket-option {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 14px;
-}
-  
-}
-
-
 @media (max-width: 1024px) {
   .producer-hero {
     padding: 120px 20px 50px;
@@ -2562,94 +2441,6 @@ footer{
     height: 160px;
     display: block;
   }
-}
-
-@media (max-width: 768px){
-  .producer-hero {
-    height: auto;
-    min-height: 420px;
-    padding: 120px 20px 40px;
-  }
-
-  .producer-hero .hero-content{
-    position: relative;
-    top: auto;
-    transform: none;
-    margin-top: 60px;
-  }
-
-  .producer-logo{
-    margin-top: 10px;
-    width: 80px;
-    height: 80px;
-  }
-
-  .nav-links{
-    display: none;
-    flex-direction: column;
-    position: absolute;
-    top: 70px;
-    left: 0;
-    width: 100%;
-    background: #000;
-    padding: 20px;
-    gap: 15px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    transition: all 0.3s ease;
-  }
-
-  .nav-links.active{
-    display: flex;
-  }
-
-  .menu-toggle{
-    display: block;
-    color: white;
-  }
-
- nav{
-    padding:14px 18px;
-    flex-direction:row;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
-  }
-
-  .about-preview {
-    padding: 40px 20px;
-    margin: 20px;
-    border-radius: 16px;
-  }
-
-  .about-content {
-    max-width: 100%;
-  }
-
-  .about-preview h2 {
-    font-size: 24px;
-  }
-
-  .about-preview p {
-    font-size: 14px;
-  }
-
-  .about-actions {
-    flex-direction: column;
-  }
-
-  .btn-primary,
-  .btn-secondary {
-    width: 100%;
-    text-align: center;
-  }
-
-  .footer-container {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 25px;
-  }
-
 }
 
 .tickets-page {
@@ -3351,202 +3142,7 @@ footer{
   color:#001018;
 }
 
-@media(max-width:768px){
-  .calculator-tabs{
-    flex-direction:column;
-  }
-}
 
-@media(max-width:768px){
-  .commission-hero{
-    padding:130px 6% 60px;
-  }
-
-  .calculator-card{
-    padding:22px;
-  }
-
-  .calculator-inputs,
-  .calculator-results{
-    grid-template-columns:1fr;
-  }
-
-  .calc-result strong{
-    font-size:1.55rem;
-  }
-}
-
-@media(max-width:900px){
-
-  .fees-grid{
-    grid-template-columns:1fr;
-  }
-
-  .cashless-banner{
-    flex-direction:column;
-    align-items:flex-start;
-    padding:34px;
-  }
-
-}
-
-
-@media(max-width:768px){
-  .cashless-banner{
-    margin:50px 5%;
-    padding:28px;
-    flex-direction:column;
-    align-items:flex-start;
-  }
-}
-
-/* R */
-@media(max-width:768px){
-
-  .checkout-summary{
-    padding:20px;
-    border-radius:22px;
-
-  }
-
-  .checkout-total{
-    font-size:24px;
-    line-height:1.1;
-  }
-}
-
-@media(max-width:768px){
-
-  .checkout{
-
-    padding:120px 18px 60px;
-
-  }
-
-}
-
-@media(max-width:768px){
-
-  .nav-search{
-    flex:1;
-    max-width:180px;
-  }
-
-  .search,
-  .search:focus{
-    width:100%;
-    max-width:100%;
-  }
-
-}
-
-@media(max-width:768px){
-
-  .ticket-option{
-    padding:18px;
-  }
-
-  .ticket-option h3{
-    font-size:16px;
-  }
-
-  .ticket-option .ticket-price{
-    font-size:22px;
-  }
-
-  .ticket-total{
-    font-size:24px;
-  }
-
-}
-
-@media (max-width: 768px) {
-  .tickets-page {
-    padding: 120px 18px 60px;
-  }
-
-  .tickets-page .tickets-title {
-    font-size: 28px;
-  }
-
-  .tickets-page .tickets-form {
-    flex-direction: column;
-  }
-}
-
-
-
-@media (max-width: 600px){
-  .page {
-    margin: 40px 15px;
-    padding: 15px;
-  }
-}
-
-@media (max-width: 480px){
-
-  .producer-hero {
-    padding: 70px 15px 30px;
-  }
-  .producer-logo{
-    width: 140px;
-    height: 140px;
-  }
-
-  .checkout{
-    padding:50px 15px;
-  }
-
-  .event-container,
-  .checkout-container{
-    grid-template-columns:1fr;
-  }
-
-}
-@media(max-width:768px){
-
-  .producer-story,
-  .trust,
-  .producer-socials{
-
-    padding:80px 20px;
-
-  }
-
-  .producer-story h2,
-  .trust h2,
-  .producer-socials h2{
-    font-size:clamp(28px,7vw,34px);
-    line-height:1.1;
-    text-align:center;
-    margin-bottom:24px;
-
-  }
-
-  .producer-story p{
-    font-size:15px;
-    line-height:1.8;
-    text-align:left;
-
-  }
-
-}
-
-@media(max-width:768px){
-
-  .hero h1{
-    font-size:1.55rem !important;
-    line-height:1.05;
-    letter-spacing:-1px;
-  }
-
-  .rocket{
-    font-size:.55em;
-    margin:0 1px;
-    vertical-align:middle;
-  }
-
-}
 
 .metrics-section{
   padding:120px 60px;
@@ -3597,19 +3193,12 @@ footer{
 }
 
 .metric-box{
-
   min-height:180px;
-
   padding:28px;
-
   border-radius:24px;
-
   display:flex;
-
   flex-direction:column;
-
   justify-content:space-between;
-
   background:
     linear-gradient(
       180deg,
@@ -3622,93 +3211,46 @@ footer{
 }
 
 .metric-box span{
-
   display:block;
-
   opacity:.7;
-
   margin-bottom:12px;
-
 }
 
 .metric-box strong{
-
   font-size:32px;
-
   line-height:1.05;
-
   word-break:break-word;
-
   color:#00e5ff;
-
 }
 
 .metric-box.alert strong{
   color:#ff8a65;
 }
 
-@media(max-width:768px){
-
-  .metrics-section{
-    grid-template-columns:1fr;
-    padding:80px 20px;
-  }
-
-  .metrics-left h2{
-    font-size:2.4rem;
-  }
-
-  .metric-box{
-    min-height:160px;
-    padding:22px;
-  }
-
-  .metric-box strong{
-    font-size:2rem;
-  }
-
-}
 
 .ticket-badge{
-
   display:inline-flex;
-
   align-items:center;
-
   gap:6px;
-
   margin-top:10px;
-
   margin-right:8px;
-
   padding:8px 12px;
-
   border-radius:999px;
-
   background:
     rgba(0,229,255,.08);
-
   border:
     1px solid rgba(0,229,255,.18);
-
   color:#9befff;
-
   font-size:12px;
-
   font-weight:700;
-
 }
 
 .ticket-badge.danger{
-
   background:
     rgba(255,80,80,.08);
-
   border:
     1px solid rgba(255,80,80,.18);
-
   color:#ff9d9d;
-
 }
 
 .ticket-badge.countdown{
@@ -3732,4 +3274,316 @@ body{
 .ticket-modal{
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+
+
+@media(max-width:900px){
+
+  .fees-grid{
+    grid-template-columns:1fr;
+  }
+
+  .cashless-banner{
+    flex-direction:column;
+    align-items:flex-start;
+    padding:34px;
+  }
+
+}
+
+
+@media (max-width: 600px){
+  .page {
+    margin: 40px 15px;
+    padding: 15px;
+  }
+}
+
+@media (max-width: 480px){
+
+  .producer-hero {
+    padding: 70px 15px 30px;
+  }
+  .producer-logo{
+    width: 140px;
+    height: 140px;
+  }
+
+  .checkout{
+    padding:50px 15px;
+  }
+
+  .event-container,
+  .checkout-container{
+    grid-template-columns:1fr;
+  }
+
+}
+
+@media(max-width:768px){
+  .cashless-section{
+    grid-template-columns:1fr;
+    padding:70px 20px;
+    gap:40px;
+  }
+
+  .cashless-left h2{
+    font-size:56px;
+    line-height:.95;
+    letter-spacing:-2px;
+    max-width:100%;
+  }
+
+  .cashless-sub{
+    max-width:100%;
+    font-size:16px;
+    line-height:1.7;
+  }
+
+  .wallet-card{
+    width:100%;
+    max-width:100%;
+    transform:none;
+  }
+
+  #producer-tag{
+    gap:10px;
+  }
+
+  .feature-header-card{
+    width:100%;
+    justify-content:center;
+    padding:14px 16px;
+    border-radius:16px;
+  }
+
+  .event-card:active{
+    transform:translateY(-4px) scale(1.02);
+    box-shadow:0 15px 35px rgba(0,0,0,.6),0 0 20px rgba(0,229,255,.18);
+    border:1px solid rgba(0,229,255,.3);
+  }
+
+  .event-card:active h3{
+    color:#00e5ff;
+  }
+
+  .ticket-content{
+    width:min(92%,720px);
+    padding:24px;
+    margin:4vh auto;
+  }
+
+  .ticket-content h2{
+    font-size:1.5rem;
+  }
+
+  .ticket-option{
+    padding:18px;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+    gap:14px;
+  }
+
+  .ticket-option h3{
+    font-size:16px;
+  }
+
+  .ticket-option .ticket-price{
+    font-size:22px;
+  }
+
+  .ticket-total{
+    font-size:24px;
+  }
+
+  .producer-hero{
+    height:auto;
+    min-height:420px;
+    padding:120px 20px 40px;
+  }
+
+  .producer-hero .hero-content{
+    position:relative;
+    top:auto;
+    transform:none;
+    margin-top:60px;
+  }
+
+  .producer-logo{
+    margin-top:10px;
+    width:80px;
+    height:80px;
+  }
+
+  .nav-links{
+    display:none;
+    flex-direction:column;
+    position:absolute;
+    top:70px;
+    left:0;
+    width:100%;
+    background:#000;
+    padding:20px;
+    gap:15px;
+    border-top:1px solid rgba(255,255,255,.1);
+    transition:.3s;
+  }
+
+  .nav-links.active{
+    display:flex;
+  }
+
+  .menu-toggle{
+    display:block;
+    color:#fff;
+  }
+
+  nav{
+    padding:14px 18px;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+  }
+
+  .nav-search{
+    flex:1;
+    max-width:180px;
+  }
+
+  .search,
+  .search:focus{
+    width:100%;
+    max-width:100%;
+  }
+
+  .about-preview{
+    padding:40px 20px;
+    margin:20px;
+    border-radius:16px;
+  }
+
+  .about-content{
+    max-width:100%;
+  }
+
+  .about-preview h2{
+    font-size:24px;
+  }
+
+  .about-preview p{
+    font-size:14px;
+  }
+
+  .about-actions{
+    flex-direction:column;
+  }
+
+  .btn-primary,
+  .btn-secondary{
+    width:100%;
+    text-align:center;
+  }
+
+  .footer-container{
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    gap:25px;
+  }
+
+  .calculator-tabs{
+    flex-direction:column;
+  }
+
+  .commission-hero{
+    padding:130px 6% 60px;
+  }
+
+  .calculator-card{
+    padding:22px;
+  }
+
+  .calculator-inputs,
+  .calculator-results{
+    grid-template-columns:1fr;
+  }
+
+  .calc-result strong{
+    font-size:1.55rem;
+  }
+
+  .cashless-banner{
+    margin:50px 5%;
+    padding:28px;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .checkout{
+    padding:120px 18px 60px;
+  }
+
+  .checkout-summary{
+    padding:20px;
+    border-radius:22px;
+  }
+
+  .checkout-total{
+    font-size:24px;
+    line-height:1.1;
+  }
+
+  .producer-story,
+  .trust,
+  .producer-socials{
+    padding:80px 20px;
+  }
+
+  .producer-story h2,
+  .trust h2,
+  .producer-socials h2{
+    font-size:clamp(28px,7vw,34px);
+    line-height:1.1;
+    text-align:center;
+    margin-bottom:24px;
+  }
+
+  .producer-story p{
+    font-size:15px;
+    line-height:1.8;
+    text-align:left;
+  }
+
+  .hero h1{
+    font-size:1.55rem !important;
+    line-height:1.05;
+    letter-spacing:-1px;
+  }
+
+  .rocket{
+    font-size:.55em;
+    margin:0 1px;
+    vertical-align:middle;
+  }
+
+  .metrics-section{
+    grid-template-columns:1fr;
+    padding:80px 20px;
+  }
+
+  .metrics-left h2{
+    font-size:2.4rem;
+  }
+
+  .metric-box{
+    min-height:160px;
+    padding:22px;
+  }
+
+  .metric-box strong{
+    font-size:2rem;
+  }
 }
