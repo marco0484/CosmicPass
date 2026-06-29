@@ -7,7 +7,7 @@
 <meta name="copyright" content="Cosmic Pass">
 <title>Simulador de Comisiones | Cosmic Pass</title>
 <link rel="icon" type="image/png" sizes="32x32" href="images/logo.webp">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
@@ -35,8 +35,13 @@
 <section class="commission-calculator">
   <div class="calculator-card">
 
+    <div class="calculator-tabs">
+      <button class="calc-tab active" data-mode="sell">Voy a vender en</button>
+      <button class="calc-tab" data-mode="target">Quiero recibir</button>
+    </div>
+
     <div class="calculator-inputs">
-      <label for="ticketAmount">Precio del boleto</label>
+      <label id="amountLabel" for="ticketAmount">Precio del boleto</label>
       <input id="ticketAmount" type="number" min="1" placeholder="Ej. 1000">
 
       <label for="ticketQty">Cantidad de boletos</label>
@@ -44,31 +49,29 @@
     </div>
 
     <div class="calculator-results">
-
       <div class="calc-result">
         <h3>Mercado Pago</h3>
-        <p>Comisión estimada</p>
+        <p id="mpFeeLabel">Comisión estimada</p>
         <strong id="mpFee">$0 MXN</strong>
-        <p>Monto neto estimado</p>
+        <p id="mpNetLabel">Monto neto estimado</p>
         <strong id="mpNet">$0 MXN</strong>
-        <small>Referencia basada en comisión porcentual + cargo fijo configurable.</small>
+        <small id="mpHelp">Si vendes en ese precio, esto recibirías aproximadamente.</small>
       </div>
 
       <div class="calc-result featured">
         <h3>Stripe</h3>
-        <p>Comisión estimada</p>
+        <p id="stripeFeeLabel">Comisión estimada</p>
         <strong id="stripeFee">$0 MXN</strong>
-        <p>Monto neto estimado</p>
+        <p id="stripeNetLabel">Monto neto estimado</p>
         <strong id="stripeNet">$0 MXN</strong>
-        <small>Referencia basada en comisión porcentual + cargo fijo configurable.</small>
+        <small id="stripeHelp">Si vendes en ese precio, esto recibirías aproximadamente.</small>
       </div>
-
     </div>
 
     <div class="difference-box">
       <span>Comparativa</span>
       <strong id="bestOption">Ingresa un monto para comparar</strong>
-      <p id="differenceText">El simulador te mostrará cuál pasarela deja mayor monto neto estimado.</p>
+      <p id="differenceText">Puedes calcular cuánto recibirías o cuánto deberías cobrar para llegar a un monto neto.</p>
     </div>
 
   </div>
@@ -130,6 +133,6 @@
   <br>
   <p>Desarrollado por <strong>Matehuala Digital Engineering</strong></p>
 </footer>
-<script src="script.js"></script>
+<script src="js/script.js"></script>
 </body>
 </html>
