@@ -3109,7 +3109,6 @@ footer{
   color:#ff7676;
 }
 
-
 .ticket-badge{
   display:inline-flex;
   align-items:center;
@@ -3498,7 +3497,7 @@ body{
   .access-mini-card{
     padding:22px;
   }
-  
+
     .fees-grid{
     grid-template-columns:1fr;
   }
