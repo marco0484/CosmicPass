@@ -216,7 +216,7 @@ nav li a:hover::after{
 }
 
 .why-cosmic{
-  padding:110px 8%;
+  padding:80px 8% 20px;
   background:radial-gradient(circle at top,rgba(0,229,255,.08),transparent 42%),linear-gradient(180deg,#050816,#08111f);
   overflow:hidden;
 }
@@ -2614,7 +2614,7 @@ footer{
 }
 
 .cashless-banner{
-  margin:0 8% 30px;
+  margin:30px auto;
   padding:34px 42px;
   display:flex;
   align-items:center;
@@ -3156,9 +3156,15 @@ footer{
 
 html,
 body{
-  overflow-x: hidden;
-  max-width: 100%;
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
 }
+
+section{
+  width:100%;
+}
+
 
 .ticket-modal{
   overflow-x: hidden;
@@ -3166,7 +3172,7 @@ body{
 }
 
 .metrics-section{
-  padding:90px 8% 30px;
+  padding:30px 8% 30px;
   display:grid;
   grid-template-columns:.9fr 1.1fr;
   gap:60px;
@@ -3296,6 +3302,43 @@ body{
   color:#fff;
   font-size:18px;
   white-space:nowrap;
+}
+
+
+.demo-disclaimer{
+  max-width:1400px;
+  margin:40px auto 70px;
+  padding:18px 26px;
+  display:flex;
+  align-items:flex-start;
+  gap:18px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.03);
+}
+
+.demo-icon{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  background:rgba(0,229,255,.08);
+  border:1px solid rgba(0,229,255,.15);
+  font-size:20px;
+}
+
+.demo-disclaimer p{
+  margin:0;
+  color:rgba(255,255,255,.65);
+  font-size:15px;
+  line-height:1.75;
+}
+
+.demo-disclaimer strong{
+  color:#fff;
 }
 
 @media (max-width: 480px){
