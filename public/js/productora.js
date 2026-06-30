@@ -478,6 +478,22 @@ title.textContent =
 
   modal.classList.add("active");
 
+  pendingPaymentMethod = null;
+selectedTicket = null;
+ticketQuantity = 1;
+
+const globalQty = document.getElementById("global-ticket-qty");
+const globalTotal = document.getElementById("global-ticket-total");
+
+if (globalQty) {
+  globalQty.disabled = false;
+  globalQty.value = "1";
+}
+
+if (globalTotal) {
+  globalTotal.innerHTML = "Total: $0";
+}
+
   try {
     const res = await fetch(`${API}/eventos/${eventId}/tickets`);
 
@@ -735,16 +751,46 @@ btnFinal.addEventListener("click", async () => {
 const metodo = (selectedTicket.tipo_ticket || "") .toLowerCase();
 
 if (Number(selectedTicket.precio) === 0 || metodo === "free access") {
+
   pendingPaymentMethod = "free_access";
+  ticketQuantity = 1;
+
+  const globalQty =
+    document.getElementById("global-ticket-qty");
+
+  const globalTotal =
+    document.getElementById("global-ticket-total");
+
+  if(globalQty){
+    globalQty.value = "1";
+    globalQty.disabled = true;
+  }
+
+  if(globalTotal){
+    globalTotal.innerHTML = "Total: Cortesía";
+  }
+
   openUserDataModal();
 
-  const userModalTitle = document.querySelector("#user-data-modal h2");
-  const userModalSub = document.querySelector("#user-data-modal .ticket-sub");
-  const userModalBtn = document.querySelector("#user-data-modal .btn-buy-final");
+  const userModalTitle =
+    document.querySelector("#user-data-modal h2");
 
-  if(userModalTitle) userModalTitle.innerText = "Completa tus datos";
-  if(userModalSub) userModalSub.innerText = "Necesitamos estos datos para generar tu acceso gratuito.";
-  if(userModalBtn) userModalBtn.innerText = "Generar acceso gratuito";
+  const userModalSub =
+    document.querySelector("#user-data-modal .ticket-sub");
+
+  const userModalBtn =
+    document.querySelector("#user-data-modal .btn-buy-final");
+
+  if(userModalTitle)
+    userModalTitle.innerText = "Completa tus datos";
+
+  if(userModalSub)
+    userModalSub.innerText =
+      "Necesitamos estos datos para generar tu acceso gratuito.";
+
+  if(userModalBtn)
+    userModalBtn.innerText =
+      "Generar acceso gratuito";
 
   return;
 }
