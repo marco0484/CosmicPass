@@ -644,6 +644,39 @@ async function generatepago() {
     alert("Todos los campos son obligatorios");
     return;
   }
+
+  if (pendingPaymentMethod === "free_access") {
+  try {
+    const res = await fetch(`${API}/crear-ticket-gratis`, {
+      method:"POST",
+      headers:{ "Content-Type":"application/json" },
+      body:JSON.stringify({
+        ticket_id:selectedTicket.id,
+        cantidad:ticketQuantity,
+        nombre,
+        correo:email,
+        telefono
+      })
+    });
+
+    const data = await res.json();
+
+    if(!res.ok || !data.success){
+      alert(data.error || data.message || "No se pudo generar el acceso");
+      return;
+    }
+
+    alert("Acceso gratuito generado correctamente 🚀");
+    closeUserDataModal();
+    closeTicketModal();
+
+  } catch(err) {
+    alert("Error generando acceso gratuito");
+  }
+
+  return;
+}
+
   if (
   pendingPaymentMethod ===
   "mercado_pago"
@@ -699,24 +732,32 @@ btnFinal.addEventListener("click", async () => {
     return;
   }
 
-const metodo =
-  (selectedTicket.tipo_ticket || "")
-    .toLowerCase();
+const metodo = (selectedTicket.tipo_ticket || "") .toLowerCase();
 
-if (metodo === "mercado pago") {
-
-  pendingPaymentMethod =
-    "mercado_pago";
-
+if (Number(selectedTicket.precio) === 0 || metodo === "free access") {
+  pendingPaymentMethod = "free_access";
   openUserDataModal();
+
+  const userModalTitle = document.querySelector("#user-data-modal h2");
+  const userModalSub = document.querySelector("#user-data-modal .ticket-sub");
+  const userModalBtn = document.querySelector("#user-data-modal .btn-buy-final");
+
+  if(userModalTitle) userModalTitle.innerText = "Completa tus datos";
+  if(userModalSub) userModalSub.innerText = "Necesitamos estos datos para generar tu acceso gratuito.";
+  if(userModalBtn) userModalBtn.innerText = "Generar acceso gratuito";
 
   return;
 }
 
+if (metodo === "mercado pago") {
+  pendingPaymentMethod =
+    "mercado_pago";
+  openUserDataModal();
+  return;
+}
+
 if (metodo === "stripe") {
-
   try {
-
     const res = await fetch(
       `${API}/crear-pago-stripe`,
       {

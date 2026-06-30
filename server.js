@@ -775,6 +775,92 @@ app.post("/mis-boletos", async (req, res) => {
   }
 });
 
+app.post("/crear-ticket-gratis", async (req, res) => {
+  try {
+    const { ticket_id, cantidad = 1, nombre, correo, telefono } = req.body;
+
+    if (!ticket_id || !nombre || !correo || !telefono) {
+      return res.status(400).json({
+        success:false,
+        error:"Faltan datos obligatorios"
+      });
+    }
+
+    const { data: ticket, error } = await supabase
+      .from("ticket_types")
+      .select("*")
+      .eq("id", ticket_id)
+      .eq("ind_activo", 1)
+      .single();
+
+    if (error || !ticket) {
+      return res.status(404).json({
+        success:false,
+        error:"Ticket no encontrado"
+      });
+    }
+
+    if (Number(ticket.precio) !== 0) {
+      return res.status(400).json({
+        success:false,
+        error:"Este ticket no es gratuito"
+      });
+    }
+
+    if (ticket.stock_disponible !== null && ticket.stock_disponible < Number(cantidad)) {
+      return res.status(400).json({
+        success:false,
+        error:"Stock insuficiente"
+      });
+    }
+
+    const ticketToken = crypto.randomUUID();
+    const folio = `CP-${Date.now()}`;
+
+    const { error: insertError } = await supabase
+      .from("tickets")
+      .insert([{
+        evento_id:ticket.id_evento,
+        nombre_cliente:nombre,
+        correo,
+        telefono,
+        cantidad:Number(cantidad),
+        monto:0,
+        metodo_pago:"FREE_ACCESS",
+        payment_id:null,
+        payment_status:"free",
+        fecha_pago:new Date(),
+        estatus:"pendiente",
+        ticket_type_id:ticket.id,
+        ticket_token:ticketToken,
+        folio
+      }]);
+
+    if (insertError) {
+      return res.status(500).json({
+        success:false,
+        error:insertError.message
+      });
+    }
+
+    await supabase.rpc("descontar_stock", {
+      p_ticket_id:ticket.id,
+      p_cantidad:Number(cantidad)
+    });
+
+    res.json({
+      success:true,
+      message:"Acceso gratuito generado correctamente"
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success:false,
+      error:err.message
+    });
+  }
+});
+
 app.post("/crear-pago-ticket", async (req, res) => {
 
   try {
