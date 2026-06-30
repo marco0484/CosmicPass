@@ -2643,12 +2643,30 @@ footer{
 }
 
 .fees-section{
-    margin:80px 8%;
+  width:calc(100% - 32px);
+  max-width:1180px;
+  margin:34px auto 80px;
 }
 
 .fees-header{
   text-align:center;
-  margin-bottom:60px;
+  margin-bottom:52px;
+}
+
+.fees-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:24px;
+  margin-bottom:40px;
+}
+
+.fee-card{
+  min-width:0;
+  padding:30px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:var(--radius);
+  overflow:hidden;
 }
 
 .fees-header span{
@@ -2668,21 +2686,6 @@ footer{
   margin:auto;
   color:var(--muted);
   line-height:1.8;
-}
-
-.fees-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:24px;
-  margin-bottom:40px;
-}
-
-.fee-card{
-  padding:30px;
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  transition:.3s;
 }
 
 .fee-card:hover{
@@ -3306,35 +3309,48 @@ section{
 
 
 .demo-disclaimer{
-  max-width:1400px;
-  margin:40px auto 70px;
-  padding:18px 26px;
+  width:calc(100% - 48px);
+  max-width:1180px;
+  margin:36px auto 34px;
+  padding:18px 22px;
   display:flex;
   align-items:flex-start;
-  gap:18px;
+  gap:16px;
   border-radius:18px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.09);
+  background:rgba(255,255,255,.035);
+  box-shadow:0 18px 45px rgba(0,0,0,.22);
 }
 
 .demo-icon{
   width:42px;
   height:42px;
-  border-radius:12px;
+  border-radius:14px;
   display:flex;
   align-items:center;
   justify-content:center;
   flex-shrink:0;
   background:rgba(0,229,255,.08);
-  border:1px solid rgba(0,229,255,.15);
+  border:1px solid rgba(0,229,255,.16);
   font-size:20px;
+}
+
+.demo-disclaimer strong{
+  display:block;
+  margin-bottom:6px;
+  color:#fff;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
 }
 
 .demo-disclaimer p{
   margin:0;
-  color:rgba(255,255,255,.65);
+  max-width:980px;
+  color:rgba(255,255,255,.68);
   font-size:15px;
-  line-height:1.75;
+  line-height:1.65;
 }
 
 .demo-disclaimer strong{
@@ -3646,6 +3662,11 @@ section{
 
 @media(max-width:900px){
 
+.demo-disclaimer{
+    width:calc(100% - 32px);
+    margin:28px auto 28px;
+  }
+
   .metrics-section{
     grid-template-columns:1fr;
     padding:80px 22px;
@@ -3750,5 +3771,12 @@ section{
     width: 160px;
     height: 160px;
     display: block;
+  }
+}
+
+@media(max-width:520px){
+  .demo-disclaimer{
+    flex-direction:column;
+    padding:18px;
   }
 }
