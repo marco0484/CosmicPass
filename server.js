@@ -639,7 +639,6 @@ app.post("/api/create-ticket", async (req, res) => {
           tipo_ticket: "Free Access",
           estatus: "activo",
           ticket_token: ticketToken,
-          qr_code: qrImage,
           folio: folio
         }
       ])
