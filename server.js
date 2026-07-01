@@ -265,6 +265,49 @@ const supabase = createClient(
    process.env.SUPABASE_SECRET_KEY
 );
 
+app.post("/stripe/connect/:productoraId", async (req, res) => {
+  try {
+    const { productoraId } = req.params;
+
+    const account = await stripe.accounts.create({
+      type: "standard"
+    });
+
+    const { error } = await supabase
+      .from("cat_productoras")
+      .update({
+        stripe_account_id: account.id,
+        stripe_onboarding_complete: false
+      })
+      .eq("id", productoraId);
+
+    if (error) {
+      throw error;
+    }
+
+    const accountLink = await stripe.accountLinks.create({
+      account: account.id,
+      refresh_url: `https://www.cosmicpass.space/productora.html?id=${productoraId}`,
+      return_url: `https://www.cosmicpass.space/productora.html?id=${productoraId}`,
+      type: "account_onboarding"
+    });
+
+    res.json({
+      success: true,
+      url: accountLink.url,
+      stripe_account_id: account.id
+    });
+
+  } catch (error) {
+    console.error("ERROR STRIPE CONNECT:", error);
+
+    res.status(500).json({
+      success: false,
+      error: error.message
+    });
+  }
+});
+
 app.get("/productora-full/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
