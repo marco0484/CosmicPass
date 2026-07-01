@@ -660,10 +660,67 @@ async function generatepago() {
     .value
     .trim();
 
-  if (!nombre || !email || !telefono) {
-    alert("Todos los campos son obligatorios");
-    return;
-  }
+ if (!nombre || !email || !telefono) {
+  alert("Todos los campos son obligatorios.");
+  return;
+}
+
+const nombreLimpio =
+  nombre.replace(/\s+/g, " ").trim();
+
+if (nombreLimpio.length < 3) {
+  alert("Ingresa un nombre válido.");
+  return;
+}
+
+const emailRegex =
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!emailRegex.test(email)) {
+
+  const input =
+    document.getElementById("user-email");
+
+  input.focus();
+  input.classList.add("input-error");
+
+  alert("Ingresa un correo electrónico válido.");
+
+  return;
+}
+
+const dominiosBloqueados = [
+  "mailinator.com",
+  "yopmail.com",
+  "guerrillamail.com",
+  "temp-mail.org",
+  "10minutemail.com"
+];
+
+const dominio =
+  email.split("@")[1]?.toLowerCase();
+
+if (dominiosBloqueados.includes(dominio)) {
+  alert("No se permiten correos temporales.");
+  return;
+}
+
+
+const phoneRegex =
+  /^[0-9]{10}$/;
+
+if (!phoneRegex.test(telefono)) {
+  alert("El teléfono debe contener exactamente 10 dígitos.");
+  return;
+}
+
+if (
+  /^(\d)\1{9}$/.test(telefono) ||
+  telefono === "1234567890"
+) {
+  alert("Ingresa un número telefónico válido.");
+  return;
+}
 
   if (pendingPaymentMethod === "free_access") {
   try {
@@ -740,6 +797,35 @@ const data = await res.json();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+
+  const phoneInput =
+  document.getElementById("user-phone");
+
+if (phoneInput) {
+
+  phoneInput.addEventListener("input", () => {
+
+    phoneInput.value =
+      phoneInput.value
+        .replace(/\D/g, "")
+        .slice(0, 10);
+
+  });
+
+}
+
+const emailInput =
+  document.getElementById("user-email");
+
+if (emailInput) {
+
+  emailInput.addEventListener("input", () => {
+
+    emailInput.classList.remove("input-error");
+
+  });
+
+}
 
   const btnFinal = document.querySelector(".btn-buy-final");
 
