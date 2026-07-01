@@ -838,7 +838,6 @@ app.post("/crear-ticket-gratis", async (req, res) => {
         estatus:"pendiente",
         ticket_type_id:ticket.id,
         ticket_token:ticketToken,
-        qr_code:qrImage,
         folio
       }]);
 
