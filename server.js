@@ -358,12 +358,13 @@ app.post("/crear-pago-stripe", async (req, res) => {
   await supabase
     .from("ticket_types")
     .select(`
-      id,
-      id_evento,
-      tipo_ticket,
-      precio,
-      stock_disponible
-    `)
+            id,
+            id_evento,
+            id_productora,
+            tipo_ticket,
+            precio,
+            stock_disponible
+          `)
     .eq("id", ticket_id)
     .single();
 
@@ -384,6 +385,22 @@ if (
   });
 
 }
+
+const { data: productora, error: productoraError } =
+  await supabase
+    .from("cat_productoras")
+    .select("stripe_account_id")
+    .eq("id", ticket.id_productora)
+    .single();
+
+if (productoraError || !productora?.stripe_account_id) {
+
+  return res.status(400).json({
+    error: "La productora no tiene Stripe conectado"
+  });
+
+}
+
     const session =
   await stripe.checkout.sessions.create({
 
@@ -421,7 +438,18 @@ if (
       "https://www.cosmicpass.space/successful.html",
 
     cancel_url:
-      "https://www.cosmicpass.space/error.html"
+      "https://www.cosmicpass.space/error.html",
+
+      payment_intent_data: {
+
+  application_fee_amount: 0,
+
+  transfer_data: {
+    destination:
+      productora.stripe_account_id
+  }
+
+},
 
   });
 
