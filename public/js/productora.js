@@ -577,27 +577,31 @@ div.addEventListener("click", () => {
   const globalTotal =
     document.getElementById("global-ticket-total");
 
-  const updateGlobalTotal = () => {
+const updateGlobalTotal = () => {
 
-    if (Number(ticket.precio) === 0) {
+  if (Number(ticket.precio) === 0) {
 
-      globalQty.value = 1;
-      globalQty.disabled = true;
-      ticketQuantity = 1;
+    globalQty.value = "1";
+    globalQty.disabled = true;
+    ticketQuantity = 1;
 
-      globalTotal.innerHTML = "Total: Cortesía";
-      return;
+    document.querySelector(".checkout-summary").style.display = "none";
 
-    }
+    globalTotal.innerHTML = "Total: Cortesía";
+    return;
 
-    globalQty.disabled = false;
+  }
 
-    ticketQuantity = Number(globalQty.value);
+  document.querySelector(".checkout-summary").style.display = "";
 
-    globalTotal.innerHTML =
-      `Total: $${Number(ticket.precio) * ticketQuantity}`;
+  globalQty.disabled = false;
 
-  };
+  ticketQuantity = Number(globalQty.value);
+
+  globalTotal.innerHTML =
+    `Total: $${Number(ticket.precio) * ticketQuantity}`;
+
+};
 
   updateGlobalTotal();
 
