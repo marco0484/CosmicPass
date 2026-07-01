@@ -560,50 +560,50 @@ tickets.forEach(ticket => {
 </div>
 
 `;
+div.addEventListener("click", () => {
 
-  div.addEventListener("click", () => {
-    document
-      .querySelectorAll(".ticket-option")
-      .forEach(el =>
-        el.classList.remove("selected")
-      );
+  document
+    .querySelectorAll(".ticket-option")
+    .forEach(el => el.classList.remove("selected"));
 
-    div.classList.add("selected");
+  div.classList.add("selected");
 
-    selectedTicket = ticket;
-    selectedEventId = eventId;
+  selectedTicket = ticket;
+  selectedEventId = eventId;
 
-    const globalQty =
-      document.getElementById(
-        "global-ticket-qty"
-      );
+  const globalQty =
+    document.getElementById("global-ticket-qty");
 
-    const globalTotal =
-      document.getElementById(
-        "global-ticket-total"
-      );
+  const globalTotal =
+    document.getElementById("global-ticket-total");
 
-    const updateGlobalTotal = () => {
+  const updateGlobalTotal = () => {
 
-      const qty =
-        Number(globalQty.value);
+    if (Number(ticket.precio) === 0) {
 
-      ticketQuantity = qty;
+      globalQty.value = 1;
+      globalQty.disabled = true;
+      ticketQuantity = 1;
 
-      const total =
-        Number(ticket.precio) * qty;
+      globalTotal.innerHTML = "Total: Cortesía";
+      return;
 
-      globalTotal.innerHTML =
-        `Total: $${total}`;
+    }
 
-    };
+    globalQty.disabled = false;
 
-    updateGlobalTotal();
+    ticketQuantity = Number(globalQty.value);
 
-    globalQty.onchange =
-      updateGlobalTotal;
+    globalTotal.innerHTML =
+      `Total: $${Number(ticket.precio) * ticketQuantity}`;
 
-  });
+  };
+
+  updateGlobalTotal();
+
+  globalQty.onchange = updateGlobalTotal;
+
+});
 
   container.appendChild(div);
 });
