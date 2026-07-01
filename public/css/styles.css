@@ -3721,29 +3721,79 @@ section{
 }
 
 @media(max-width:768px){
-  .cashless-section{
-    grid-template-columns:1fr;
-    padding:70px 20px;
-    gap:40px;
+
+  nav{
+    padding:14px 18px;
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
   }
 
-  .cashless-left h2{
-    font-size:56px;
-    line-height:.95;
-    letter-spacing:-2px;
-    max-width:100%;
+  .nav-links{
+    display:none;
+    flex-direction:column;
+    position:absolute;
+    top:70px;
+    left:0;
+    width:100%;
+    background:#000;
+    padding:20px;
+    gap:15px;
+    border-top:1px solid rgba(255,255,255,.1);
+    transition:.3s;
   }
 
-  .cashless-sub{
-    max-width:100%;
-    font-size:16px;
-    line-height:1.7;
+  .nav-links.active{
+    display:flex;
   }
 
-  .wallet-card{
+  .menu-toggle{
+    display:block;
+    color:#fff;
+  }
+
+  .nav-search{
+    flex:1;
+    max-width:180px;
+  }
+
+  .search,
+  .search:focus{
     width:100%;
     max-width:100%;
+  }
+
+  .producer-hero{
+    height:auto;
+    min-height:260px;
+    padding:70px 20px 30px;
+  }
+
+  .producer-hero .hero-content{
+    position:relative;
+    top:auto;
     transform:none;
+    margin-top:0;
+  }
+
+  .hero-inner{
+    min-height:180px;
+    padding:28px 20px;
+    border-radius:0 0 34px 34px;
+  }
+
+  .producer-logo{
+    width:72px;
+    height:72px;
+    margin-top:0;
+    margin-bottom:14px;
+  }
+
+  #producer-name{
+    font-size:42px;
+    line-height:1.05;
+    letter-spacing:-1px;
   }
 
   #producer-tag{
@@ -3755,6 +3805,16 @@ section{
     justify-content:center;
     padding:14px 16px;
     border-radius:16px;
+  }
+
+  .producer-events-section{
+    padding:70px 20px 80px;
+  }
+
+  .producer-events-section h2{
+    font-size:42px;
+    line-height:1.05;
+    margin-bottom:42px;
   }
 
   .event-card:active{
@@ -3797,65 +3857,39 @@ section{
     font-size:24px;
   }
 
-  .producer-hero{
-    height:auto;
-    min-height:420px;
-    padding:120px 20px 40px;
+  .checkout{
+    padding:120px 18px 60px;
   }
 
-  .producer-hero .hero-content{
-    position:relative;
-    top:auto;
-    transform:none;
-    margin-top:60px;
-  }
-
-  .producer-logo{
-    margin-top:10px;
-    width:80px;
-    height:80px;
-  }
-
-  .nav-links{
-    display:none;
-    flex-direction:column;
-    position:absolute;
-    top:70px;
-    left:0;
-    width:100%;
-    background:#000;
+  .checkout-summary{
     padding:20px;
-    gap:15px;
-    border-top:1px solid rgba(255,255,255,.1);
-    transition:.3s;
+    border-radius:22px;
   }
 
-  .nav-links.active{
-    display:flex;
+  .checkout-total{
+    font-size:24px;
+    line-height:1.1;
   }
 
-  .menu-toggle{
-    display:block;
-    color:#fff;
+  .producer-story,
+  .trust,
+  .producer-socials{
+    padding:80px 20px;
   }
 
-  nav{
-    padding:14px 18px;
-    flex-direction:row;
-    align-items:center;
-    justify-content:space-between;
-    gap:12px;
+  .producer-story h2,
+  .trust h2,
+  .producer-socials h2{
+    font-size:clamp(28px,7vw,34px);
+    line-height:1.1;
+    text-align:center;
+    margin-bottom:24px;
   }
 
-  .nav-search{
-    flex:1;
-    max-width:180px;
-  }
-
-  .search,
-  .search:focus{
-    width:100%;
-    max-width:100%;
+  .producer-story p{
+    font-size:15px;
+    line-height:1.8;
+    text-align:left;
   }
 
   .about-preview{
@@ -3914,46 +3948,36 @@ section{
     font-size:1.55rem;
   }
 
+  .cashless-section{
+    grid-template-columns:1fr;
+    padding:70px 20px;
+    gap:40px;
+  }
+
+  .cashless-left h2{
+    font-size:56px;
+    line-height:.95;
+    letter-spacing:-2px;
+    max-width:100%;
+  }
+
+  .cashless-sub{
+    max-width:100%;
+    font-size:16px;
+    line-height:1.7;
+  }
+
+  .wallet-card{
+    width:100%;
+    max-width:100%;
+    transform:none;
+  }
+
   .cashless-banner{
     margin:50px 5%;
     padding:28px;
     flex-direction:column;
     align-items:flex-start;
-  }
-
-  .checkout{
-    padding:120px 18px 60px;
-  }
-
-  .checkout-summary{
-    padding:20px;
-    border-radius:22px;
-  }
-
-  .checkout-total{
-    font-size:24px;
-    line-height:1.1;
-  }
-
-  .producer-story,
-  .trust,
-  .producer-socials{
-    padding:80px 20px;
-  }
-
-  .producer-story h2,
-  .trust h2,
-  .producer-socials h2{
-    font-size:clamp(28px,7vw,34px);
-    line-height:1.1;
-    text-align:center;
-    margin-bottom:24px;
-  }
-
-  .producer-story p{
-    font-size:15px;
-    line-height:1.8;
-    text-align:left;
   }
 
   .hero h1{
@@ -3980,6 +4004,7 @@ section{
   .metric-box strong{
     font-size:2rem;
   }
+
 }
 
 @media(max-width:900px){
