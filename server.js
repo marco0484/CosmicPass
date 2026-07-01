@@ -817,6 +817,12 @@ app.post("/crear-ticket-gratis", async (req, res) => {
     const ticketToken = crypto.randomUUID();
     const folio = `CP-${Date.now()}`;
 
+    const qrImage = await QRCode.toDataURL(ticketToken, {
+      width:300,
+      margin:2,
+      errorCorrectionLevel:"H"
+    });
+
     const { error: insertError } = await supabase
       .from("tickets")
       .insert([{
@@ -824,7 +830,7 @@ app.post("/crear-ticket-gratis", async (req, res) => {
         nombre_cliente:nombre,
         correo,
         telefono,
-        cantidad:Number(cantidad),
+        cantidad:1,
         monto:0,
         metodo_pago:"FREE_ACCESS",
         payment_id:null,
@@ -833,6 +839,7 @@ app.post("/crear-ticket-gratis", async (req, res) => {
         estatus:"pendiente",
         ticket_type_id:ticket.id,
         ticket_token:ticketToken,
+        qr_code:qrImage,
         folio
       }]);
 
@@ -845,8 +852,35 @@ app.post("/crear-ticket-gratis", async (req, res) => {
 
     await supabase.rpc("descontar_stock", {
       p_ticket_id:ticket.id,
-      p_cantidad:Number(cantidad)
+      p_cantidad:1
     });
+
+    try {
+      await transporter.sendMail({
+        from:'"Cosmic Pass" <cosmicpass0484@gmail.com>',
+        to:correo,
+        subject:"Tu acceso Cosmic Pass 🎟️",
+        html:`
+          <h1>Tu acceso fue generado correctamente</h1>
+          <p><strong>Nombre:</strong> ${nombre}</p>
+          <p><strong>Tipo de acceso:</strong> ${ticket.tipo_ticket}</p>
+          <p><strong>Folio:</strong> ${folio}</p>
+          <p>Presenta este QR en el acceso:</p>
+          <img src="cid:ticketqr" width="250" />
+          <p>Gracias por usar Cosmic Pass 🚀</p>
+        `,
+        attachments:[
+          {
+            filename:"ticket-qr.png",
+            content:qrImage.split("base64,")[1],
+            encoding:"base64",
+            cid:"ticketqr"
+          }
+        ]
+      });
+    } catch (mailError) {
+      console.error("ERROR ENVIANDO CORREO FREE ACCESS:", mailError);
+    }
 
     res.json({
       success:true,
