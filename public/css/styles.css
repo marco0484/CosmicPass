@@ -3766,8 +3766,8 @@ section{
 
   .producer-hero{
     height:auto;
-    min-height:260px;
-    padding:70px 20px 30px;
+    min-height:320px;
+    padding:90px 20px 50px;
   }
 
   .producer-hero .hero-content{
@@ -3778,8 +3778,8 @@ section{
   }
 
   .hero-inner{
-    min-height:180px;
-    padding:28px 20px;
+    min-height:220px;
+    padding:34px 20px;
     border-radius:0 0 34px 34px;
   }
 
@@ -3808,13 +3808,34 @@ section{
   }
 
   .producer-events-section{
-    padding:70px 20px 80px;
+    padding:55px 20px 70px;
   }
 
   .producer-events-section h2{
     font-size:42px;
     line-height:1.05;
-    margin-bottom:42px;
+    margin-bottom:36px;
+  }
+
+  .producer-story,
+  .trust,
+  .producer-socials{
+    padding:55px 20px;
+  }
+
+  .producer-story h2,
+  .trust h2,
+  .producer-socials h2{
+    font-size:clamp(28px,7vw,34px);
+    line-height:1.1;
+    text-align:center;
+    margin-bottom:18px;
+  }
+
+  .producer-story p{
+    font-size:15px;
+    line-height:1.8;
+    text-align:left;
   }
 
   .event-card:active{
@@ -3869,27 +3890,6 @@ section{
   .checkout-total{
     font-size:24px;
     line-height:1.1;
-  }
-
-  .producer-story,
-  .trust,
-  .producer-socials{
-    padding:80px 20px;
-  }
-
-  .producer-story h2,
-  .trust h2,
-  .producer-socials h2{
-    font-size:clamp(28px,7vw,34px);
-    line-height:1.1;
-    text-align:center;
-    margin-bottom:24px;
-  }
-
-  .producer-story p{
-    font-size:15px;
-    line-height:1.8;
-    text-align:left;
   }
 
   .about-preview{
