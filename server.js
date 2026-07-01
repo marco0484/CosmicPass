@@ -603,117 +603,6 @@ app.get("/eventos/:id/tickets", async (req, res) => {
   }
 });
 
-app.post("/api/create-ticket", async (req, res) => {
-  try {
-    const {
-      evento_id,
-      nombre,
-      email,
-      telefono
-    } = req.body;
-
-    if (!evento_id || !nombre || !email || !telefono) {
-      return res.status(400).json({
-        success: false,
-        message: "Faltan datos obligatorios"
-      });
-    }
-
-    const folio = `CP-${Date.now()}-${Math.floor(Math.random() * 9999)}`;
-    const ticketToken = `TK-${Date.now()}-${Math.random().toString(36).substring(2, 12)}`;
-    const qrContent = ticketToken;
-    const qrImage = await QRCode.toDataURL(qrContent, {
-      width: 300,
-      margin: 2,
-      errorCorrectionLevel: "H"
-    });
-
-    const { data, error } = await supabase
-      .from("tickets")
-      .insert([
-        {
-          evento_id: evento_id,
-          nombre_cliente: nombre,
-          telefono: telefono,
-          correo: email,
-          tipo_ticket: "Free Access",
-          estatus: "activo",
-          ticket_token: ticketToken,
-          folio: folio
-        }
-      ])
-      .select();
-
-    if (error) throw error;
-
-    const { data: eventoData, error: eventoError } = await supabase
-      .from("cat_events")
-      .select(`
-        name,
-        city,
-        date,
-        image,
-        price
-      `)
-      .eq("id", evento_id)
-      .single();
-
-    if (eventoError) throw eventoError;
-
-    try {
-  await transporter.sendMail({
-  from: '"Cosmic Pass" <cosmicpass0484@gmail.com>',
-  to: email,
-  subject: "Tu Ticket Cosmic Pass 🎟️",
-
-  html: `
-    <h1>Tu acceso fue generado correctamente</h1>
-    <p><strong>Evento:</strong> ${eventoData.name}</p>
-    <p><strong>Ciudad:</strong> ${eventoData.city}</p>
-    <p><strong>Fecha:</strong> ${eventoData.date}</p>
-    <p><strong>Folio:</strong> ${folio}</p>
-    <p>Presenta este QR en acceso:</p>
-    <img src="cid:ticketqr" width="250" />
-    <p>Gracias por usar Cosmic Pass 🚀</p>
-  `,
-
- attachments: [
-  {
-    filename: "ticket-qr.png",
-    content: qrImage.split("base64,")[1],
-    encoding: "base64",
-    cid: "ticketqr"
-  }
-]
-});
-} catch (mailError) {
-  console.error("Error enviando correo:", mailError);
-}
-
-    res.json({
-      success: true,
-      message: "Ticket generado correctamente",
-      ticket: {
-        ...data[0],
-        evento_nombre: eventoData.name,
-        lugar: eventoData.city,
-        fecha_evento: eventoData.date,
-        imagen_evento: eventoData.image,
-        precio_evento: eventoData.price
-      }
-    });
-
-  } catch (error) {
-    console.error("ERROR CREATE TICKET:", error);
-
-    res.status(500).json({
-      success: false,
-      message: error.message,
-      detalle: error
-    });
-  }
-});
-
 app.post("/mis-boletos", async (req, res) => {
   try {
     const { email, telefono } = req.body;
@@ -806,6 +695,24 @@ app.post("/crear-ticket-gratis", async (req, res) => {
       });
     }
 
+  const { data: evento, error: eventoError } = await supabase
+  .from("cat_events")
+  .select(`
+    name,
+    city,
+    date,
+    image
+  `)
+  .eq("id", ticket.id_evento)
+  .single();
+
+if (eventoError || !evento) {
+  return res.status(404).json({
+    success:false,
+    error:"Evento no encontrado"
+  });
+}
+
     if (ticket.stock_disponible !== null && ticket.stock_disponible < Number(cantidad)) {
       return res.status(400).json({
         success:false,
@@ -815,7 +722,6 @@ app.post("/crear-ticket-gratis", async (req, res) => {
 
     const ticketToken = crypto.randomUUID();
     const folio = `CP-${Date.now()}`;
-
     const qrImage = await QRCode.toDataURL(ticketToken, {
       width:300,
       margin:2,
@@ -858,15 +764,45 @@ app.post("/crear-ticket-gratis", async (req, res) => {
         from:'"Cosmic Pass" <cosmicpass0484@gmail.com>',
         to:correo,
         subject:"Tu acceso Cosmic Pass 🎟️",
-        html:`
-          <h1>Tu acceso fue generado correctamente</h1>
-          <p><strong>Nombre:</strong> ${nombre}</p>
-          <p><strong>Tipo de acceso:</strong> ${ticket.tipo_ticket}</p>
-          <p><strong>Folio:</strong> ${folio}</p>
-          <p>Presenta este QR en el acceso:</p>
-          <img src="cid:ticketqr" width="250" />
-          <p>Gracias por usar Cosmic Pass 🚀</p>
-        `,
+       html:`
+  <div style="font-family:Arial,sans-serif;background:#f4f4f4;padding:24px;">
+    <div style="max-width:560px;margin:auto;background:#ffffff;border-radius:16px;overflow:hidden;">
+      
+      <img src="${evento.image}" style="width:100%;display:block;" />
+
+      <div style="padding:24px;">
+        <h1 style="margin:0 0 10px;">🎉 Tu acceso está listo</h1>
+
+        <h2 style="margin:0 0 16px;color:#111;">
+          ${evento.name}
+        </h2>
+
+        <p><strong>📍 Lugar:</strong> ${evento.city || "Por confirmar"}</p>
+        <p><strong>📅 Fecha:</strong> ${evento.date || "Por confirmar"}</p>
+
+        <hr style="border:none;border-top:1px solid #ddd;margin:20px 0;" />
+
+        <p><strong>👤 Nombre:</strong> ${nombre}</p>
+        <p><strong>🎟️ Tipo de acceso:</strong> ${ticket.tipo_ticket}</p>
+        <p><strong>🔖 Folio:</strong> ${folio}</p>
+
+        <div style="text-align:center;margin:28px 0;">
+          <p><strong>Presenta este QR en el acceso:</strong></p>
+          <img src="cid:ticketqr" width="260" />
+        </div>
+
+        <p style="font-size:14px;color:#555;">
+          Este QR es único y válido para un solo ingreso. No lo compartas con terceros.
+        </p>
+
+        <p style="margin-top:24px;">
+          Gracias por usar <strong>Cosmic Pass</strong> 🚀
+        </p>
+      </div>
+
+    </div>
+  </div>
+`,
         attachments:[
           {
             filename:"ticket-qr.png",
