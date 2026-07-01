@@ -1579,39 +1579,6 @@ footer{
     0 0 20px rgba(0,229,255,.06);
 }
 
-.producer-story h2::after,
-.trust h2::after,
-.producer-socials h2::after,
-.why-cosmic h2::after,
-.events h2::after{
-
-  content:"";
-
-  position:absolute;
-
-  left:50%;
-  bottom:-18px;
-
-  transform:translateX(-50%);
-
-  width:140px;
-  height:4px;
-
-  border-radius:999px;
-
-  background:
-    linear-gradient(
-      90deg,
-      transparent,
-      var(--primary),
-      #7b2cff,
-      transparent
-    );
-
-  box-shadow:
-    0 0 25px rgba(0,229,255,.6);
-}
-
 .producer-story p {
   max-width: 750px;
   margin: auto;
