@@ -3916,11 +3916,39 @@ section{
   }
 
   .commission-hero{
-    padding:130px 6% 60px;
+     min-height:auto !important;
+    padding:95px 20px 28px !important;
+  }
+
+  .commission-calculator{
+        padding:20px 16px 34px !important;
+  }
+
+   .fees-section{
+    margin:24px auto 40px;
+    width:calc(100% - 24px);
+  }
+
+  .official-fees{
+    padding:40px 18px;
+  }
+
+  .commission-note{
+    margin:0 18px 40px;
+    padding:24px;
+  }
+
+  .fees-header{
+    margin-bottom:28px;
+  }
+
+  .difference-box{
+    margin-top:18px;
   }
 
   .calculator-card{
     padding:22px;
+    border-radius:22px;
   }
 
   .calculator-inputs,
