@@ -2581,32 +2581,49 @@ footer{
 }
 
 .cashless-banner{
-  margin:30px auto;
-  padding:34px 42px;
+  width:min(1180px, calc(100% - 48px));
+  margin:80px auto 40px;
+  padding:36px 42px;
   display:flex;
   align-items:center;
   justify-content:space-between;
-  gap:24px;
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  background:linear-gradient(135deg,var(--surface),var(--surface-hover));
+  gap:32px;
+  border-radius:24px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.04);
+  box-shadow:0 24px 80px rgba(0,0,0,.25);
+}
+
+.cashless-banner div{
+  max-width:680px;
 }
 
 .cashless-banner span{
-  color:var(--primary);
-  font-size:.8rem;
+  display:block;
+  margin-bottom:12px;
+  color:#00eaff;
+  font-size:13px;
   font-weight:800;
-  letter-spacing:.12em;
+  letter-spacing:2px;
 }
 
 .cashless-banner h2{
-  margin:10px 0;
-  font-size:clamp(1.7rem,3vw,2.5rem);
+  margin:0 0 12px;
+  font-size:42px;
+  line-height:1;
 }
 
 .cashless-banner p{
-  color:var(--muted);
+  margin:0;
   max-width:620px;
+  color:rgba(255,255,255,.78);
+  font-size:17px;
+  line-height:1.55;
+}
+
+.cashless-banner .btn-primary{
+  flex-shrink:0;
+  white-space:nowrap;
 }
 
 .fees-section{
@@ -3941,11 +3958,27 @@ section{
   }
 
   .cashless-banner{
-    margin:50px 5%;
-    padding:28px;
+    width:calc(100% - 32px);
+    margin:56px auto 32px;
+    padding:28px 22px;
     flex-direction:column;
     align-items:flex-start;
+    border-radius:20px;
   }
+
+  .cashless-banner h2{
+    font-size:34px;
+  }
+
+  .cashless-banner p{
+    font-size:15px;
+  }
+
+  .cashless-banner .btn-primary{
+    width:100%;
+    text-align:center;
+  }
+
 
   .hero h1{
     font-size:1.55rem !important;
@@ -4029,12 +4062,6 @@ section{
 
     .fees-grid{
     grid-template-columns:1fr;
-  }
-
-  .cashless-banner{
-    flex-direction:column;
-    align-items:flex-start;
-    padding:34px;
   }
 
   .dashboard-main{
