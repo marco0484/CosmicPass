@@ -743,7 +743,7 @@ if (
       return;
     }
 
-    alert("Acceso gratuito generado correctamente 🚀");
+    alert("Tu acceso a sido enviado al correo registrado 🚀");
     closeUserDataModal();
     closeTicketModal();
 
