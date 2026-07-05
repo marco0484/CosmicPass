@@ -1,41 +1,41 @@
 .commission-hero{
-  min-height:55vh;
-  padding:140px 20px 60px;
+  min-height:52vh;
+  padding:130px 20px 55px;
   display:flex;
   flex-direction:column;
   justify-content:center;
   align-items:center;
   text-align:center;
-  background:
-    radial-gradient(circle at top,rgba(0,229,255,.08),transparent 40%),
-    linear-gradient(180deg,#050816,#071018);
+  background:radial-gradient(circle at top,rgba(0,229,255,.1),transparent 42%),linear-gradient(180deg,#050816,#071018);
 }
 
-.commission-hero span{
+.commission-hero span,
+.calculator-head span,
+.fees-header span{
   color:var(--primary);
-  font-size:13px;
-  font-weight:800;
+  font-size:12px;
+  font-weight:900;
   letter-spacing:4px;
-  margin-bottom:18px;
 }
 
 .commission-hero h1{
-  max-width:950px;
-  font-size:clamp(44px,7vw,86px);
+  max-width:920px;
+  margin:18px auto;
+  font-size:clamp(42px,7vw,82px);
   line-height:.95;
   letter-spacing:-3px;
-  margin-bottom:22px;
 }
 
 .commission-hero p{
-  max-width:700px;
+  max-width:680px;
   color:rgba(255,255,255,.68);
-  font-size:20px;
+  font-size:19px;
   line-height:1.7;
 }
 
-.commission-calculator{
-  padding:20px 20px 80px;
+.commission-calculator,
+.official-fees{
+  padding:70px 20px;
   background:linear-gradient(180deg,#071018,#0b1220);
 }
 
@@ -48,32 +48,28 @@
   border:1px solid rgba(255,255,255,.08);
 }
 
-.calculator-head{
+.calculator-head,
+.fees-header{
   text-align:center;
-  margin-bottom:28px;
+  margin-bottom:32px;
 }
 
-.calculator-head span{
-  color:var(--primary);
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:3px;
-}
-
-.calculator-head h2{
-  margin:12px auto;
+.calculator-head h2,
+.fees-header h2{
   max-width:760px;
-  font-size:clamp(30px,4vw,52px);
+  margin:12px auto;
+  font-size:clamp(32px,5vw,56px);
   line-height:1;
   letter-spacing:-2px;
 }
 
-.calculator-head p{
-  max-width:680px;
+.calculator-head p,
+.fees-header p{
+  max-width:720px;
   margin:auto;
-  color:rgba(255,255,255,.65);
-  line-height:1.6;
+  color:rgba(255,255,255,.66);
   font-size:16px;
+  line-height:1.7;
 }
 
 .calculator-inputs{
@@ -96,7 +92,7 @@
 .input-group label{
   color:rgba(255,255,255,.72);
   font-size:14px;
-  font-weight:700;
+  font-weight:800;
 }
 
 .input-group input,
@@ -125,7 +121,7 @@
 }
 
 .real-result{
-  min-height:130px;
+  min-height:120px;
   padding:20px;
   border-radius:20px;
   background:rgba(255,255,255,.04);
@@ -141,7 +137,7 @@
   margin-bottom:10px;
   color:rgba(255,255,255,.58);
   font-size:14px;
-  font-weight:700;
+  font-weight:800;
 }
 
 .real-result strong{
@@ -163,7 +159,7 @@
 .difference-box span{
   color:var(--primary);
   font-size:12px;
-  font-weight:800;
+  font-weight:900;
   letter-spacing:3px;
 }
 
@@ -179,14 +175,265 @@
   line-height:1.5;
 }
 
-@media(max-width:900px){
+.fees-grid-compact{
+  max-width:1200px;
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:22px;
+}
+
+.premium-fee-card{
+  min-height:480px;
+  padding:28px;
+  border-radius:24px;
+  background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.022));
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:0 18px 45px rgba(0,0,0,.25);
+}
+
+.active-fee,
+.stripe-fee-card,
+.cosmic-fee-card{
+  border-color:rgba(0,229,255,.45);
+}
+
+.fee-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+  margin-bottom:28px;
+}
+
+.official-badge,
+.cosmic-badge{
+  display:inline-flex;
+  align-items:center;
+  padding:8px 13px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.official-badge{
+  background:rgba(0,255,120,.12);
+  color:#41ff91;
+}
+
+.cosmic-badge{
+  background:rgba(0,229,255,.15);
+  color:var(--primary);
+}
+
+.provider-logo{
+  width:118px;
+  max-height:34px;
+  object-fit:contain;
+  display:block;
+}
+
+.stripe-logo{
+  width:86px;
+}
+
+.provider-logo-text{
+  color:var(--primary);
+  font-size:14px;
+  font-weight:900;
+  letter-spacing:2px;
+}
+
+.fee-icon{
+  position:relative;
+  width:74px;
+  height:74px;
+  margin-bottom:22px;
+  border-radius:50%;
+  background:rgba(0,229,255,.08);
+  border:1px solid rgba(0,229,255,.16);
+}
+
+.fee-icon::before,
+.fee-icon::after{
+  content:"";
+  position:absolute;
+  display:block;
+}
+
+.card-icon::before{
+  width:34px;
+  height:22px;
+  left:18px;
+  top:25px;
+  border:2px solid var(--primary);
+  border-radius:6px;
+}
+
+.card-icon::after{
+  width:20px;
+  height:2px;
+  left:25px;
+  top:34px;
+  background:var(--primary);
+  border-radius:10px;
+}
+
+.calculator-icon::before{
+  width:30px;
+  height:38px;
+  left:20px;
+  top:17px;
+  border:2px solid var(--primary);
+  border-radius:8px;
+}
+
+.calculator-icon::after{
+  width:16px;
+  height:4px;
+  left:27px;
+  top:25px;
+  background:var(--primary);
+  box-shadow:-6px 12px 0 rgba(0,229,255,.7),6px 12px 0 rgba(0,229,255,.7),-6px 22px 0 rgba(0,229,255,.7),6px 22px 0 rgba(0,229,255,.7);
+}
+
+.premium-fee-card h3{
+  margin-bottom:12px;
+  font-size:26px;
+}
+
+.premium-fee-card strong{
+  display:block;
+  color:var(--primary);
+  font-size:42px;
+  line-height:1;
+  margin-bottom:8px;
+}
+
+.premium-fee-card .fixed-fee{
+  margin:0 0 14px;
+  color:#fff;
+  font-size:25px;
+  font-weight:900;
+}
+
+.premium-fee-card small{
+  display:inline-flex;
+  width:max-content;
+  margin-bottom:18px;
+  padding:8px 12px;
+  border-radius:10px;
+  background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.08);
+  color:rgba(255,255,255,.78);
+  font-size:13px;
+  font-weight:800;
+}
+
+.premium-fee-card p{
+  color:rgba(255,255,255,.68);
+  line-height:1.6;
+  font-size:15px;
+}
+
+.premium-fee-card a{
+  display:inline-flex;
+  margin-top:20px;
+  color:var(--primary);
+  text-decoration:none;
+  font-weight:900;
+}
+
+.premium-fee-card a:hover{
+  color:#fff;
+}
+
+.fee-breakdown{
+  display:grid;
+  gap:10px;
+  margin:20px 0 4px;
+}
+
+.fee-breakdown div{
+  padding:13px 14px;
+  border-radius:14px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.fee-breakdown span{
+  display:block;
+  margin-bottom:4px;
+  color:rgba(255,255,255,.55);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+
+.fee-breakdown b{
+  color:#fff;
+  font-size:15px;
+}
+
+.fees-trust-banner{
+  max-width:1200px;
+  margin:24px auto 0;
+  padding:24px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  border-radius:20px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.fees-trust-banner div{
+  display:flex;
+  align-items:center;
+  gap:18px;
+  flex-wrap:wrap;
+}
+
+.fees-trust-banner span{
+  width:58px;
+  height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:50%;
+  background:rgba(0,229,255,.08);
+  border:1px solid rgba(0,229,255,.15);
+  font-size:28px;
+}
+
+.fees-trust-banner strong{
+  font-size:22px;
+}
+
+.fees-trust-banner p{
+  width:100%;
+  margin-left:76px;
+  color:rgba(255,255,255,.68);
+}
+
+.fees-trust-banner small{
+  white-space:nowrap;
+  padding:12px 16px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,.12);
+  color:#fff;
+}
+
+@media(max-width:1000px){
+  .fees-grid-compact,
   .real-results{
     grid-template-columns:1fr 1fr;
   }
 }
 
 @media(max-width:650px){
-
   .commission-hero{
     min-height:45vh;
     padding:120px 18px 40px;
@@ -201,8 +448,9 @@
     font-size:17px;
   }
 
-  .commission-calculator{
-    padding:20px 14px 60px;
+  .commission-calculator,
+  .official-fees{
+    padding:50px 14px;
   }
 
   .calculator-card{
@@ -211,7 +459,8 @@
   }
 
   .calculator-inputs,
-  .real-results{
+  .real-results,
+  .fees-grid-compact{
     grid-template-columns:1fr;
   }
 
@@ -219,4 +468,17 @@
     grid-column:auto;
   }
 
+  .premium-fee-card{
+    min-height:auto;
+    padding:22px;
+  }
+
+  .fees-trust-banner{
+    flex-direction:column;
+    align-items:flex-start;
+  }
+
+  .fees-trust-banner p{
+    margin-left:0;
+  }
 }

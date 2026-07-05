@@ -39,18 +39,18 @@
 
 <section class="commission-hero">
   <span>TRANSPARENCIA FINANCIERA</span>
-  <h1>Simula cuánto recibes por cada venta</h1>
-  <p>Calcula una referencia aproximada de comisión y monto neto usando Mercado Pago o Stripe antes de publicar tu evento.</p>
+  <h1>Comisiones claras antes de vender</h1>
+  <p>Conoce cuánto recibirías realmente por tus boletos según el método de cobro.</p>
 </section>
 
 <section class="commission-calculator">
   <div class="calculator-card">
 
-    <div class="calculator-head">
-      <span>COMISIONES REALES Y CLARAS</span>
-      <h2>Calcula cuánto recibes por tus boletos</h2>
-      <p>Selecciona el método de cobro, precio y cantidad. Te mostramos comisión, monto neto y precio sugerido si quieres absorber la comisión.</p>
-    </div>
+<div class="calculator-head">
+  <span>SIMULADOR</span>
+  <h2>Calcula tu venta</h2>
+  <p>Ingresa el precio, cantidad de boletos y método de cobro para estimar comisión, neto y precio sugerido.</p>
+</div>
 
 <div class="calculator-inputs">
   <div class="input-group">
@@ -109,28 +109,87 @@
 <section class="official-fees">
   <div class="fees-header">
     <span>FUENTES OFICIALES</span>
-    <h2>Tarifas verificables</h2>
-    <p>Las tarifas reales pueden cambiar según el proveedor, método de pago, país, plazo de liquidación o condiciones comerciales. Por eso mostramos estimados y referencias oficiales.</p>
+    <h2>Tarifas oficiales utilizadas</h2>
+    <p>Estas son las tarifas públicas que usamos como referencia para estimar tus comisiones.</p>
   </div>
 
-  <div class="fees-grid">
-    <div class="fee-card">
+  <div class="fees-grid fees-grid-compact">
+
+    <div class="fee-card premium-fee-card active-fee">
+      <div class="fee-top">
+        <span class="official-badge">✓ OFICIAL</span>
+        <img src="images/mercado-pago.png" class="provider-logo mp-logo" alt="Mercado Pago">
+      </div>
+
+      <div class="fee-icon card-icon"></div>
+
       <h3>Mercado Pago</h3>
-      <p>Mercado Pago indica que las comisiones varían según el plazo elegido para recibir el dinero y el medio de pago utilizado.</p>
-      <a href="https://www.mercadopago.com.mx/herramientas-para-vender/link-de-pago" target="_blank" rel="noopener noreferrer">Ver fuente oficial</a>
+      <strong>3.49%</strong>
+      <p class="fixed-fee">+ $4.00 + IVA</p>
+      <small>Tarjeta al instante</small>
+
+      <div class="fee-breakdown">
+        <div>
+          <span>7 días</span>
+          <b>3.19% + $4 + IVA</b>
+        </div>
+        <div>
+          <span>30 días</span>
+          <b>2.95% + $4 + IVA</b>
+        </div>
+        <div>
+          <span>Oxxo / efectivo</span>
+          <b>3.79% + $4 + IVA</b>
+        </div>
+      </div>
+
+      <a href="https://www.mercadopago.com.mx/herramientas-para-vender/link-de-pago" target="_blank" rel="noopener noreferrer">Ver fuente oficial ↗</a>
     </div>
 
-    <div class="fee-card">
+    <div class="fee-card premium-fee-card stripe-fee-card">
+      <div class="fee-top">
+        <span class="official-badge">✓ OFICIAL</span>
+        <img src="images/stripe.svg" class="provider-logo stripe-logo" alt="Stripe">
+      </div>
+
+      <div class="fee-icon card-icon"></div>
+
       <h3>Stripe</h3>
-      <p>Stripe publica sus tarifas en su página oficial de precios para México.</p>
-      <a href="https://stripe.com/mx/pricing" target="_blank" rel="noopener noreferrer">Ver fuente oficial</a>
+      <strong>3.6%</strong>
+      <p class="fixed-fee">+ $3.00</p>
+      <small>Tarjeta nacional</small>
+
+      <p>Tarifa estándar publicada para pagos con tarjeta nacional en México.</p>
+
+      <a href="https://stripe.com/mx/pricing" target="_blank" rel="noopener noreferrer">Ver fuente oficial ↗</a>
     </div>
 
-    <div class="fee-card">
-      <h3>Cosmic Pass</h3>
-      <p>El simulador es una herramienta de apoyo para estimar ingresos netos antes de publicar boletos.</p>
-      <a href="index.html#contacto">Resolver dudas</a>
+    <div class="fee-card premium-fee-card cosmic-fee-card">
+      <div class="fee-top">
+        <span class="cosmic-badge">COSMIC PASS</span>
+        <span class="provider-logo-text">Cosmic Pass</span>
+      </div>
+
+      <div class="fee-icon calculator-icon"></div>
+
+      <h3>¿Cómo calculamos?</h3>
+      <strong>Transparente</strong>
+      <p class="fixed-fee">Sin letras chiquitas</p>
+
+      <p>Tomamos comisión porcentual, cargo fijo, IVA cuando aplica y calculamos el precio sugerido para absorber comisión.</p>
+
+      <a href="index.html#contacto">Resolver dudas ↗</a>
     </div>
+
+  </div>
+
+  <div class="fees-trust-banner">
+    <div>
+      <span>🛡️</span>
+      <strong>Transparencia ante todo</strong>
+      <p>Las comisiones mostradas provienen de tarifas públicas de Mercado Pago y Stripe.</p>
+    </div>
+    <small>Actualizado: Julio 2026</small>
   </div>
 </section>
 
