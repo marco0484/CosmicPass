@@ -1,5 +1,41 @@
+.commission-hero{
+  min-height:55vh;
+  padding:140px 20px 60px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  background:
+    radial-gradient(circle at top,rgba(0,229,255,.08),transparent 40%),
+    linear-gradient(180deg,#050816,#071018);
+}
+
+.commission-hero span{
+  color:var(--primary);
+  font-size:13px;
+  font-weight:800;
+  letter-spacing:4px;
+  margin-bottom:18px;
+}
+
+.commission-hero h1{
+  max-width:950px;
+  font-size:clamp(44px,7vw,86px);
+  line-height:.95;
+  letter-spacing:-3px;
+  margin-bottom:22px;
+}
+
+.commission-hero p{
+  max-width:700px;
+  color:rgba(255,255,255,.68);
+  font-size:20px;
+  line-height:1.7;
+}
+
 .commission-calculator{
-  padding:80px 20px;
+  padding:20px 20px 80px;
   background:linear-gradient(180deg,#071018,#0b1220);
 }
 
@@ -54,7 +90,7 @@
 }
 
 .input-group.wide{
-  grid-column:1 / -1;
+  grid-column:1/-1;
 }
 
 .input-group label{
@@ -150,8 +186,23 @@
 }
 
 @media(max-width:650px){
+
+  .commission-hero{
+    min-height:45vh;
+    padding:120px 18px 40px;
+  }
+
+  .commission-hero h1{
+    font-size:clamp(40px,10vw,60px);
+    letter-spacing:-2px;
+  }
+
+  .commission-hero p{
+    font-size:17px;
+  }
+
   .commission-calculator{
-    padding:50px 14px;
+    padding:20px 14px 60px;
   }
 
   .calculator-card{
@@ -167,4 +218,5 @@
   .input-group.wide{
     grid-column:auto;
   }
+
 }
