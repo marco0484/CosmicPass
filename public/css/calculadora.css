@@ -427,35 +427,52 @@
 }
 
 @media(max-width:1000px){
+
   .fees-grid-compact,
   .real-results{
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:repeat(2,1fr);
   }
+
 }
 
 @media(max-width:650px){
+
   .commission-hero{
-    min-height:45vh;
-    padding:120px 18px 40px;
+    min-height:38vh;
+    padding:110px 18px 30px;
   }
 
   .commission-hero h1{
-    font-size:clamp(40px,10vw,60px);
+    font-size:clamp(34px,10vw,48px);
+    line-height:1;
     letter-spacing:-2px;
   }
 
   .commission-hero p{
-    font-size:17px;
+    font-size:16px;
+    line-height:1.6;
   }
 
   .commission-calculator,
   .official-fees{
-    padding:50px 14px;
+    padding:36px 14px;
   }
 
   .calculator-card{
     padding:18px;
-    border-radius:22px;
+    border-radius:20px;
+  }
+
+  .calculator-head{
+    margin-bottom:20px;
+  }
+
+  .calculator-head h2{
+    font-size:30px;
+  }
+
+  .calculator-head p{
+    font-size:15px;
   }
 
   .calculator-inputs,
@@ -468,17 +485,146 @@
     grid-column:auto;
   }
 
+  .real-result{
+    min-height:auto;
+    padding:18px;
+  }
+
   .premium-fee-card{
     min-height:auto;
-    padding:22px;
+    padding:18px;
+    border-radius:18px;
+  }
+
+  .fee-top{
+    margin-bottom:18px;
+  }
+
+  .provider-logo{
+    width:105px;
+  }
+
+  .stripe-logo{
+    width:72px;
+  }
+
+  .fee-icon{
+    width:56px;
+    height:56px;
+    margin-bottom:16px;
+  }
+
+  .card-icon::before{
+    width:26px;
+    height:16px;
+    left:13px;
+    top:18px;
+  }
+
+  .card-icon::after{
+    width:16px;
+    left:19px;
+    top:26px;
+  }
+
+  .calculator-icon::before{
+    width:24px;
+    height:30px;
+    left:15px;
+    top:11px;
+  }
+
+  .calculator-icon::after{
+    width:12px;
+    left:21px;
+    top:18px;
+  }
+
+  .premium-fee-card h3{
+    font-size:24px;
+    margin-bottom:8px;
+  }
+
+  .premium-fee-card strong{
+    font-size:34px;
+    margin-bottom:6px;
+  }
+
+  .premium-fee-card .fixed-fee{
+    font-size:20px;
+    margin-bottom:10px;
+  }
+
+  .premium-fee-card small{
+    margin-bottom:14px;
+    padding:7px 10px;
+    font-size:12px;
+  }
+
+  .premium-fee-card p{
+    font-size:14px;
+    line-height:1.5;
+  }
+
+  .fee-breakdown{
+    gap:8px;
+    margin:14px 0;
+  }
+
+  .fee-breakdown div{
+    padding:10px 12px;
+  }
+
+  .fee-breakdown span{
+    font-size:11px;
+  }
+
+  .fee-breakdown b{
+    font-size:14px;
+  }
+
+  .premium-fee-card a{
+    margin-top:12px;
+    font-size:15px;
+  }
+
+  .fees-header{
+    margin-bottom:24px;
+  }
+
+  .fees-header h2{
+    font-size:34px;
+  }
+
+  .fees-header p{
+    font-size:15px;
   }
 
   .fees-trust-banner{
+    padding:18px;
     flex-direction:column;
     align-items:flex-start;
+    gap:14px;
+  }
+
+  .fees-trust-banner span{
+    width:48px;
+    height:48px;
+    font-size:22px;
+  }
+
+  .fees-trust-banner strong{
+    font-size:18px;
   }
 
   .fees-trust-banner p{
     margin-left:0;
+    font-size:14px;
   }
+
+  .fees-trust-banner small{
+    width:100%;
+    text-align:center;
+  }
+
 }
