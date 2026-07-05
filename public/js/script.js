@@ -404,29 +404,42 @@ function initBuscador(){
     }
   });
 }
-
 const ticketAmount = document.getElementById("ticketAmount");
 const ticketQty = document.getElementById("ticketQty");
-const mpFee = document.getElementById("mpFee");
-const mpNet = document.getElementById("mpNet");
-const stripeFee = document.getElementById("stripeFee");
-const stripeNet = document.getElementById("stripeNet");
+const feeMethod = document.getElementById("feeMethod");
+const totalSold = document.getElementById("totalSold");
+const realFee = document.getElementById("realFee");
+const realNet = document.getElementById("realNet");
+const suggestedPrice = document.getElementById("suggestedPrice");
 const bestOption = document.getElementById("bestOption");
 const differenceText = document.getElementById("differenceText");
-const calcTabs = document.querySelectorAll(".calc-tab");
-const amountLabel = document.getElementById("amountLabel");
-const mpFeeLabel = document.getElementById("mpFeeLabel");
-const mpNetLabel = document.getElementById("mpNetLabel");
-const stripeFeeLabel = document.getElementById("stripeFeeLabel");
-const stripeNetLabel = document.getElementById("stripeNetLabel");
-const mpHelp = document.getElementById("mpHelp");
-const stripeHelp = document.getElementById("stripeHelp");
-
-let calcMode = "sell";
 
 const FEES = {
-  mercadoPago:{percent:0.0349,fixed:4},
-  stripe:{percent:0.036,fixed:3}
+  mpCardInstant:{
+    name:"Mercado Pago tarjeta - al instante",
+    percent:0.0349,
+    fixed:4.64
+  },
+  mpCard7:{
+    name:"Mercado Pago tarjeta - 7 días",
+    percent:0.0319,
+    fixed:4.64
+  },
+  mpCard30:{
+    name:"Mercado Pago tarjeta - 30 días",
+    percent:0.0295,
+    fixed:4.64
+  },
+  mpCash:{
+    name:"Mercado Pago Oxxo / efectivo",
+    percent:0.0379,
+    fixed:4.64
+  },
+  stripe:{
+    name:"Stripe tarjeta nacional",
+    percent:0.036,
+    fixed:3
+  }
 };
 
 function moneyComision(value){
@@ -437,136 +450,40 @@ function moneyComision(value){
   });
 }
 
-function precioParaRecibir(neto, fee){
-  return (neto + fee.fixed) / (1 - fee.percent);
-}
-
 function calcularComisiones(){
-  if(!ticketAmount || !ticketQty || !mpFee || !mpNet || !stripeFee || !stripeNet || !bestOption || !differenceText) return;
+  if(!ticketAmount || !ticketQty || !feeMethod) return;
 
-  const valor = Number(ticketAmount.value || 0);
+  const precio = Number(ticketAmount.value || 0);
   const cantidad = Number(ticketQty.value || 1);
+  const fee = FEES[feeMethod.value];
 
-  if(valor <= 0){
-    mpFee.textContent = "$0.00";
-    mpNet.textContent = "$0.00";
-    stripeFee.textContent = "$0.00";
-    stripeNet.textContent = "$0.00";
-    bestOption.textContent = "Ingresa un monto";
-    differenceText.textContent = "El simulador calculará automáticamente el monto neto o el precio sugerido.";
+  if(precio <= 0 || cantidad <= 0){
+    totalSold.textContent = "$0.00";
+    realFee.textContent = "$0.00";
+    realNet.textContent = "$0.00";
+    suggestedPrice.textContent = "$0.00";
+    bestOption.textContent = "Ingresa un precio para calcular";
+    differenceText.textContent = "Usamos tarifas públicas de Mercado Pago y Stripe. Los montos son estimados.";
     return;
   }
 
-  if(calcMode === "sell"){
-    const total = valor * cantidad;
-    const mpComision = ((valor * FEES.mercadoPago.percent) + FEES.mercadoPago.fixed) * cantidad;
-    const stripeComision = ((valor * FEES.stripe.percent) + FEES.stripe.fixed) * cantidad;
-    const mpFinal = total - mpComision;
-    const stripeFinal = total - stripeComision;
-    const diferencia = Math.abs(mpFinal - stripeFinal);
+  const ventaTotal = precio * cantidad;
+  const comisionPorBoleto = (precio * fee.percent) + fee.fixed;
+  const comisionTotal = comisionPorBoleto * cantidad;
+  const neto = ventaTotal - comisionTotal;
+  const precioAbsorbido = (precio + fee.fixed) / (1 - fee.percent);
 
-    mpFee.textContent = moneyComision(mpComision);
-    mpNet.textContent = moneyComision(mpFinal);
-    stripeFee.textContent = moneyComision(stripeComision);
-    stripeNet.textContent = moneyComision(stripeFinal);
+  totalSold.textContent = moneyComision(ventaTotal);
+  realFee.textContent = moneyComision(comisionTotal);
+  realNet.textContent = moneyComision(neto);
+  suggestedPrice.textContent = `${moneyComision(precioAbsorbido)} c/u`;
 
-    if(mpFinal > stripeFinal){
-      bestOption.textContent = "Mercado Pago deja un mayor monto neto";
-      differenceText.textContent = `Diferencia aproximada: ${moneyComision(diferencia)} para ${cantidad} boleto(s).`;
-    }else if(stripeFinal > mpFinal){
-      bestOption.textContent = "Stripe deja un mayor monto neto";
-      differenceText.textContent = `Diferencia aproximada: ${moneyComision(diferencia)} para ${cantidad} boleto(s).`;
-    }else{
-      bestOption.textContent = "Ambas opciones quedan prácticamente iguales";
-      differenceText.textContent = "No existe una diferencia significativa.";
-    }
-
-    return;
-  }
-
-  const netoDeseadoTotal = valor;
-  const netoPorBoleto = netoDeseadoTotal / cantidad;
-
-  const precioMP = precioParaRecibir(netoPorBoleto, FEES.mercadoPago);
-  const precioStripe = precioParaRecibir(netoPorBoleto, FEES.stripe);
-
-  const comisionMP = ((precioMP * FEES.mercadoPago.percent) + FEES.mercadoPago.fixed) * cantidad;
-  const comisionStripe = ((precioStripe * FEES.stripe.percent) + FEES.stripe.fixed) * cantidad;
-
-  const totalMP = precioMP * cantidad;
-  const totalStripe = precioStripe * cantidad;
-  const diferencia = Math.abs(totalMP - totalStripe);
-
-  mpFee.textContent = moneyComision(comisionMP);
-  mpNet.textContent = moneyComision(totalMP);
-  stripeFee.textContent = moneyComision(comisionStripe);
-  stripeNet.textContent = moneyComision(totalStripe);
-
-  if(totalMP < totalStripe){
-    bestOption.textContent = "Mercado Pago requiere menor precio de venta";
-    differenceText.textContent = `Para recibir ${moneyComision(netoDeseadoTotal)}, venderías aproximadamente en ${moneyComision(precioMP)} por boleto.`;
-  }else if(totalStripe < totalMP){
-    bestOption.textContent = "Stripe requiere menor precio de venta";
-    differenceText.textContent = `Para recibir ${moneyComision(netoDeseadoTotal)}, venderías aproximadamente en ${moneyComision(precioStripe)} por boleto.`;
-  }else{
-    bestOption.textContent = "Ambas opciones requieren un precio similar";
-    differenceText.textContent = `Para recibir ${moneyComision(netoDeseadoTotal)}, ambos precios quedan casi iguales.`;
-  }
+  bestOption.textContent = `Con ${fee.name}, recibirías aprox. ${moneyComision(neto)}`;
+  differenceText.textContent = `Si quieres absorber la comisión, publica el boleto en aprox. ${moneyComision(precioAbsorbido)}.`;
 }
 
-function actualizarModo(){
-  if(!amountLabel) return;
-
-  if(calcMode === "sell"){
-    amountLabel.textContent = "Precio del boleto";
-    ticketAmount.placeholder = "Ej. 1000";
-
-    mpFeeLabel.textContent = "Comisión estimada";
-    mpNetLabel.textContent = "Monto neto estimado";
-    stripeFeeLabel.textContent = "Comisión estimada";
-    stripeNetLabel.textContent = "Monto neto estimado";
-
-    mpHelp.textContent = "Si vendes en ese precio, esto recibirías aproximadamente.";
-    stripeHelp.textContent = "Si vendes en ese precio, esto recibirías aproximadamente.";
-  }else{
-    amountLabel.textContent = "Monto neto que quieres recibir";
-    ticketAmount.placeholder = "Ej. 100000";
-
-    mpFeeLabel.textContent = "Comisión estimada";
-    mpNetLabel.textContent = "Precio total sugerido";
-    stripeFeeLabel.textContent = "Comisión estimada";
-    stripeNetLabel.textContent = "Precio total sugerido";
-
-    mpHelp.textContent = "Precio aproximado que deberías cobrar para alcanzar el neto deseado.";
-    stripeHelp.textContent = "Precio aproximado que deberías cobrar para alcanzar el neto deseado.";
-  }
-
-  calcularComisiones();
-}
-
-if(ticketAmount && ticketQty){
-  ticketAmount.addEventListener("input", calcularComisiones);
-  ticketQty.addEventListener("input", calcularComisiones);
-  ticketAmount.addEventListener("change", calcularComisiones);
-  ticketQty.addEventListener("change", calcularComisiones);
-
-  [ticketAmount,ticketQty].forEach(input=>{
-    if(!input) return;
-
-    input.addEventListener("keydown",e=>{
-      if(e.key==="Enter"){
-        e.preventDefault();
-        calcularComisiones();
-      }
-    });
-  });
-}
-
-calcTabs.forEach(tab=>{
-  tab.addEventListener("click",()=>{
-    calcTabs.forEach(t=>t.classList.remove("active"));
-    tab.classList.add("active");
-    calcMode = tab.dataset.mode;
-    actualizarModo();
-  });
+[ticketAmount,ticketQty,feeMethod].forEach(input=>{
+  if(!input) return;
+  input.addEventListener("input",calcularComisiones);
+  input.addEventListener("change",calcularComisiones);
 });
