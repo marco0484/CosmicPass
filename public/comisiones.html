@@ -10,6 +10,16 @@
 <link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" href="css/calculadora.css">
 </head>
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3PHJK2BYG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q3PHJK2BYG');
+</script>
+
 <body>
 
 <nav>
@@ -42,22 +52,28 @@
       <p>Selecciona el método de cobro, precio y cantidad. Te mostramos comisión, monto neto y precio sugerido si quieres absorber la comisión.</p>
     </div>
 
-    <div class="calculator-inputs">
-      <label for="ticketAmount">Precio por boleto</label>
-      <input id="ticketAmount" type="number" min="1" placeholder="Ej. 1000">
+<div class="calculator-inputs">
+  <div class="input-group">
+    <label for="ticketAmount">Precio por boleto</label>
+    <input id="ticketAmount" type="number" min="1" placeholder="Ej. 1000">
+  </div>
 
-      <label for="ticketQty">Cantidad de boletos</label>
-      <input id="ticketQty" type="number" min="1" value="1">
+  <div class="input-group">
+    <label for="ticketQty">Cantidad de boletos</label>
+    <input id="ticketQty" type="number" min="1" value="1">
+  </div>
 
-      <label for="feeMethod">Método de cobro</label>
-      <select id="feeMethod">
-        <option value="mpCardInstant">Mercado Pago tarjeta - al instante</option>
-        <option value="mpCard7">Mercado Pago tarjeta - 7 días</option>
-        <option value="mpCard30">Mercado Pago tarjeta - 30 días</option>
-        <option value="mpCash">Mercado Pago Oxxo / efectivo</option>
-        <option value="stripe">Stripe tarjeta nacional</option>
-      </select>
-    </div>
+  <div class="input-group wide">
+    <label for="feeMethod">Método de cobro</label>
+    <select id="feeMethod">
+      <option value="mpCardInstant">Mercado Pago tarjeta - al instante</option>
+      <option value="mpCard7">Mercado Pago tarjeta - 7 días</option>
+      <option value="mpCard30">Mercado Pago tarjeta - 30 días</option>
+      <option value="mpCash">Mercado Pago Oxxo / efectivo</option>
+      <option value="stripe">Stripe tarjeta nacional</option>
+    </select>
+  </div>
+</div>
 
     <div class="real-results">
       <div class="real-result">
