@@ -7,7 +7,7 @@
 <meta name="copyright" content="Cosmic Pass">
 <title>Simulador de Comisiones | Cosmic Pass</title>
 <link rel="icon" type="image/png" sizes="32x32" href="images/logo.webp">
-<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/calculadora.css">
 </head>
 <body>
 
@@ -35,43 +35,55 @@
 <section class="commission-calculator">
   <div class="calculator-card">
 
-    <div class="calculator-tabs">
-      <button class="calc-tab active" data-mode="sell">Voy a vender en</button>
-      <button class="calc-tab" data-mode="target">Quiero recibir</button>
+    <div class="calculator-head">
+      <span>COMISIONES REALES Y CLARAS</span>
+      <h2>Calcula cuánto recibes por tus boletos</h2>
+      <p>Selecciona el método de cobro, precio y cantidad. Te mostramos comisión, monto neto y precio sugerido si quieres absorber la comisión.</p>
     </div>
 
     <div class="calculator-inputs">
-      <label id="amountLabel" for="ticketAmount">Precio del boleto</label>
+      <label for="ticketAmount">Precio por boleto</label>
       <input id="ticketAmount" type="number" min="1" placeholder="Ej. 1000">
 
       <label for="ticketQty">Cantidad de boletos</label>
       <input id="ticketQty" type="number" min="1" value="1">
+
+      <label for="feeMethod">Método de cobro</label>
+      <select id="feeMethod">
+        <option value="mpCardInstant">Mercado Pago tarjeta - al instante</option>
+        <option value="mpCard7">Mercado Pago tarjeta - 7 días</option>
+        <option value="mpCard30">Mercado Pago tarjeta - 30 días</option>
+        <option value="mpCash">Mercado Pago Oxxo / efectivo</option>
+        <option value="stripe">Stripe tarjeta nacional</option>
+      </select>
     </div>
 
-    <div class="calculator-results">
-      <div class="calc-result">
-        <h3>Mercado Pago</h3>
-        <p id="mpFeeLabel">Comisión estimada</p>
-        <strong id="mpFee">$0 MXN</strong>
-        <p id="mpNetLabel">Monto neto estimado</p>
-        <strong id="mpNet">$0 MXN</strong>
-        <small id="mpHelp">Si vendes en ese precio, esto recibirías aproximadamente.</small>
+    <div class="real-results">
+      <div class="real-result">
+        <p>Total vendido</p>
+        <strong id="totalSold">$0.00</strong>
       </div>
 
-      <div class="calc-result featured">
-        <h3>Stripe</h3>
-        <p id="stripeFeeLabel">Comisión estimada</p>
-        <strong id="stripeFee">$0 MXN</strong>
-        <p id="stripeNetLabel">Monto neto estimado</p>
-        <strong id="stripeNet">$0 MXN</strong>
-        <small id="stripeHelp">Si vendes en ese precio, esto recibirías aproximadamente.</small>
+      <div class="real-result">
+        <p>Comisión estimada</p>
+        <strong id="realFee">$0.00</strong>
+      </div>
+
+      <div class="real-result featured">
+        <p>Recibirías aprox.</p>
+        <strong id="realNet">$0.00</strong>
+      </div>
+
+      <div class="real-result">
+        <p>Precio sugerido absorbiendo comisión</p>
+        <strong id="suggestedPrice">$0.00</strong>
       </div>
     </div>
 
     <div class="difference-box">
-      <span>Comparativa</span>
-      <strong id="bestOption">Ingresa un monto para comparar</strong>
-      <p id="differenceText">Puedes calcular cuánto recibirías o cuánto deberías cobrar para llegar a un monto neto.</p>
+      <span>Sin letras chiquitas</span>
+      <strong id="bestOption">Ingresa un precio para calcular</strong>
+      <p id="differenceText">Usamos tarifas públicas de Mercado Pago y Stripe. Los montos son estimados.</p>
     </div>
 
   </div>
@@ -128,6 +140,6 @@
   <br>
   <p>Desarrollado por <strong>Matehuala Digital Engineering</strong></p>
 </footer>
-<script src="js/script.js"></script>
+<script src="js/calculadora.js"></script>
 </body>
 </html>
