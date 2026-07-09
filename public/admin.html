@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Panel Admin</title>
-
-  <link rel="stylesheet" href="admin.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Dashboard | Cosmic Pass</title>
+<link rel="stylesheet" href="admin.css">
+<link rel="icon" type="image/png" href="images/logo.webp">
 </head>
 
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3PHJK2BYG"></script>
@@ -16,24 +17,131 @@
   gtag('config', 'G-Q3PHJK2BYG');
 </script>
 
+
 <body>
+<div class="admin-shell">
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="images/logo.webp" alt="Cosmic Pass">
+      <div>
+        <strong>Cosmic Pass</strong>
+        <span>Admin Console</span>
+      </div>
+    </div>
 
-  <h2>Panel de Contactos</h2>
+    <nav>
+      <a class="active" href="#">Dashboard</a>
+      <a href="#">Eventos</a>
+      <a href="#">Productoras</a>
+      <a href="#">Tickets</a>
+      <a href="#">Ventas</a>
+      <a href="#">Cortesías</a>
+      <a href="#">Usuarios</a>
+      <a href="#">Configuración</a>
+    </nav>
 
-  <button id="logoutBtn">Cerrar sesión</button>
+    <button id="logoutBtn" class="logout">Cerrar sesión</button>
+  </aside>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Nombre</th>
-        <th>Email</th>
-        <th>Mensaje</th>
-      </tr>
-    </thead>
-    <tbody id="tablaContactos"></tbody>
-  </table>
+  <main class="main">
+    <header class="topbar">
+      <div>
+        <p>Centro de control</p>
+        <h1>Dashboard</h1>
+      </div>
+      <div class="user-pill">
+        <span id="adminName">Admin</span>
+      </div>
+    </header>
 
-  <script src="js/admin.js"></script>
+    <section class="hero-card">
+      <div>
+        <p class="eyebrow">Cosmic Pass Live</p>
+        <h2>Operación de eventos en tiempo real.</h2>
+        <p class="hero-text">Administra ventas, accesos, productoras, cortesías y tickets desde un solo panel.</p>
+      </div>
+      <div class="hero-orbit">
+        <span></span>
+      </div>
+    </section>
 
+    <section class="stats-grid">
+      <article>
+        <span>Ventas totales</span>
+        <strong id="ventasTotal">$0</strong>
+        <small>Ingresos registrados</small>
+      </article>
+      <article>
+        <span>Tickets vendidos</span>
+        <strong id="ticketsVendidos">0</strong>
+        <small>Boletos generados</small>
+      </article>
+      <article>
+        <span>Eventos activos</span>
+        <strong id="eventosActivos">0</strong>
+        <small>Disponibles al público</small>
+      </article>
+      <article>
+        <span>Productoras</span>
+        <strong id="productorasTotal">0</strong>
+        <small>Operadores registrados</small>
+      </article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel large">
+        <div class="panel-head">
+          <div>
+            <span>Actividad</span>
+            <h3>Eventos recientes</h3>
+          </div>
+          <button>Ver todos</button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Evento</th>
+                <th>Ciudad</th>
+                <th>Fecha</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="tablaEventos">
+              <tr><td colspan="4">Cargando eventos...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <span>Accesos</span>
+            <h3>Resumen rápido</h3>
+          </div>
+        </div>
+
+        <div class="quick-list">
+          <div>
+            <b>Validación QR</b>
+            <p>Control de entradas por ticket único.</p>
+          </div>
+          <div>
+            <b>Cortesías</b>
+            <p>Generación de accesos gratuitos.</p>
+          </div>
+          <div>
+            <b>Pagos</b>
+            <p>Mercado Pago y Stripe activos.</p>
+          </div>
+        </div>
+      </article>
+    </section>
+  </main>
+</div>
+
+<script src="js/admin.js"></script>
 </body>
 </html>
