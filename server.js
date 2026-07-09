@@ -1,16 +1,18 @@
 let cacheEventos = {};
-let cacheTime = null;
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const nodemailer = require("nodemailer");
+
+require("dotenv").config();
+
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
   port: 587,
   secure: false,
   auth: {
-    user: "a93c19001@smtp-brevo.com",
-    pass: "0zs3CKam7TRwvd9H"
+    user: process.env.BREVO_USER,
+    pass: process.env.BREVO_PASSWORD
   }
 });
 const { createClient } = require("@supabase/supabase-js");
@@ -31,8 +33,6 @@ app.use((req, res, next) => {
   }
 
 });
-
-require("dotenv").config();
 
 const {
   MercadoPagoConfig,
@@ -264,6 +264,53 @@ const supabase = createClient(
   "https://uqrbykxgsarsfyyvmibr.supabase.co",
    process.env.SUPABASE_SECRET_KEY
 );
+
+app.post("/login", async (req, res) => {
+  try {
+    const { user, password } = req.body;
+
+    if (!user || !password) {
+      return res.status(400).json({
+        success: false,
+        error: "Usuario y contraseña requeridos"
+      });
+    }
+
+    const { data, error } = await supabase
+      .from("cosmic_usuarios")
+      .select("id,nombre,usuario,rol,activo")
+      .eq("usuario", user)
+      .eq("password", password)
+      .eq("activo", true)
+      .maybeSingle();
+
+    if (error || !data) {
+      return res.status(401).json({
+        success: false,
+        error: "Credenciales incorrectas"
+      });
+    }
+
+    res.json({
+      success: true,
+      user: {
+        id: data.id,
+        nombre: data.nombre || data.usuario,
+        usuario: data.usuario,
+        rol: data.rol || "admin"
+      }
+    });
+
+  } catch (err) {
+    console.error("ERROR LOGIN:", err);
+
+    res.status(500).json({
+      success: false,
+      error: "Error en servidor"
+    });
+  }
+});
+
 
 app.post("/stripe/connect/:productoraId", async (req, res) => {
   try {
