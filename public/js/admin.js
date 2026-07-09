@@ -1,33 +1,59 @@
+const API =
+  window.location.hostname === "localhost" ||
+  window.location.hostname === "127.0.0.1"
+    ? "http://localhost:3000"
+    : "https://www.cosmicpass.space";
+
 if (localStorage.getItem("auth") !== "true") {
   window.location.href = "login.html";
 }
 
-document.getElementById("logoutBtn").addEventListener("click", () => {
+const user = JSON.parse(localStorage.getItem("cosmic_user"));
+
+if (!user) {
   localStorage.removeItem("auth");
   window.location.href = "login.html";
-});
+}
 
-async function cargarContactos() {
-  const res = await fetch("http://localhost:3000/contactos");
-  const data = await res.json();
-  const tabla = document.getElementById("tablaContactos");
+const isAdmin = user.rol === "admin";
+const idProductora = user.id_productora;
 
-  tabla.innerHTML = "";
+const logoutBtn = document.getElementById("logoutBtn");
 
-  if (data.length === 0) {
-    tabla.innerHTML = "<tr><td colspan='3'>Sin contactos</td></tr>";
-    return;
-  }
-
-  data.forEach(c => {
-    tabla.innerHTML += `
-      <tr>
-        <td>${c.nombre}</td>
-        <td>${c.email}</td>
-        <td>${c.mensaje}</td>
-      </tr>
-    `;
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("auth");
+    localStorage.removeItem("cosmic_user");
+    window.location.href = "login.html";
   });
 }
 
-cargarContactos();
+const adminName = document.getElementById("adminName");
+
+if (adminName) {
+  adminName.textContent = isAdmin
+    ? "Administrador general"
+    : `Productora #${idProductora}`;
+}
+
+async function cargarDashboard() {
+  try {
+    const endpoint = isAdmin
+      ? `${API}/admin/dashboard`
+      : `${API}/admin/dashboard?id_productora=${idProductora}`;
+
+    const res = await fetch(endpoint);
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || "Error cargando dashboard");
+    }
+
+    console.log("Dashboard:", data);
+
+  } catch (error) {
+    console.error("ERROR DASHBOARD:", error);
+  }
+}
+
+cargarDashboard();

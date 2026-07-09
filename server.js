@@ -278,7 +278,7 @@ app.post("/login", async (req, res) => {
 
     const { data, error } = await supabase
       .from("cosmic_usuarios")
-      .select("id,nombre,usuario,rol,activo")
+      .select("id,nombre,usuario,rol,activo,id_productora")
       .eq("usuario", user)
       .eq("password", password)
       .eq("activo", true)
@@ -294,10 +294,11 @@ app.post("/login", async (req, res) => {
     res.json({
       success: true,
       user: {
-        id: data.id,
-        nombre: data.nombre || data.usuario,
-        usuario: data.usuario,
-        rol: data.rol || "admin"
+        id:       data.id,
+        nombre:   data.nombre || data.usuario,
+        usuario:  data.usuario,
+        rol:      data.rol || "admin",
+         id_productora: data.id_productora
       }
     });
 
@@ -307,6 +308,107 @@ app.post("/login", async (req, res) => {
     res.status(500).json({
       success: false,
       error: "Error en servidor"
+    });
+  }
+});
+
+app.get("/admin/dashboard", async (req, res) => {
+  try {
+    const idProductora = req.query.id_productora
+      ? Number(req.query.id_productora)
+      : null;
+
+    let eventosQuery = supabase
+      .from("cat_events")
+      .select("id", { count: "exact", head: true });
+
+    let ticketsQuery = supabase
+      .from("tickets")
+      .select("id", { count: "exact", head: true });
+
+    let ventasQuery = supabase
+      .from("tickets")
+      .select("monto,payment_status,evento_id");
+
+    let productorasQuery = supabase
+      .from("cat_productoras")
+      .select("id", { count: "exact", head: true });
+
+    if (idProductora) {
+      eventosQuery = eventosQuery.eq("id_productora", idProductora);
+
+      const { data: eventosProductora, error: eventosError } =
+        await supabase
+          .from("cat_events")
+          .select("id")
+          .eq("id_productora", idProductora);
+
+      if (eventosError) throw eventosError;
+
+      const eventosIds = eventosProductora.map(e => e.id);
+
+      if (eventosIds.length === 0) {
+        return res.json({
+          success: true,
+          scope: "productora",
+          id_productora: idProductora,
+          metricas: {
+            eventos: 0,
+            tickets: 0,
+            ingresos: 0,
+            productoras: 1
+          }
+        });
+      }
+
+      ticketsQuery = ticketsQuery.in("evento_id", eventosIds);
+      ventasQuery = ventasQuery.in("evento_id", eventosIds);
+      productorasQuery = productorasQuery.eq("id", idProductora);
+    }
+
+    const [
+      eventosResult,
+      ticketsResult,
+      ventasResult,
+      productorasResult
+    ] = await Promise.all([
+      eventosQuery,
+      ticketsQuery,
+      ventasQuery,
+      productorasQuery
+    ]);
+
+    if (eventosResult.error) throw eventosResult.error;
+    if (ticketsResult.error) throw ticketsResult.error;
+    if (ventasResult.error) throw ventasResult.error;
+    if (productorasResult.error) throw productorasResult.error;
+
+    const ingresos = (ventasResult.data || [])
+      .filter(t =>
+        t.payment_status === "paid" ||
+        t.payment_status === "approved" ||
+        t.payment_status === "free"
+      )
+      .reduce((total, t) => total + Number(t.monto || 0), 0);
+
+    res.json({
+      success: true,
+      scope: idProductora ? "productora" : "admin",
+      id_productora: idProductora,
+      metricas: {
+        eventos: eventosResult.count || 0,
+        tickets: ticketsResult.count || 0,
+        ingresos,
+        productoras: productorasResult.count || 0
+      }
+    });
+
+  } catch (error) {
+    console.error("ERROR /admin/dashboard:", error);
+
+    res.status(500).json({
+      success: false,
+      error: "Error cargando dashboard"
     });
   }
 });
