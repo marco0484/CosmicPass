@@ -318,21 +318,26 @@ app.get("/admin/dashboard", async (req, res) => {
       ? Number(req.query.id_productora)
       : null;
 
-    let eventosQuery = supabase
-      .from("cat_events")
-      .select("id", { count: "exact", head: true });
+      let eventosQuery = supabase
+  .from("cat_events")
+  .select("id", { count: "exact", head: true });
 
-    let ticketsQuery = supabase
-      .from("tickets")
-      .select("id", { count: "exact", head: true });
+  let ticketsQuery = supabase
+    .from("tickets")
+    .select("cantidad,evento_id");
 
-    let ventasQuery = supabase
-      .from("tickets")
-      .select("monto,payment_status,evento_id");
+  let ventasQuery = supabase
+    .from("tickets")
+    .select("monto,payment_status,evento_id");
 
-    let productorasQuery = supabase
-      .from("cat_productoras")
-      .select("id", { count: "exact", head: true });
+  let cortesiasQuery = supabase
+    .from("tickets")
+    .select("cantidad,evento_id")
+    .or("metodo_pago.eq.FREE_ACCESS,payment_status.eq.free");
+
+  let productorasQuery = supabase
+    .from("cat_productoras")
+    .select("id", { count: "exact", head: true });
 
     if (idProductora) {
       eventosQuery = eventosQuery.eq("id_productora", idProductora);
@@ -353,35 +358,40 @@ app.get("/admin/dashboard", async (req, res) => {
           scope: "productora",
           id_productora: idProductora,
           metricas: {
-            eventos: 0,
-            tickets: 0,
-            ingresos: 0,
-            productoras: 1
-          }
+                eventos: 0,
+                tickets: 0,
+                ingresos: 0,
+                cortesias: 0,
+                productoras: 1
+              }
         });
       }
 
-      ticketsQuery = ticketsQuery.in("evento_id", eventosIds);
-      ventasQuery = ventasQuery.in("evento_id", eventosIds);
-      productorasQuery = productorasQuery.eq("id", idProductora);
+ticketsQuery = ticketsQuery.in("evento_id", eventosIds);
+ventasQuery = ventasQuery.in("evento_id", eventosIds);
+cortesiasQuery = cortesiasQuery.in("evento_id", eventosIds);
+productorasQuery = productorasQuery.eq("id", idProductora);
     }
 
     const [
-      eventosResult,
-      ticketsResult,
-      ventasResult,
-      productorasResult
-    ] = await Promise.all([
-      eventosQuery,
-      ticketsQuery,
-      ventasQuery,
-      productorasQuery
-    ]);
+  eventosResult,
+  ticketsResult,
+  ventasResult,
+  cortesiasResult,
+  productorasResult
+] = await Promise.all([
+  eventosQuery,
+  ticketsQuery,
+  ventasQuery,
+  cortesiasQuery,
+  productorasQuery
+]);
 
     if (eventosResult.error) throw eventosResult.error;
     if (ticketsResult.error) throw ticketsResult.error;
     if (ventasResult.error) throw ventasResult.error;
     if (productorasResult.error) throw productorasResult.error;
+    if (cortesiasResult.error) throw cortesiasResult.error;
 
     const ingresos = (ventasResult.data || [])
       .filter(t =>
@@ -391,16 +401,31 @@ app.get("/admin/dashboard", async (req, res) => {
       )
       .reduce((total, t) => total + Number(t.monto || 0), 0);
 
+  const ticketsEntregados =
+    (ticketsResult.data || []).reduce(
+      (total, ticket) =>
+        total + Number(ticket.cantidad || 1),
+      0
+    );
+
+  const cortesiasGeneradas =
+    (cortesiasResult.data || []).reduce(
+      (total, ticket) =>
+        total + Number(ticket.cantidad || 1),
+      0
+    );
+    
     res.json({
       success: true,
       scope: idProductora ? "productora" : "admin",
       id_productora: idProductora,
       metricas: {
-        eventos: eventosResult.count || 0,
-        tickets: ticketsResult.count || 0,
-        ingresos,
-        productoras: productorasResult.count || 0
-      }
+            eventos: eventosResult.count || 0,
+            tickets: ticketsEntregados,
+            ingresos,
+            cortesias: cortesiasGeneradas,
+            productoras: productorasResult.count || 0
+          }
     });
 
   } catch (error) {
