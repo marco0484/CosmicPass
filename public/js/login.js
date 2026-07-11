@@ -62,12 +62,23 @@ form.addEventListener("submit", async (e) => {
     msg.classList.add("ok");
 
 setTimeout(() => {
-  const rol = String(result.user.rol || "").toLowerCase();
+
+  const rol =
+    String(result.user.rol || "")
+      .toLowerCase();
+
+  const idProductora =
+    Number(result.user.id_productora) || null;
+
+  const isOwner =
+    rol === "owner" ||
+    (rol === "admin" && !idProductora);
 
   window.location.href =
-    rol === "owner"
+    isOwner
       ? "admin.html"
       : "productora-admin.html";
+
 }, 450);
 
   } catch (error) {
