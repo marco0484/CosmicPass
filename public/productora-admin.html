@@ -9,6 +9,7 @@
 </head>
 <body>
 <div class="admin-shell">
+
 <aside class="sidebar">
 <div class="brand">
 <img src="images/logo.webp" alt="Cosmic Pass">
@@ -23,22 +24,27 @@
 <span class="nav-icon">⌂</span>
 <span>Dashboard</span>
 </a>
+
 <a href="#" data-section="eventos">
 <span class="nav-icon">▣</span>
 <span>Mis eventos</span>
 </a>
+
 <a href="#" data-section="tickets">
 <span class="nav-icon">◈</span>
-<span>Tickets</span>
+<span>Accesos</span>
 </a>
+
 <a href="#" data-section="ventas">
 <span class="nav-icon">$</span>
 <span>Ventas</span>
 </a>
+
 <a href="#" data-section="cortesias">
 <span class="nav-icon">✦</span>
 <span>Cortesías</span>
 </a>
+
 <a href="#" data-section="scanner">
 <span class="nav-icon">▦</span>
 <span>Validar QR</span>
@@ -52,6 +58,7 @@
 </aside>
 
 <main class="main">
+
 <header class="topbar">
 <div>
 <p>Panel de productora</p>
@@ -60,6 +67,7 @@
 
 <div class="user-pill">
 <div class="user-avatar" id="userAvatar">P</div>
+
 <div>
 <strong id="productoraName">Productora</strong>
 <span>Administrador</span>
@@ -70,8 +78,14 @@
 <section class="welcome-row">
 <div>
 <span class="welcome-label">Resumen general</span>
-<h2 id="welcomeTitle">Bienvenido a tu panel</h2>
-<p>Consulta el rendimiento de tus eventos y accesos desde un solo lugar.</p>
+
+<h2 id="welcomeTitle">
+Bienvenido a tu panel
+</h2>
+
+<p>
+Consulta los accesos generados, ventas y cortesías de tus eventos.
+</p>
 </div>
 
 <button class="primary-button" id="createEventBtn">
@@ -81,63 +95,111 @@ Nuevo evento
 </section>
 
 <section class="stats-grid">
-<article class="stat-card">
-<div class="stat-icon money">$</div>
-<div class="stat-content">
-<span>Ingresos totales</span>
-<strong id="ventasTotal">$0.00</strong>
-<small>Pagos aprobados</small>
-</div>
-</article>
 
 <article class="stat-card">
 <div class="stat-icon tickets">◈</div>
+
 <div class="stat-content">
-<span>Tickets generados</span>
-<strong id="ticketsVendidos">0</strong>
-<small>Accesos registrados</small>
+<span>Accesos generados</span>
+
+<strong id="ticketsVendidos">
+0
+</strong>
+
+<small>
+Todos los tickets emitidos
+</small>
 </div>
 </article>
 
 <article class="stat-card">
-<div class="stat-icon events">▣</div>
+<div class="stat-icon events">$</div>
+
 <div class="stat-content">
-<span>Eventos activos</span>
-<strong id="eventosActivos">0</strong>
-<small>Disponibles al público</small>
+<span>Tickets pagados</span>
+
+<strong id="ticketsPagados">
+0
+</strong>
+
+<small>
+Accesos con pago aprobado
+</small>
 </div>
 </article>
 
 <article class="stat-card">
 <div class="stat-icon gifts">✦</div>
+
 <div class="stat-content">
-<span>Cortesías</span>
-<strong id="cortesiasTotal">0</strong>
-<small>Accesos gratuitos</small>
+<span>Cortesías generadas</span>
+
+<strong id="cortesiasTotal">
+0
+</strong>
+
+<small>
+Incluidas en los accesos generados
+</small>
 </div>
 </article>
+
+<article class="stat-card">
+<div class="stat-icon money">$</div>
+
+<div class="stat-content">
+<span>Ingresos totales</span>
+
+<strong id="ventasTotal">
+$0.00
+</strong>
+
+<small>
+Importe de pagos aprobados
+</small>
+</div>
+</article>
+
 </section>
 
 <section class="dashboard-grid">
+
 <article class="panel chart-panel">
 <div class="panel-head">
 <div>
-<span>Rendimiento</span>
-<h3>Ingresos recientes</h3>
+<span>Distribución</span>
+
+<h3>
+Accesos por tipo
+</h3>
 </div>
 
 <select id="chartPeriod">
-<option value="7">Últimos 7 días</option>
-<option value="30" selected>Últimos 30 días</option>
-<option value="90">Últimos 90 días</option>
+<option value="7">
+Últimos 7 días
+</option>
+
+<option value="30" selected>
+Últimos 30 días
+</option>
+
+<option value="90">
+Últimos 90 días
+</option>
 </select>
 </div>
 
 <div class="chart-wrapper">
-<canvas id="incomeChart"></canvas>
+<canvas id="accessChart"></canvas>
+
 <div class="chart-empty" id="chartEmpty">
-<strong>Sin movimientos todavía</strong>
-<p>La gráfica aparecerá cuando existan ventas registradas.</p>
+<strong>
+Sin accesos registrados
+</strong>
+
+<p>
+La gráfica mostrará cuántos accesos fueron pagados y cuántos fueron cortesías.
+</p>
 </div>
 </div>
 </article>
@@ -146,13 +208,18 @@ Nuevo evento
 <div class="panel-head">
 <div>
 <span>Operación</span>
-<h3>Accesos rápidos</h3>
+
+<h3>
+Accesos rápidos
+</h3>
 </div>
 </div>
 
 <div class="quick-grid">
+
 <button class="quick-action" data-action="scanner">
 <div class="quick-icon purple">▦</div>
+
 <div>
 <strong>Validar QR</strong>
 <span>Control de entradas</span>
@@ -161,6 +228,7 @@ Nuevo evento
 
 <button class="quick-action" data-action="cortesia">
 <div class="quick-icon blue">✦</div>
+
 <div>
 <strong>Generar cortesía</strong>
 <span>Crear acceso gratuito</span>
@@ -169,29 +237,37 @@ Nuevo evento
 
 <button class="quick-action" data-action="tickets">
 <div class="quick-icon green">◈</div>
+
 <div>
-<strong>Ver tickets</strong>
-<span>Consultar accesos</span>
+<strong>Ver accesos</strong>
+<span>Consultar tickets emitidos</span>
 </div>
 </button>
 
 <button class="quick-action" data-action="evento">
 <div class="quick-icon orange">＋</div>
+
 <div>
 <strong>Nuevo evento</strong>
 <span>Publicar evento</span>
 </div>
 </button>
+
 </div>
 </article>
+
 </section>
 
 <section class="bottom-grid">
+
 <article class="panel events-panel">
 <div class="panel-head">
 <div>
 <span>Actividad</span>
-<h3>Mis eventos recientes</h3>
+
+<h3>
+Mis eventos recientes
+</h3>
 </div>
 
 <button class="secondary-button" id="viewAllEvents">
@@ -210,6 +286,7 @@ Ver todos
 <th>Estado</th>
 </tr>
 </thead>
+
 <tbody id="tablaEventos">
 <tr>
 <td colspan="5" class="loading-cell">
@@ -225,15 +302,26 @@ Cargando eventos...
 <div class="panel-head">
 <div>
 <span>Cuenta</span>
-<h3>Mi productora</h3>
+
+<h3>
+Mi productora
+</h3>
 </div>
 </div>
 
 <div class="account-card">
-<div class="account-logo" id="accountInitial">P</div>
+<div class="account-logo" id="accountInitial">
+P
+</div>
+
 <div>
-<strong id="accountName">Productora</strong>
-<span id="accountId">ID de productora</span>
+<strong id="accountName">
+Productora
+</strong>
+
+<span id="accountId">
+ID de productora
+</span>
 </div>
 </div>
 
@@ -242,17 +330,26 @@ Cargando eventos...
 <span>Estado</span>
 <strong class="status-active">Activa</strong>
 </div>
+
+<div>
+<span>Eventos activos</span>
+<strong id="eventosActivos">0</strong>
+</div>
+
 <div>
 <span>Rol</span>
 <strong>Administrador</strong>
 </div>
+
 <div>
 <span>Plataforma</span>
 <strong>Cosmic Pass</strong>
 </div>
 </div>
 </article>
+
 </section>
+
 </main>
 </div>
 
