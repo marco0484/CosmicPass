@@ -61,9 +61,14 @@ form.addEventListener("submit", async (e) => {
     msg.textContent = "Acceso concedido. Entrando al panel...";
     msg.classList.add("ok");
 
-    setTimeout(() => {
-      window.location.href = "admin.html";
-    }, 450);
+setTimeout(() => {
+  const rol = String(result.user.rol || "").toLowerCase();
+
+  window.location.href =
+    rol === "owner"
+      ? "admin.html"
+      : "productora-admin.html";
+}, 450);
 
   } catch (error) {
 
