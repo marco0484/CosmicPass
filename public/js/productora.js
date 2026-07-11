@@ -526,16 +526,18 @@ if (agotado) {
 }
 
   div.innerHTML = `
-  <div>
+ <div>
+
   <h3>
     ${ticket.tipo_ticket}
   </h3>
+
   <p>
     ${ticket.desc_ticket || ""}
   </p>
-${
-  ticket.stock_disponible !== null
-    ? Number(ticket.stock_disponible) <= 0
+
+  ${
+    Number(ticket.stock_disponible) <= 0
       ? `
         <span class="ticket-mini-info ticket-sold-out">
           AGOTADO
@@ -545,18 +547,19 @@ ${
         <span class="ticket-mini-info">
           ${ticket.stock_disponible} disponibles
         </span>
+
+        ${
+          ticket.fecha_fin
+            ? `
+              <span class="ticket-mini-info">
+                Hasta ${formatDate(ticket.fecha_fin)}
+              </span>
+            `
+            : ""
+        }
       `
-    : ""
-}
-  ${
-    ticket.fecha_fin
-      ? `
-        <span class="ticket-mini-info">
-          Hasta ${formatDate(ticket.fecha_fin)}
-        </span>
-      `
-      : ""
   }
+
 </div>
 
   <div class="ticket-price">
