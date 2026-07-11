@@ -15,8 +15,15 @@ if (!user) {
   window.location.href = "login.html";
 }
 
-const isAdmin = user.rol === "admin";
-const idProductora = user.id_productora;
+const isOwner = user.rol === "owner";
+const idProductora = Number(user.id_productora) || null;
+
+if (!isOwner && !idProductora) {
+  alert("Este usuario no tiene una productora asignada.");
+  localStorage.removeItem("auth");
+  localStorage.removeItem("cosmic_user");
+  window.location.href = "login.html";
+}
 
 const logoutBtn = document.getElementById("logoutBtn");
 
@@ -31,14 +38,15 @@ if (logoutBtn) {
 const adminName = document.getElementById("adminName");
 
 if (adminName) {
-  adminName.textContent = isAdmin
-    ? "Administrador general"
-    : `Productora #${idProductora}`;
+  adminName.textContent = isOwner
+    ? "Owner Cosmic Pass"
+    : user.nombre || `Productora #${idProductora}`;
 }
 
 async function cargarDashboard() {
   try {
-    const endpoint = isAdmin
+
+    const endpoint = isOwner
       ? `${API}/admin/dashboard`
       : `${API}/admin/dashboard?id_productora=${idProductora}`;
 
@@ -49,7 +57,21 @@ async function cargarDashboard() {
       throw new Error(data.error || "Error cargando dashboard");
     }
 
-    console.log("Dashboard:", data);
+    const m = data.metricas;
+
+    document.getElementById("ventasTotal").textContent =
+      `$${Number(m.ingresos).toLocaleString("es-MX", {
+        minimumFractionDigits: 2
+      })}`;
+
+    document.getElementById("ticketsVendidos").textContent =
+      m.tickets;
+
+    document.getElementById("eventosActivos").textContent =
+      m.eventos;
+
+    document.getElementById("productorasTotal").textContent =
+      m.productoras;
 
   } catch (error) {
     console.error("ERROR DASHBOARD:", error);
