@@ -887,7 +887,21 @@ app.post("/crear-ticket-gratis", async (req, res) => {
   try {
     const { ticket_id, cantidad = 1, nombre, correo, telefono } = req.body;
 
-    if (!ticket_id || !nombre || !correo || !telefono) {
+    const correoNormalizado =
+  String(correo || "")
+    .trim()
+    .toLowerCase();
+
+const telefonoNormalizado =
+  String(telefono || "")
+    .replace(/\D/g, "");
+
+  if (
+  !ticket_id ||
+  !nombre ||
+  !correoNormalizado ||
+  !telefonoNormalizado
+) {
       return res.status(400).json({
         success:false,
         error:"Faltan datos obligatorios"

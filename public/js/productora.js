@@ -5,6 +5,7 @@ const API = window.location.hostname === "localhost"
 
 let selectedTicket = null;
 let ticketQuantity = 1;
+let generatingTicket = false;
 let selectedEventId = null;
 let pendingPaymentMethod = null;
 const params = new URLSearchParams(window.location.search);
@@ -514,31 +515,39 @@ if (globalTotal) {
 tickets.forEach(ticket => {
 
   const div = document.createElement("div");
-
   div.classList.add("ticket-option");
 
+  const agotado =
+  ticket.stock_disponible !== null &&
+  Number(ticket.stock_disponible) <= 0;
+
+if (agotado) {
+  div.classList.add("sold-out");
+}
+
   div.innerHTML = `
-
   <div>
-
   <h3>
     ${ticket.tipo_ticket}
   </h3>
-
   <p>
     ${ticket.desc_ticket || ""}
   </p>
-
-  ${
-    ticket.stock_disponible
+${
+  ticket.stock_disponible !== null
+    ? Number(ticket.stock_disponible) <= 0
       ? `
-        <span class="ticket-mini-info">
-           ${ticket.stock_disponible} disponibles
+        <span class="ticket-mini-info ticket-sold-out">
+          AGOTADO
         </span>
       `
-      : ""
-  }
-
+      : `
+        <span class="ticket-mini-info">
+          ${ticket.stock_disponible} disponibles
+        </span>
+      `
+    : ""
+}
   ${
     ticket.fecha_fin
       ? `
@@ -548,7 +557,6 @@ tickets.forEach(ticket => {
       `
       : ""
   }
-
 </div>
 
   <div class="ticket-price">
@@ -561,6 +569,10 @@ tickets.forEach(ticket => {
 
 `;
 div.addEventListener("click", () => {
+
+    if (agotado) { alert("Este acceso está agotado.");
+    return;
+  }
 
   document
     .querySelectorAll(".ticket-option")
@@ -645,6 +657,8 @@ function closeUserDataModal() {
 
 async function generatepago() {
 
+  if (generatingTicket) {return;}
+
   const nombre = document
     .getElementById("user-name")
     .value
@@ -722,33 +736,86 @@ if (
   return;
 }
 
-  if (pendingPaymentMethod === "free_access") {
+const generateButton =
+  document.querySelector(
+    "#user-data-modal .btn-buy-final"
+  );
+
+generatingTicket = true;
+
+if (generateButton) {
+  generateButton.disabled = true;
+  generateButton.innerText =
+    pendingPaymentMethod === "free_access"
+      ? "Generando tu ticket..."
+      : "Procesando...";
+}
+
+if (pendingPaymentMethod === "free_access") {
+
   try {
-    const res = await fetch(`${API}/crear-ticket-gratis`, {
-      method:"POST",
-      headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({
-        ticket_id:selectedTicket.id,
-        cantidad:ticketQuantity,
-        nombre,
-        correo:email,
-        telefono
-      })
-    });
+
+    const res = await fetch(
+      `${API}/crear-ticket-gratis`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          ticket_id: selectedTicket.id,
+          cantidad: 1,
+          nombre,
+          correo: email,
+          telefono
+        })
+      }
+    );
 
     const data = await res.json();
 
-    if(!res.ok || !data.success){
-      alert(data.error || data.message || "No se pudo generar el acceso");
+    if (!res.ok || !data.success) {
+
+      alert(
+        data.error ||
+        data.message ||
+        "No se pudo generar el acceso"
+      );
+
+      generatingTicket = false;
+
+      if (generateButton) {
+        generateButton.disabled = false;
+        generateButton.innerText =
+          "Generar acceso gratuito";
+      }
+
       return;
     }
 
-    alert("Tu acceso a sido enviado al correo registrado 🚀");
     closeUserDataModal();
     closeTicketModal();
 
-  } catch(err) {
-    alert("Error generando acceso gratuito");
+    alert(
+      "Tu acceso fue generado correctamente y enviado al correo registrado 🚀"
+    );
+
+    document.getElementById("user-name").value = "";
+    document.getElementById("user-email").value = "";
+    document.getElementById("user-phone").value = "";
+
+  } catch (err) {
+
+    generatingTicket = false;
+
+    if (generateButton) {
+      generateButton.disabled = false;
+      generateButton.innerText =
+        "Generar acceso gratuito";
+    }
+
+    alert("Error generando el acceso gratuito.");
+
   }
 
   return;

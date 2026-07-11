@@ -3418,6 +3418,29 @@ section{
   box-shadow:0 0 0 4px rgba(239,68,68,.15);
 }
 
+.ticket-option.sold-out{
+  opacity:.55;
+  cursor:not-allowed;
+  pointer-events:auto;
+  border-color:#555;
+}
+
+.ticket-option.sold-out:hover{
+  transform:none;
+}
+
+.ticket-sold-out{
+  display:inline-block;
+  margin-top:8px;
+  padding:5px 10px;
+  border-radius:999px;
+  background:#d62828;
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.8px;
+}
+
 @media(max-width:980px){
   .cashless-dashboard-hero,
   .cashless-flow{
