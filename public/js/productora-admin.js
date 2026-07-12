@@ -113,10 +113,39 @@ async function cargarDashboard() {
     const data = await res.json();
 
     if (!res.ok || !data.success) {
-      throw new Error(data.error || "Error cargando dashboard");
+      throw new Error(
+        data.error || "Error cargando dashboard"
+      );
     }
 
     const metricas = data.metricas || {};
+
+    const accesosGenerados =
+      Number(metricas.tickets || 0);
+
+    const cortesiasGeneradas =
+      Number(metricas.cortesias || 0);
+
+    const ticketsPagados =
+      Math.max(
+        accesosGenerados - cortesiasGeneradas,
+        0
+      );
+
+    setText(
+      "ticketsVendidos",
+      formatoNumero(accesosGenerados)
+    );
+
+    setText(
+      "ticketsPagados",
+      formatoNumero(ticketsPagados)
+    );
+
+    setText(
+      "cortesiasTotal",
+      formatoNumero(cortesiasGeneradas)
+    );
 
     setText(
       "ventasTotal",
@@ -124,42 +153,20 @@ async function cargarDashboard() {
     );
 
     setText(
-      "ticketsVendidos",
-      formatoNumero(metricas.tickets || 0)
-    );
-
-    setText(
       "eventosActivos",
       formatoNumero(metricas.eventos || 0)
     );
 
-    setText(
-      "cortesiasTotal",
-      formatoNumero(metricas.cortesias || 0)
+    actualizarGrafica(
+      accesosGenerados,
+      cortesiasGeneradas
     );
 
-const accesosGenerados =
-  Number(metricas.tickets || 0);
-
-const cortesiasGeneradas =
-  Number(metricas.cortesias || 0);
-
-actualizarGrafica(
-  accesosGenerados,
-  cortesiasGeneradas
-);
-
-    actualizarGrafica(ingresosPorDia);
-
   } catch (error) {
-    console.error("ERROR DASHBOARD:", error);
-
-    setText("ventasTotal", "$0.00");
-    setText("ticketsVendidos", "0");
-    setText("eventosActivos", "0");
-    setText("cortesiasTotal", "0");
-
-    actualizarGrafica(0, 0);
+    console.error(
+      "ERROR CARGANDO DASHBOARD:",
+      error
+    );
   }
 }
 
@@ -333,8 +340,12 @@ function crearGrafica() {
   });
 }
 
-function actualizarGrafica(accesosGenerados, cortesiasGeneradas) {
-  const empty = document.getElementById("chartEmpty");
+function actualizarGrafica(
+  accesosGenerados,
+  cortesiasGeneradas
+) {
+  const empty =
+    document.getElementById("chartEmpty");
 
   const totalAccesos =
     Number(accesosGenerados || 0);
@@ -343,12 +354,10 @@ function actualizarGrafica(accesosGenerados, cortesiasGeneradas) {
     Number(cortesiasGeneradas || 0);
 
   const ticketsPagados =
-    Math.max(totalAccesos - cortesias, 0);
-
-  setText(
-    "ticketsPagados",
-    formatoNumero(ticketsPagados)
-  );
+    Math.max(
+      totalAccesos - cortesias,
+      0
+    );
 
   if (!incomeChart) {
     crearGrafica();
