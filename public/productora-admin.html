@@ -229,9 +229,11 @@ Accesos rápidos
 <button class="quick-action" data-action="cortesia">
 <div class="quick-icon blue">✦</div>
 
+<button class="quick-action" id="activarCortesiasBtn">
+<div class="quick-icon blue">✦</div>
 <div>
-<strong>Generar cortesía</strong>
-<span>Crear acceso gratuito</span>
+<strong>Activar cortesías</strong>
+<span>Agregar accesos disponibles</span>
 </div>
 </button>
 
@@ -351,6 +353,99 @@ ID de productora
 </section>
 
 </main>
+</div>
+
+<div class="modal-overlay" id="cortesiasModal">
+<div class="modal-card">
+
+<button class="modal-close" id="cerrarCortesiasModal" type="button">
+×
+</button>
+
+<div class="modal-header">
+<span>Administración de accesos</span>
+<h2>Activar cortesías</h2>
+<p>
+Selecciona el acceso gratuito e indica cuántas cortesías quieres habilitar.
+</p>
+</div>
+
+<form id="activarCortesiasForm">
+
+<label for="cortesiaTicketSelect">
+Evento y tipo de acceso
+</label>
+
+<select id="cortesiaTicketSelect" required>
+<option value="">
+Cargando accesos gratuitos...
+</option>
+</select>
+
+<div class="stock-info" id="stockCortesiaInfo">
+Selecciona un acceso para consultar su disponibilidad.
+</div>
+
+<label for="cantidadCortesias">
+Cantidad que deseas agregar
+</label>
+
+<input
+type="number"
+id="cantidadCortesias"
+min="1"
+max="10000"
+step="1"
+placeholder="Ejemplo: 50"
+required
+>
+
+<button class="modal-submit" id="guardarCortesiasBtn" type="submit">
+Activar cortesías
+</button>
+
+<p class="modal-message" id="cortesiasMessage"></p>
+
+</form>
+</div>
+</div>
+
+
+<div class="modal-overlay" id="cortesiasModal">
+<div class="modal-card">
+<button class="modal-close" id="cerrarCortesiasModal" type="button">×</button>
+
+<div class="modal-header">
+<span>Cortesías</span>
+<h2>Activar cortesías</h2>
+<p>Selecciona el evento y la cantidad de accesos gratuitos que deseas habilitar.</p>
+</div>
+
+<form id="activarCortesiasForm">
+<label for="cortesiaEventoSelect">Evento</label>
+
+<select id="cortesiaEventoSelect" required>
+<option value="">Selecciona un evento</option>
+</select>
+
+<label for="cantidadCortesias">Cantidad de cortesías</label>
+
+<input
+type="number"
+id="cantidadCortesias"
+min="1"
+step="1"
+placeholder="Ejemplo: 50"
+required
+>
+
+<button class="modal-submit" id="guardarCortesiasBtn" type="submit">
+Activar cortesías
+</button>
+
+<p class="modal-message" id="cortesiasMessage"></p>
+</form>
+</div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

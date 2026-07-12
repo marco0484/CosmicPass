@@ -438,6 +438,245 @@ productorasQuery = productorasQuery.eq("id", idProductora);
   }
 });
 
+app.post("/admin/activar-cortesias", async (req, res) => {
+  try {
+    const {
+      id_productora,
+      evento_id,
+      cantidad
+    } = req.body;
+
+    const idProductora = Number(id_productora);
+    const eventoId = Number(evento_id);
+    const cantidadAgregar = Number(cantidad);
+
+    if (
+      !idProductora ||
+      !eventoId ||
+      !Number.isInteger(cantidadAgregar) ||
+      cantidadAgregar <= 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        error: "Datos inválidos"
+      });
+    }
+
+    const { data: ticket, error: ticketError } =
+      await supabase
+        .from("ticket_types")
+        .select(`
+          id,
+          id_evento,
+          id_productora,
+          precio,
+          stock_disponible
+        `)
+        .eq("id_evento", eventoId)
+        .eq("id_productora", idProductora)
+        .eq("precio", 0)
+        .eq("ind_activo", 1)
+        .maybeSingle();
+
+    if (ticketError) {
+      throw ticketError;
+    }
+
+    if (!ticket) {
+      return res.status(404).json({
+        success: false,
+        error: "Este evento no tiene un acceso gratuito configurado"
+      });
+    }
+
+    const nuevoStock =
+      Number(ticket.stock_disponible || 0) +
+      cantidadAgregar;
+
+    const { error: updateError } =
+      await supabase
+        .from("ticket_types")
+        .update({
+          stock_disponible: nuevoStock
+        })
+        .eq("id", ticket.id);
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    return res.json({
+      success: true,
+      message: `${cantidadAgregar} cortesías activadas correctamente`
+    });
+
+  } catch (error) {
+    console.error("ERROR ACTIVANDO CORTESÍAS:", error);
+
+    return res.status(500).json({
+      success: false,
+      error: "No se pudieron activar las cortesías"
+    });
+  }
+});
+
+app.get("/admin/cortesias/:idProductora", async (req, res) => {
+  try {
+    const idProductora =
+      Number(req.params.idProductora);
+
+    if (!idProductora) {
+      return res.status(400).json({
+        success: false,
+        error: "Productora inválida"
+      });
+    }
+
+    const { data, error } = await supabase
+      .from("ticket_types")
+      .select(`
+        id,
+        id_evento,
+        id_productora,
+        tipo_ticket,
+        stock_disponible,
+        precio,
+        cat_events!inner(
+          id,
+          name,
+          date
+        )
+      `)
+      .eq("id_productora", idProductora)
+      .eq("precio", 0)
+      .eq("ind_activo", 1)
+      .order("id_evento", {
+        ascending: false
+      });
+
+    if (error) {
+      throw error;
+    }
+
+    return res.json({
+      success: true,
+      cortesias: data || []
+    });
+
+  } catch (error) {
+    console.error(
+      "ERROR CARGANDO CORTESÍAS:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      error: "No se pudieron cargar las cortesías"
+    });
+  }
+});
+
+app.post("/admin/activar-cortesias", async (req, res) => {
+  try {
+    const {
+      id_productora,
+      ticket_type_id,
+      cantidad
+    } = req.body;
+
+    const idProductora =
+      Number(id_productora);
+
+    const ticketTypeId =
+      Number(ticket_type_id);
+
+    const cantidadAgregar =
+      Number(cantidad);
+
+    if (
+      !idProductora ||
+      !ticketTypeId ||
+      !Number.isInteger(cantidadAgregar) ||
+      cantidadAgregar <= 0
+    ) {
+      return res.status(400).json({
+        success: false,
+        error: "Datos inválidos"
+      });
+    }
+
+    const { data: ticketType, error: ticketError } =
+      await supabase
+        .from("ticket_types")
+        .select(`
+          id,
+          id_evento,
+          id_productora,
+          tipo_ticket,
+          precio,
+          stock_disponible
+        `)
+        .eq("id", ticketTypeId)
+        .eq("id_productora", idProductora)
+        .eq("precio", 0)
+        .eq("ind_activo", 1)
+        .maybeSingle();
+
+    if (ticketError) {
+      throw ticketError;
+    }
+
+    if (!ticketType) {
+      return res.status(404).json({
+        success: false,
+        error: "Acceso gratuito no encontrado"
+      });
+    }
+
+    const stockActual =
+      Number(ticketType.stock_disponible || 0);
+
+    const nuevoStock =
+      stockActual + cantidadAgregar;
+
+    const { data: actualizado, error: updateError } =
+      await supabase
+        .from("ticket_types")
+        .update({
+          stock_disponible: nuevoStock
+        })
+        .eq("id", ticketType.id)
+        .eq("id_productora", idProductora)
+        .select(`
+          id,
+          tipo_ticket,
+          stock_disponible
+        `)
+        .single();
+
+    if (updateError) {
+      throw updateError;
+    }
+
+    return res.json({
+      success: true,
+      message: `${cantidadAgregar} cortesías activadas correctamente`,
+      ticket: actualizado
+    });
+
+  } catch (error) {
+    console.error(
+      "ERROR ACTIVANDO CORTESÍAS:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      error: "No se pudieron activar las cortesías"
+    });
+  }
+});
+
 
 app.post("/stripe/connect/:productoraId", async (req, res) => {
   try {

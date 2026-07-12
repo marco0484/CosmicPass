@@ -38,6 +38,7 @@ let eventosGlobal = [];
 document.addEventListener("DOMContentLoaded", () => {
   configurarUsuario();
   configurarBotones();
+  configurarCortesias();
   crearGrafica([]);
   cargarDashboard();
   cargarEventos();
@@ -392,6 +393,169 @@ function setText(id, value) {
   if (element) {
     element.textContent = value;
   }
+}
+
+function configurarCortesias() {
+  const abrirBtn = document.getElementById("activarCortesiasBtn");
+  const cerrarBtn = document.getElementById("cerrarCortesiasModal");
+  const modal = document.getElementById("cortesiasModal");
+  const form = document.getElementById("activarCortesiasForm");
+
+  abrirBtn?.addEventListener("click", async () => {
+    modal?.classList.add("active");
+    await cargarEventosCortesia();
+  });
+
+  cerrarBtn?.addEventListener("click", cerrarModalCortesias);
+
+  modal?.addEventListener("click", event => {
+    if (event.target === modal) {
+      cerrarModalCortesias();
+    }
+  });
+
+  form?.addEventListener("submit", async event => {
+    event.preventDefault();
+    await activarCortesias();
+  });
+}
+
+function cerrarModalCortesias() {
+  document
+    .getElementById("cortesiasModal")
+    ?.classList.remove("active");
+
+  const message = document.getElementById("cortesiasMessage");
+
+  if (message) {
+    message.textContent = "";
+    message.className = "modal-message";
+  }
+}
+
+async function cargarEventosCortesia() {
+  const select = document.getElementById("cortesiaEventoSelect");
+
+  if (!select) return;
+
+  select.innerHTML = `
+    <option value="">
+      Cargando eventos...
+    </option>
+  `;
+
+  try {
+    const res = await fetch(
+      `${API}/events?id_productora=${idProductora}`
+    );
+
+    const eventos = await res.json();
+
+    if (!res.ok) {
+      throw new Error("No se pudieron cargar los eventos");
+    }
+
+    select.innerHTML = `
+      <option value="">
+        Selecciona un evento
+      </option>
+    `;
+
+    eventos.forEach(evento => {
+      const option = document.createElement("option");
+
+      option.value = evento.id;
+      option.textContent = evento.name;
+
+      select.appendChild(option);
+    });
+
+  } catch (error) {
+    select.innerHTML = `
+      <option value="">
+        Error cargando eventos
+      </option>
+    `;
+  }
+}
+
+async function activarCortesias() {
+  const eventoId = Number(
+    document.getElementById("cortesiaEventoSelect")?.value
+  );
+
+  const cantidad = Number(
+    document.getElementById("cantidadCortesias")?.value
+  );
+
+  const button = document.getElementById("guardarCortesiasBtn");
+
+  if (!eventoId || !Number.isInteger(cantidad) || cantidad <= 0) {
+    mostrarMensajeCortesia(
+      "Selecciona un evento e ingresa una cantidad válida.",
+      "error"
+    );
+
+    return;
+  }
+
+  if (button) {
+    button.disabled = true;
+    button.textContent = "Activando...";
+  }
+
+  try {
+    const res = await fetch(
+      `${API}/admin/activar-cortesias`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          id_productora: idProductora,
+          evento_id: eventoId,
+          cantidad
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(
+        data.error || "No se pudieron activar las cortesías"
+      );
+    }
+
+    mostrarMensajeCortesia(
+      data.message || "Cortesías activadas correctamente.",
+      "success"
+    );
+
+    document.getElementById("cantidadCortesias").value = "";
+
+  } catch (error) {
+    mostrarMensajeCortesia(
+      error.message || "Error activando cortesías",
+      "error"
+    );
+
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = "Activar cortesías";
+    }
+  }
+}
+
+function mostrarMensajeCortesia(texto, tipo) {
+  const message = document.getElementById("cortesiasMessage");
+
+  if (!message) return;
+
+  message.textContent = texto;
+  message.className = `modal-message ${tipo}`;
 }
 
 function formatoMoneda(value) {

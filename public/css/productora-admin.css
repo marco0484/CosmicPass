@@ -676,6 +676,147 @@ font-size:11px;
 color:var(--green);
 }
 
+.modal-overlay{
+position:fixed;
+inset:0;
+display:none;
+align-items:center;
+justify-content:center;
+padding:20px;
+background:rgba(3,3,10,.78);
+backdrop-filter:blur(8px);
+z-index:100;
+}
+
+.modal-overlay.active{
+display:flex;
+}
+
+.modal-card{
+position:relative;
+width:min(100%,480px);
+padding:26px;
+border:1px solid var(--border);
+border-radius:20px;
+background:#11111b;
+box-shadow:0 28px 80px rgba(0,0,0,.55);
+}
+
+.modal-close{
+position:absolute;
+top:14px;
+right:14px;
+width:36px;
+height:36px;
+display:grid;
+place-items:center;
+border:1px solid var(--border);
+border-radius:10px;
+background:rgba(255,255,255,.05);
+color:#fff;
+font-size:23px;
+line-height:1;
+}
+
+.modal-header{
+margin-bottom:23px;
+padding-right:38px;
+}
+
+.modal-header span{
+display:block;
+margin-bottom:7px;
+color:#aaa6bc;
+font-size:10px;
+font-weight:800;
+letter-spacing:.15em;
+text-transform:uppercase;
+}
+
+.modal-header h2{
+margin-bottom:8px;
+font-size:24px;
+letter-spacing:-.03em;
+}
+
+.modal-header p{
+color:var(--muted);
+font-size:12px;
+line-height:1.55;
+}
+
+#activarCortesiasForm{
+display:flex;
+flex-direction:column;
+gap:11px;
+}
+
+#activarCortesiasForm label{
+margin-top:4px;
+color:#d8d8e1;
+font-size:12px;
+font-weight:700;
+}
+
+#activarCortesiasForm select,
+#activarCortesiasForm input{
+width:100%;
+min-height:48px;
+padding:0 14px;
+border:1px solid var(--border);
+border-radius:12px;
+outline:none;
+background:#181822;
+color:#fff;
+font-size:13px;
+}
+
+#activarCortesiasForm select:focus,
+#activarCortesiasForm input:focus{
+border-color:#7c4dff;
+box-shadow:0 0 0 3px rgba(124,77,255,.13);
+}
+
+.stock-info{
+padding:12px 14px;
+border:1px solid var(--border-soft);
+border-radius:11px;
+background:rgba(255,255,255,.035);
+color:var(--muted);
+font-size:11px;
+line-height:1.45;
+}
+
+.modal-submit{
+min-height:48px;
+margin-top:8px;
+border:0;
+border-radius:12px;
+background:linear-gradient(135deg,var(--purple),#4767eb);
+color:#fff;
+font-weight:800;
+}
+
+.modal-submit:disabled{
+cursor:not-allowed;
+opacity:.55;
+}
+
+.modal-message{
+min-height:18px;
+color:var(--muted);
+font-size:11px;
+text-align:center;
+}
+
+.modal-message.success{
+color:var(--green);
+}
+
+.modal-message.error{
+color:var(--danger);
+}
+
 @media(max-width:1200px){
 .stats-grid{
 grid-template-columns:repeat(2,minmax(0,1fr));
