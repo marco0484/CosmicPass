@@ -119,40 +119,53 @@ async function cargarDashboard() {
       );
     }
 
-  const accesosEmitidos =
-  Number(metricas.emitidos || 0);
+    const metricas = data.metricas || {};
 
-const accesosDescargados =
-  Number(metricas.descargados || 0);
+    const accesosDescargados =
+      Number(metricas.tickets || 0);
 
-const ticketsPagados =
-  Number(metricas.pagados || 0);
+    const cortesiasGeneradas =
+      Number(metricas.cortesias || 0);
 
-const cortesiasGeneradas =
-  Number(metricas.cortesias || 0);
+    const accesosDisponibles =
+      Number(metricas.disponibles || 0);
+
+    const accesosEmitidos =
+      accesosDescargados + accesosDisponibles;
+
+    const ticketsPagados =
+      Math.max(
+        accesosDescargados - cortesiasGeneradas,
+        0
+      );
 
     setText(
-  "accesosEmitidos",
-  formatoNumero(accesosEmitidos)
-);
+      "accesosEmitidos",
+      formatoNumero(accesosEmitidos)
+    );
 
-setText(
-  "accesosDescargados",
-  formatoNumero(accesosDescargados)
-);
+    setText(
+      "accesosDescargados",
+      formatoNumero(accesosDescargados)
+    );
 
-setText(
-  "cortesiasTotal",
-  formatoNumero(cortesiasGeneradas)
-);
+    setText(
+      "cortesiasTotal",
+      formatoNumero(cortesiasGeneradas)
+    );
 
-setText(
-  "ventasTotal",
-  formatoMoneda(metricas.ingresos || 0)
-);
+    setText(
+      "ventasTotal",
+      formatoMoneda(metricas.ingresos || 0)
+    );
+
+    setText(
+      "eventosActivos",
+      formatoNumero(metricas.eventos || 0)
+    );
 
     actualizarGrafica(
-      accesosGenerados,
+      accesosDescargados,
       cortesiasGeneradas
     );
 
