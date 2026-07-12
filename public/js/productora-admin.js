@@ -32,14 +32,14 @@ if (!idProductora) {
   cerrarSesion();
 }
 
-let accessChart = null;
+let incomeChart = null;
 let eventosGlobal = [];
 
 document.addEventListener("DOMContentLoaded", () => {
   configurarUsuario();
   configurarBotones();
   configurarCortesias();
-  crearGrafica([]);
+  crearGrafica();
   cargarDashboard();
   cargarEventos();
 });

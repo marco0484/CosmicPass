@@ -8,11 +8,14 @@
 <link rel="icon" type="image/png" href="images/cp.webp">
 </head>
 <body>
+
 <div class="admin-shell">
 
 <aside class="sidebar">
+
 <div class="brand">
 <img src="images/logo.webp" alt="Cosmic Pass">
+
 <div>
 <strong>Cosmic Pass</strong>
 <span>Panel de productora</span>
@@ -20,6 +23,7 @@
 </div>
 
 <nav>
+
 <a class="active" href="productora-admin.html">
 <span class="nav-icon">⌂</span>
 <span>Dashboard</span>
@@ -49,35 +53,47 @@
 <span class="nav-icon">▦</span>
 <span>Validar QR</span>
 </a>
+
 </nav>
 
-<button id="logoutBtn" class="logout">
+<button id="logoutBtn" class="logout" type="button">
 <span>Cerrar sesión</span>
 <span>→</span>
 </button>
+
 </aside>
 
 <main class="main">
 
 <header class="topbar">
+
 <div>
 <p>Panel de productora</p>
 <h1>Dashboard</h1>
 </div>
 
 <div class="user-pill">
-<div class="user-avatar" id="userAvatar">P</div>
+
+<div class="user-avatar" id="userAvatar">
+P
+</div>
 
 <div>
 <strong id="productoraName">Productora</strong>
 <span>Administrador</span>
 </div>
+
 </div>
+
 </header>
 
 <section class="welcome-row">
+
 <div>
-<span class="welcome-label">Resumen general</span>
+
+<span class="welcome-label">
+Resumen general
+</span>
 
 <h2 id="welcomeTitle">
 Bienvenido a tu panel
@@ -86,21 +102,29 @@ Bienvenido a tu panel
 <p>
 Consulta los accesos generados, ventas y cortesías de tus eventos.
 </p>
+
 </div>
 
-<button class="primary-button" id="createEventBtn">
+<button class="primary-button" id="createEventBtn" type="button">
 <span>＋</span>
 Nuevo evento
 </button>
+
 </section>
 
 <section class="stats-grid">
 
 <article class="stat-card">
-<div class="stat-icon tickets">◈</div>
+
+<div class="stat-icon tickets">
+◈
+</div>
 
 <div class="stat-content">
-<span>Accesos generados</span>
+
+<span>
+Accesos generados
+</span>
 
 <strong id="ticketsVendidos">
 0
@@ -109,14 +133,22 @@ Nuevo evento
 <small>
 Todos los tickets emitidos
 </small>
+
 </div>
+
 </article>
 
 <article class="stat-card">
-<div class="stat-icon events">$</div>
+
+<div class="stat-icon events">
+$
+</div>
 
 <div class="stat-content">
-<span>Tickets pagados</span>
+
+<span>
+Tickets pagados
+</span>
 
 <strong id="ticketsPagados">
 0
@@ -125,14 +157,22 @@ Todos los tickets emitidos
 <small>
 Accesos con pago aprobado
 </small>
+
 </div>
+
 </article>
 
 <article class="stat-card">
-<div class="stat-icon gifts">✦</div>
+
+<div class="stat-icon gifts">
+✦
+</div>
 
 <div class="stat-content">
-<span>Cortesías generadas</span>
+
+<span>
+Cortesías generadas
+</span>
 
 <strong id="cortesiasTotal">
 0
@@ -141,14 +181,22 @@ Accesos con pago aprobado
 <small>
 Incluidas en los accesos generados
 </small>
+
 </div>
+
 </article>
 
 <article class="stat-card">
-<div class="stat-icon money">$</div>
+
+<div class="stat-icon money">
+$
+</div>
 
 <div class="stat-content">
-<span>Ingresos totales</span>
+
+<span>
+Ingresos totales
+</span>
 
 <strong id="ventasTotal">
 $0.00
@@ -157,7 +205,9 @@ $0.00
 <small>
 Importe de pagos aprobados
 </small>
+
 </div>
+
 </article>
 
 </section>
@@ -165,16 +215,23 @@ Importe de pagos aprobados
 <section class="dashboard-grid">
 
 <article class="panel chart-panel">
+
 <div class="panel-head">
+
 <div>
-<span>Distribución</span>
+
+<span>
+Distribución
+</span>
 
 <h3>
 Accesos por tipo
 </h3>
+
 </div>
 
 <select id="chartPeriod">
+
 <option value="7">
 Últimos 7 días
 </option>
@@ -186,13 +243,17 @@ Accesos por tipo
 <option value="90">
 Últimos 90 días
 </option>
+
 </select>
+
 </div>
 
 <div class="chart-wrapper">
+
 <canvas id="accessChart"></canvas>
 
 <div class="chart-empty" id="chartEmpty">
+
 <strong>
 Sin accesos registrados
 </strong>
@@ -200,62 +261,87 @@ Sin accesos registrados
 <p>
 La gráfica mostrará cuántos accesos fueron pagados y cuántos fueron cortesías.
 </p>
+
 </div>
+
 </div>
+
 </article>
 
 <article class="panel quick-panel">
+
 <div class="panel-head">
+
 <div>
-<span>Operación</span>
+
+<span>
+Operación
+</span>
 
 <h3>
 Accesos rápidos
 </h3>
+
 </div>
+
 </div>
 
 <div class="quick-grid">
 
-<button class="quick-action" data-action="scanner">
-<div class="quick-icon purple">▦</div>
+<button class="quick-action" data-action="scanner" type="button">
+
+<div class="quick-icon purple">
+▦
+</div>
 
 <div>
 <strong>Validar QR</strong>
 <span>Control de entradas</span>
 </div>
+
 </button>
 
-<button class="quick-action" data-action="cortesia">
-<div class="quick-icon blue">✦</div>
+<button class="quick-action" id="activarCortesiasBtn" type="button">
 
-<button class="quick-action" id="activarCortesiasBtn">
-<div class="quick-icon blue">✦</div>
+<div class="quick-icon blue">
+✦
+</div>
+
 <div>
 <strong>Activar cortesías</strong>
-<span>Agregar accesos disponibles</span>
+<span>Agregar accesos gratuitos</span>
 </div>
+
 </button>
 
-<button class="quick-action" data-action="tickets">
-<div class="quick-icon green">◈</div>
+<button class="quick-action" data-action="tickets" type="button">
+
+<div class="quick-icon green">
+◈
+</div>
 
 <div>
 <strong>Ver accesos</strong>
 <span>Consultar tickets emitidos</span>
 </div>
+
 </button>
 
-<button class="quick-action" data-action="evento">
-<div class="quick-icon orange">＋</div>
+<button class="quick-action" data-action="evento" type="button">
+
+<div class="quick-icon orange">
+＋
+</div>
 
 <div>
 <strong>Nuevo evento</strong>
 <span>Publicar evento</span>
 </div>
+
 </button>
 
 </div>
+
 </article>
 
 </section>
@@ -263,23 +349,33 @@ Accesos rápidos
 <section class="bottom-grid">
 
 <article class="panel events-panel">
+
 <div class="panel-head">
+
 <div>
-<span>Actividad</span>
+
+<span>
+Actividad
+</span>
 
 <h3>
 Mis eventos recientes
 </h3>
+
 </div>
 
-<button class="secondary-button" id="viewAllEvents">
+<button class="secondary-button" id="viewAllEvents" type="button">
 Ver todos
 </button>
+
 </div>
 
 <div class="table-wrap">
+
 <table>
+
 <thead>
+
 <tr>
 <th>Evento</th>
 <th>Ciudad</th>
@@ -287,36 +383,51 @@ Ver todos
 <th>Precio</th>
 <th>Estado</th>
 </tr>
+
 </thead>
 
 <tbody id="tablaEventos">
+
 <tr>
 <td colspan="5" class="loading-cell">
 Cargando eventos...
 </td>
 </tr>
+
 </tbody>
+
 </table>
+
 </div>
+
 </article>
 
 <article class="panel account-panel">
+
 <div class="panel-head">
+
 <div>
-<span>Cuenta</span>
+
+<span>
+Cuenta
+</span>
 
 <h3>
 Mi productora
 </h3>
+
 </div>
+
 </div>
 
 <div class="account-card">
+
 <div class="account-logo" id="accountInitial">
 P
 </div>
 
 <div>
+
 <strong id="accountName">
 Productora
 </strong>
@@ -324,10 +435,13 @@ Productora
 <span id="accountId">
 ID de productora
 </span>
+
 </div>
+
 </div>
 
 <div class="account-list">
+
 <div>
 <span>Estado</span>
 <strong class="status-active">Activa</strong>
@@ -347,47 +461,61 @@ ID de productora
 <span>Plataforma</span>
 <strong>Cosmic Pass</strong>
 </div>
+
 </div>
+
 </article>
 
 </section>
 
 </main>
+
 </div>
 
 <div class="modal-overlay" id="cortesiasModal">
+
 <div class="modal-card">
 
-<button class="modal-close" id="cerrarCortesiasModal" type="button">
+<button
+class="modal-close"
+id="cerrarCortesiasModal"
+type="button"
+>
 ×
 </button>
 
 <div class="modal-header">
-<span>Administración de accesos</span>
-<h2>Activar cortesías</h2>
+
+<span>
+Cortesías
+</span>
+
+<h2>
+Activar cortesías
+</h2>
+
 <p>
-Selecciona el acceso gratuito e indica cuántas cortesías quieres habilitar.
+Selecciona el evento y la cantidad de cortesías que deseas agregar.
 </p>
+
 </div>
 
 <form id="activarCortesiasForm">
 
-<label for="cortesiaTicketSelect">
-Evento y tipo de acceso
+<label for="cortesiaEventoSelect">
+Evento
 </label>
 
-<select id="cortesiaTicketSelect" required>
+<select id="cortesiaEventoSelect" required>
+
 <option value="">
-Cargando accesos gratuitos...
+Selecciona un evento
 </option>
+
 </select>
 
-<div class="stock-info" id="stockCortesiaInfo">
-Selecciona un acceso para consultar su disponibilidad.
-</div>
-
 <label for="cantidadCortesias">
-Cantidad que deseas agregar
+Cantidad de cortesías
 </label>
 
 <input
@@ -400,55 +528,27 @@ placeholder="Ejemplo: 50"
 required
 >
 
-<button class="modal-submit" id="guardarCortesiasBtn" type="submit">
-Activar cortesías
-</button>
-
-<p class="modal-message" id="cortesiasMessage"></p>
-
-</form>
-</div>
-</div>
-
-
-<div class="modal-overlay" id="cortesiasModal">
-<div class="modal-card">
-<button class="modal-close" id="cerrarCortesiasModal" type="button">×</button>
-
-<div class="modal-header">
-<span>Cortesías</span>
-<h2>Activar cortesías</h2>
-<p>Selecciona el evento y la cantidad de accesos gratuitos que deseas habilitar.</p>
-</div>
-
-<form id="activarCortesiasForm">
-<label for="cortesiaEventoSelect">Evento</label>
-
-<select id="cortesiaEventoSelect" required>
-<option value="">Selecciona un evento</option>
-</select>
-
-<label for="cantidadCortesias">Cantidad de cortesías</label>
-
-<input
-type="number"
-id="cantidadCortesias"
-min="1"
-step="1"
-placeholder="Ejemplo: 50"
-required
+<button
+class="modal-submit"
+id="guardarCortesiasBtn"
+type="submit"
 >
-
-<button class="modal-submit" id="guardarCortesiasBtn" type="submit">
 Activar cortesías
 </button>
 
-<p class="modal-message" id="cortesiasMessage"></p>
+<p
+class="modal-message"
+id="cortesiasMessage"
+></p>
+
 </form>
+
 </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="js/productora-admin.js"></script>
+
 </body>
 </html>
