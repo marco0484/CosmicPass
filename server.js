@@ -318,6 +318,10 @@ app.get("/admin/dashboard", async (req, res) => {
       ? Number(req.query.id_productora)
       : null;
 
+  let eventosQuery = supabase
+  .from("cat_events")
+  .select("id", { count: "exact", head: true });
+
 let ticketsQuery = supabase
   .from("tickets")
   .select("cantidad,evento_id");
@@ -335,12 +339,6 @@ let cortesiasQuery = supabase
   .from("ticket_types")
   .select("stock_disponible,id_evento")
   .eq("precio", 0)
-  .eq("ind_activo", 1);
-
-
-let stockQuery = supabase
-  .from("ticket_types")
-  .select("stock_disponible,id_evento")
   .eq("ind_activo", 1);
 
 let productorasQuery = supabase
@@ -365,12 +363,13 @@ let productorasQuery = supabase
           scope: "productora",
           id_productora: idProductora,
           metricas: {
-                eventos: 0,
-                tickets: 0,
-                ingresos: 0,
-                cortesias: 0,
-                productoras: 1
-              }
+  eventos: 0,
+  tickets: 0,
+  disponibles: 0,
+  ingresos: 0,
+  cortesias: 0,
+  productoras: 1
+}
         });
       }
 
@@ -401,10 +400,7 @@ if (eventosResult.error) throw eventosResult.error;
 if (ticketsResult.error) throw ticketsResult.error;
 if (ventasResult.error) throw ventasResult.error;
 if (cortesiasResult.error) throw cortesiasResult.error;
-if (stockResult.error) throw stockResult.error;
 if (productorasResult.error) throw productorasResult.error;
-
-
 if (stockResult.error) throw stockResult.error;
 
     const ingresos = (ventasResult.data || [])
@@ -433,22 +429,6 @@ if (stockResult.error) throw stockResult.error;
   (stockResult.data || []).reduce(
     (total, ticket) =>
       total + Number(ticket.stock_disponible || 0),
-    0
-  );
-
-    const accesosDisponibles =
-  (stockResult.data || []).reduce(
-    (total, ticket) =>
-      total + Number(ticket.stock_disponible || 0),
-    0
-  );
-
-const accesosEmitidos =
-  ticketsEntregados + accesosDisponibles;
-
-const ticketsPagados =
-  Math.max(
-    ticketsEntregados - cortesiasGeneradas,
     0
   );
     
