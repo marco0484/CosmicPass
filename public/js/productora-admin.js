@@ -32,7 +32,7 @@ if (!idProductora) {
   cerrarSesion();
 }
 
-let incomeChart = null;
+let accessChart = null;
 let eventosGlobal = [];
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -138,10 +138,16 @@ async function cargarDashboard() {
       formatoNumero(metricas.cortesias || 0)
     );
 
-    const ingresosPorDia =
-      Array.isArray(data.ingresos_por_dia)
-        ? data.ingresos_por_dia
-        : [];
+const accesosGenerados =
+  Number(metricas.tickets || 0);
+
+const cortesiasGeneradas =
+  Number(metricas.cortesias || 0);
+
+actualizarGrafica(
+  accesosGenerados,
+  cortesiasGeneradas
+);
 
     actualizarGrafica(ingresosPorDia);
 
@@ -153,7 +159,7 @@ async function cargarDashboard() {
     setText("eventosActivos", "0");
     setText("cortesiasTotal", "0");
 
-    actualizarGrafica([]);
+    actualizarGrafica(0, 0);
   }
 }
 
@@ -271,39 +277,45 @@ function renderEventos(eventos) {
   }).join("");
 }
 
-function crearGrafica(datos) {
-  const canvas = document.getElementById("incomeChart");
+function crearGrafica() {
+  const canvas = document.getElementById("accessChart");
 
-  if (!canvas || typeof Chart === "undefined") return;
+  if (!canvas || typeof Chart === "undefined") {
+    return;
+  }
 
   incomeChart = new Chart(canvas, {
-    type: "line",
+    type: "doughnut",
     data: {
-      labels: [],
+      labels: [
+        "Tickets pagados",
+        "Cortesías"
+      ],
       datasets: [
         {
-          label: "Ingresos",
-          data: [],
-          borderColor: "#7c4dff",
-          backgroundColor: "rgba(124,77,255,.14)",
-          borderWidth: 2,
-          tension: .38,
-          pointRadius: 3,
-          pointHoverRadius: 5,
-          fill: true
+          data: [0, 0],
+          backgroundColor: [
+            "#21cf87",
+            "#ff922e"
+          ],
+          borderWidth: 0,
+          hoverOffset: 6
         }
       ]
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      interaction: {
-        intersect: false,
-        mode: "index"
-      },
+      cutout: "70%",
       plugins: {
         legend: {
-          display: false
+          position: "bottom",
+          labels: {
+            color: "#d8d8e1",
+            padding: 20,
+            usePointStyle: true,
+            pointStyle: "circle"
+          }
         },
         tooltip: {
           backgroundColor: "#161620",
@@ -312,83 +324,56 @@ function crearGrafica(datos) {
           padding: 12,
           callbacks: {
             label(context) {
-              return ` ${formatoMoneda(context.parsed.y || 0)}`;
-            }
-          }
-        }
-      },
-      scales: {
-        x: {
-          grid: {
-            display: false
-          },
-          ticks: {
-            color: "#858593",
-            maxTicksLimit: 8,
-            font: {
-              size: 10
-            }
-          }
-        },
-        y: {
-          beginAtZero: true,
-          grid: {
-            color: "rgba(255,255,255,.055)"
-          },
-          ticks: {
-            color: "#858593",
-            font: {
-              size: 10
-            },
-            callback(value) {
-              return formatoMonedaCompacta(value);
+              return ` ${context.label}: ${context.raw}`;
             }
           }
         }
       }
     }
   });
-
-  actualizarGrafica(datos);
 }
 
-function actualizarGrafica(datos) {
+function actualizarGrafica(accesosGenerados, cortesiasGeneradas) {
   const empty = document.getElementById("chartEmpty");
 
+  const totalAccesos =
+    Number(accesosGenerados || 0);
+
+  const cortesias =
+    Number(cortesiasGeneradas || 0);
+
+  const ticketsPagados =
+    Math.max(totalAccesos - cortesias, 0);
+
+  setText(
+    "ticketsPagados",
+    formatoNumero(ticketsPagados)
+  );
+
   if (!incomeChart) {
-    crearGrafica(datos);
+    crearGrafica();
+  }
+
+  if (!incomeChart) {
     return;
   }
 
-  const registros = Array.isArray(datos)
-    ? datos.filter(item => item)
-    : [];
+  incomeChart.data.datasets[0].data = [
+    ticketsPagados,
+    cortesias
+  ];
 
-  const labels = registros.map(item =>
-    formatoFechaCorta(
-      item.fecha ||
-      item.date ||
-      item.dia
-    )
-  );
-
-  const valores = registros.map(item =>
-    Number(
-      item.ingresos ??
-      item.total ??
-      item.monto ??
-      0
-    )
-  );
-
-  const tieneDatos = valores.some(valor => valor > 0);
-
-  incomeChart.data.labels = labels;
-  incomeChart.data.datasets[0].data = valores;
   incomeChart.update();
 
+  const tieneDatos =
+    ticketsPagados > 0 ||
+    cortesias > 0;
+
   if (empty) {
-    empty.classList.toggle("active", !tieneDatos);
+    empty.classList.toggle(
+      "active",
+      !tieneDatos
+    );
   }
 }
 
