@@ -318,27 +318,34 @@ app.get("/admin/dashboard", async (req, res) => {
       ? Number(req.query.id_productora)
       : null;
 
-      let eventosQuery = supabase
-  .from("cat_events")
+let ticketsQuery = supabase
+  .from("tickets")
+  .select("cantidad,evento_id");
+
+let ventasQuery = supabase
+  .from("tickets")
+  .select("monto,payment_status,evento_id");
+
+let cortesiasQuery = supabase
+  .from("tickets")
+  .select("cantidad,evento_id")
+  .or("metodo_pago.eq.FREE_ACCESS,payment_status.eq.free");
+
+  let stockQuery = supabase
+  .from("ticket_types")
+  .select("stock_disponible,id_evento")
+  .eq("precio", 0)
+  .eq("ind_activo", 1);
+
+
+let stockQuery = supabase
+  .from("ticket_types")
+  .select("stock_disponible,id_evento")
+  .eq("ind_activo", 1);
+
+let productorasQuery = supabase
+  .from("cat_productoras")
   .select("id", { count: "exact", head: true });
-
-  let ticketsQuery = supabase
-    .from("tickets")
-    .select("cantidad,evento_id");
-
-  let ventasQuery = supabase
-    .from("tickets")
-    .select("monto,payment_status,evento_id");
-
-  let cortesiasQuery = supabase
-    .from("tickets")
-    .select("cantidad,evento_id")
-    .or("metodo_pago.eq.FREE_ACCESS,payment_status.eq.free");
-
-  let productorasQuery = supabase
-    .from("cat_productoras")
-    .select("id", { count: "exact", head: true });
-
     if (idProductora) {
       eventosQuery = eventosQuery.eq("id_productora", idProductora);
 
@@ -370,28 +377,35 @@ app.get("/admin/dashboard", async (req, res) => {
 ticketsQuery = ticketsQuery.in("evento_id", eventosIds);
 ventasQuery = ventasQuery.in("evento_id", eventosIds);
 cortesiasQuery = cortesiasQuery.in("evento_id", eventosIds);
+stockQuery = stockQuery.in("id_evento", eventosIds);
 productorasQuery = productorasQuery.eq("id", idProductora);
     }
 
-    const [
+const [
   eventosResult,
   ticketsResult,
   ventasResult,
   cortesiasResult,
+  stockResult,
   productorasResult
 ] = await Promise.all([
   eventosQuery,
   ticketsQuery,
   ventasQuery,
   cortesiasQuery,
+  stockQuery,
   productorasQuery
 ]);
 
-    if (eventosResult.error) throw eventosResult.error;
-    if (ticketsResult.error) throw ticketsResult.error;
-    if (ventasResult.error) throw ventasResult.error;
-    if (productorasResult.error) throw productorasResult.error;
-    if (cortesiasResult.error) throw cortesiasResult.error;
+if (eventosResult.error) throw eventosResult.error;
+if (ticketsResult.error) throw ticketsResult.error;
+if (ventasResult.error) throw ventasResult.error;
+if (cortesiasResult.error) throw cortesiasResult.error;
+if (stockResult.error) throw stockResult.error;
+if (productorasResult.error) throw productorasResult.error;
+
+
+if (stockResult.error) throw stockResult.error;
 
     const ingresos = (ventasResult.data || [])
       .filter(t =>
@@ -414,18 +428,42 @@ productorasQuery = productorasQuery.eq("id", idProductora);
         total + Number(ticket.cantidad || 1),
       0
     );
+
+    const accesosDisponibles =
+  (stockResult.data || []).reduce(
+    (total, ticket) =>
+      total + Number(ticket.stock_disponible || 0),
+    0
+  );
+
+    const accesosDisponibles =
+  (stockResult.data || []).reduce(
+    (total, ticket) =>
+      total + Number(ticket.stock_disponible || 0),
+    0
+  );
+
+const accesosEmitidos =
+  ticketsEntregados + accesosDisponibles;
+
+const ticketsPagados =
+  Math.max(
+    ticketsEntregados - cortesiasGeneradas,
+    0
+  );
     
     res.json({
       success: true,
       scope: idProductora ? "productora" : "admin",
       id_productora: idProductora,
       metricas: {
-            eventos: eventosResult.count || 0,
-            tickets: ticketsEntregados,
-            ingresos,
-            cortesias: cortesiasGeneradas,
-            productoras: productorasResult.count || 0
-          }
+  eventos: eventosResult.count || 0,
+  tickets: ticketsEntregados,
+  disponibles: accesosDisponibles,
+  ingresos,
+  cortesias: cortesiasGeneradas,
+  productoras: productorasResult.count || 0
+}
     });
 
   } catch (error) {
@@ -519,164 +557,6 @@ app.post("/admin/activar-cortesias", async (req, res) => {
     });
   }
 });
-
-app.get("/admin/cortesias/:idProductora", async (req, res) => {
-  try {
-    const idProductora =
-      Number(req.params.idProductora);
-
-    if (!idProductora) {
-      return res.status(400).json({
-        success: false,
-        error: "Productora inválida"
-      });
-    }
-
-    const { data, error } = await supabase
-      .from("ticket_types")
-      .select(`
-        id,
-        id_evento,
-        id_productora,
-        tipo_ticket,
-        stock_disponible,
-        precio,
-        cat_events!inner(
-          id,
-          name,
-          date
-        )
-      `)
-      .eq("id_productora", idProductora)
-      .eq("precio", 0)
-      .eq("ind_activo", 1)
-      .order("id_evento", {
-        ascending: false
-      });
-
-    if (error) {
-      throw error;
-    }
-
-    return res.json({
-      success: true,
-      cortesias: data || []
-    });
-
-  } catch (error) {
-    console.error(
-      "ERROR CARGANDO CORTESÍAS:",
-      error
-    );
-
-    return res.status(500).json({
-      success: false,
-      error: "No se pudieron cargar las cortesías"
-    });
-  }
-});
-
-app.post("/admin/activar-cortesias", async (req, res) => {
-  try {
-    const {
-      id_productora,
-      ticket_type_id,
-      cantidad
-    } = req.body;
-
-    const idProductora =
-      Number(id_productora);
-
-    const ticketTypeId =
-      Number(ticket_type_id);
-
-    const cantidadAgregar =
-      Number(cantidad);
-
-    if (
-      !idProductora ||
-      !ticketTypeId ||
-      !Number.isInteger(cantidadAgregar) ||
-      cantidadAgregar <= 0
-    ) {
-      return res.status(400).json({
-        success: false,
-        error: "Datos inválidos"
-      });
-    }
-
-    const { data: ticketType, error: ticketError } =
-      await supabase
-        .from("ticket_types")
-        .select(`
-          id,
-          id_evento,
-          id_productora,
-          tipo_ticket,
-          precio,
-          stock_disponible
-        `)
-        .eq("id", ticketTypeId)
-        .eq("id_productora", idProductora)
-        .eq("precio", 0)
-        .eq("ind_activo", 1)
-        .maybeSingle();
-
-    if (ticketError) {
-      throw ticketError;
-    }
-
-    if (!ticketType) {
-      return res.status(404).json({
-        success: false,
-        error: "Acceso gratuito no encontrado"
-      });
-    }
-
-    const stockActual =
-      Number(ticketType.stock_disponible || 0);
-
-    const nuevoStock =
-      stockActual + cantidadAgregar;
-
-    const { data: actualizado, error: updateError } =
-      await supabase
-        .from("ticket_types")
-        .update({
-          stock_disponible: nuevoStock
-        })
-        .eq("id", ticketType.id)
-        .eq("id_productora", idProductora)
-        .select(`
-          id,
-          tipo_ticket,
-          stock_disponible
-        `)
-        .single();
-
-    if (updateError) {
-      throw updateError;
-    }
-
-    return res.json({
-      success: true,
-      message: `${cantidadAgregar} cortesías activadas correctamente`,
-      ticket: actualizado
-    });
-
-  } catch (error) {
-    console.error(
-      "ERROR ACTIVANDO CORTESÍAS:",
-      error
-    );
-
-    return res.status(500).json({
-      success: false,
-      error: "No se pudieron activar las cortesías"
-    });
-  }
-});
-
 
 app.post("/stripe/connect/:productoraId", async (req, res) => {
   try {
