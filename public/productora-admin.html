@@ -6,7 +6,18 @@
 <title>Panel de Productora | Cosmic Pass</title>
 <link rel="stylesheet" href="css/productora-admin.css">
 <link rel="icon" type="image/png" href="images/cp.webp">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Q3PHJK2BYG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-Q3PHJK2BYG');
+</script>
 </head>
+
+
+
 <body>
 
 <div class="admin-shell">
@@ -242,89 +253,16 @@ Ver todos
 Cargando eventos...
 </td>
 </tr>
-
 </tbody>
-
 </table>
-
 </div>
-
 </article>
-
-<article class="panel account-panel">
-
-<div class="panel-head">
-
-<div>
-
-<span>
-Cuenta
-</span>
-
-<h3>
-Mi productora
-</h3>
-
-</div>
-
-</div>
-
-<div class="account-card">
-
-<div class="account-logo" id="accountInitial">
-P
-</div>
-
-<div>
-
-<strong id="accountName">
-Productora
-</strong>
-
-<span id="accountId">
-ID de productora
-</span>
-
-</div>
-
-</div>
-
-<div class="account-list">
-
-<div>
-<span>Estado</span>
-<strong class="status-active">Activa</strong>
-</div>
-
-<div>
-<span>Eventos activos</span>
-<strong id="eventosActivos">0</strong>
-</div>
-
-<div>
-<span>Rol</span>
-<strong>Administrador</strong>
-</div>
-
-<div>
-<span>Plataforma</span>
-<strong>Cosmic Pass</strong>
-</div>
-
-</div>
-
-</article>
-
 </section>
-
 </main>
-
 </div>
 
 <div class="modal-overlay" id="cortesiasModal">
-
 <div class="modal-card">
-
 <button
 class="modal-close"
 id="cerrarCortesiasModal"
@@ -332,23 +270,13 @@ type="button"
 >
 ×
 </button>
-
 <div class="modal-header">
-
-<span>
-Cortesías
-</span>
-
+<span>Cortesías</span>
 <h2>
 Activar cortesías
 </h2>
-
-<p>
-Selecciona el evento y la cantidad de cortesías que deseas agregar.
-</p>
-
+<p>Selecciona el evento y la cantidad de cortesías que deseas agregar.</p>
 </div>
-
 <form id="activarCortesiasForm">
 
 <label for="cortesiaEventoSelect">
@@ -398,6 +326,5 @@ id="cortesiasMessage"
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="js/productora-admin.js"></script>
-
 </body>
 </html>
