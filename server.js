@@ -312,6 +312,68 @@ app.post("/login", async (req, res) => {
   }
 });
 
+
+app.get("/admin/dashboard", async (req, res) => {
+  try {
+    const idProductora = req.query.id_productora
+      ? Number(req.query.id_productora)
+      : null;
+
+    if (
+      req.query.id_productora &&
+      (!Number.isInteger(idProductora) || idProductora <= 0)
+    ) {
+      return res.status(400).json({
+        success: false,
+        error: "id_productora inválido"
+      });
+    }
+
+    const { data, error } = await supabase.rpc("get_dashboard",
+      {
+        p_id_productora: idProductora
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    const metricas = data || {
+      eventos: 0,
+      tickets: 0,
+      ingresos: 0,
+      productoras: idProductora ? 1 : 0
+    };
+
+    return res.json({
+      success: true,
+      scope: idProductora
+        ? "productora"
+        : "admin",
+      id_productora: idProductora,
+      metricas: {
+        eventos: Number(metricas.eventos || 0),
+        tickets: Number(metricas.tickets || 0),
+        ingresos: Number(metricas.ingresos || 0),
+        productoras: Number(metricas.productoras || 0)
+      }
+    });
+
+  } catch (error) {
+    console.error(
+      "ERROR /admin/dashboard:",
+      error
+    );
+
+    return res.status(500).json({
+      success: false,
+      error: "Error cargando dashboard"
+    });
+  }
+});
+
+/*
 app.get("/admin/dashboard", async (req, res) => {
   try {
     const idProductora = req.query.id_productora
@@ -455,6 +517,7 @@ if (stockResult.error) throw stockResult.error;
     });
   }
 });
+*/
 
 app.post("/admin/activar-cortesias", async (req, res) => {
   try {
