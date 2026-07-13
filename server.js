@@ -353,11 +353,15 @@ app.get("/admin/dashboard", async (req, res) => {
         : "admin",
       id_productora: idProductora,
       metricas: {
-        eventos: Number(metricas.eventos || 0),
-        tickets: Number(metricas.tickets || 0),
-        ingresos: Number(metricas.ingresos || 0),
-        productoras: Number(metricas.productoras || 0)
-      }
+                eventos: Number(metricas.eventos || 0),
+                emitidos: Number(metricas.emitidos || 0),
+                asignados: Number(metricas.asignados || 0),
+                tickets: Number(metricas.tickets || 0),
+                disponibles: Number(metricas.disponibles || 0),
+                cortesias: Number(metricas.cortesias || 0),
+                ingresos: Number(metricas.ingresos || 0),
+                productoras: Number(metricas.productoras || 0)
+              }
     });
 
   } catch (error) {
