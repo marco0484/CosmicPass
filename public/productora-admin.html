@@ -41,9 +41,9 @@
 <span>Ventas</span>
 </a>
 
-<a href="#" data-section="cortesias">
+<a href="#" id="activarCortesiasBtn">
 <span class="nav-icon">✦</span>
-<span>Cortesías</span>
+<span>Activar cortesías</span>
 </a>
 
 <a href="https://validador-ok.vercel.app/" target="_blank" rel="noopener noreferrer">
@@ -204,117 +204,27 @@ La gráfica mostrará cuántos accesos fueron pagados y cuántos fueron cortesí
 </div>
 
 </article>
-
-<article class="panel quick-panel">
-
-<div class="panel-head">
-
-<div>
-
-<span>
-Operación
-</span>
-
-<h3>
-Accesos rápidos
-</h3>
-
-</div>
-
-</div>
-
-<div class="quick-grid">
-
-<button
-class="quick-action"
-type="button"
-onclick="window.open('https://validador-ok.vercel.app/', '_blank', 'noopener,noreferrer')"
->
-
-<div class="quick-icon purple">
-▦
-</div>
-
-<div>
-<strong>Validar QR</strong>
-<span>Control de entradas</span>
-</div>
-
-</button>
-
-<button class="quick-action" id="activarCortesiasBtn" type="button">
-<div class="quick-icon blue">
-✦
-</div>
-<div>
-<strong>Activar cortesías</strong>
-<span>Agregar accesos gratuitos</span>
-</div>
-
-</button>
-
-<button class="quick-action" data-action="tickets" type="button">
-
-<div class="quick-icon green">
-◈
-</div>
-
-<div>
-<strong>Ver accesos</strong>
-<span>Consultar tickets emitidos</span>
-</div>
-
-</button>
-
-<button class="quick-action" data-action="evento" type="button">
-
-<div class="quick-icon orange">
-＋
-</div>
-
-<div>
-<strong>Nuevo evento</strong>
-<span>Publicar evento</span>
-</div>
-
-</button>
-
-</div>
-
-</article>
-
 </section>
 
 <section class="bottom-grid">
-
 <article class="panel events-panel">
-
 <div class="panel-head">
-
 <div>
-
 <span>
 Actividad
 </span>
-
 <h3>
 Mis eventos recientes
 </h3>
-
 </div>
-
 <button class="secondary-button" id="viewAllEvents" type="button">
 Ver todos
 </button>
-
 </div>
-
 <div class="table-wrap">
 
 <table>
-
 <thead>
-
 <tr>
 <th>Evento</th>
 <th>Ciudad</th>
