@@ -278,7 +278,14 @@ app.post("/login", async (req, res) => {
 
     const { data, error } = await supabase
       .from("cosmic_usuarios")
-      .select("id,nombre,usuario,rol,activo,id_productora")
+      .select(`
+        id,
+        nombre,
+        usuario,
+        rol,
+        activo,
+        id_productora
+      `)
       .eq("usuario", user)
       .eq("password", password)
       .eq("activo", true)
@@ -291,21 +298,46 @@ app.post("/login", async (req, res) => {
       });
     }
 
-    res.json({
+    let nombreProductora = "Cosmic Pass";
+
+    if (data.id_productora) {
+      const {
+        data: productora,
+        error: productoraError
+      } = await supabase
+        .from("cat_productoras")
+        .select("name")
+        .eq("id", data.id_productora)
+        .maybeSingle();
+
+      if (productoraError) {
+        console.error(
+          "ERROR CONSULTANDO PRODUCTORA:",
+          productoraError
+        );
+      }
+
+      if (productora?.name) {
+        nombreProductora = productora.name;
+      }
+    }
+
+    return res.json({
       success: true,
       user: {
-        id:       data.id,
-        nombre:   data.nombre || data.usuario,
-        usuario:  data.usuario,
-        rol:      data.rol || "admin",
-         id_productora: data.id_productora
+        id: data.id,
+        nombre: data.nombre || data.usuario,
+        usuario: data.usuario,
+        rol: data.rol || "admin",
+        id_productora: data.id_productora,
+        productora_nombre: nombreProductora
       }
     });
 
   } catch (err) {
     console.error("ERROR LOGIN:", err);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       error: "Error en servidor"
     });

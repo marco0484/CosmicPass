@@ -51,19 +51,32 @@ function cerrarSesion() {
 }
 
 function configurarUsuario() {
-  const nombre = user.nombre || user.usuario || `Productora #${idProductora}`;
-  const inicial = nombre.charAt(0).toUpperCase();
+  const nombreUsuario =
+    user.nombre ||
+    user.usuario ||
+    "Administrador";
 
-  setText("productoraName", nombre);
-  setText("welcomeTitle", `Hola, ${nombre}`);
-  setText("accountName", nombre);
+  const nombreProductora =
+    user.productora_nombre ||
+    `Productora #${idProductora}`;
+
+  const inicialProductora =
+    nombreProductora.charAt(0).toUpperCase();
+
+  const inicialUsuario =
+    nombreUsuario.charAt(0).toUpperCase();
+
+  setText("sidebarProductoraName", nombreProductora);
+  setText("productoraName", nombreProductora);
+  setText("welcomeTitle", `Hola, ${nombreUsuario}`);
+  setText("accountName", nombreProductora);  setText("welcomeTitle", `Hola, ${nombreUsuario}`);
+  setText("accountName", nombreProductora);
   setText("accountId", `Productora #${idProductora}`);
-  setText("userAvatar", inicial);
-  setText("accountInitial", inicial);
+  setText("userAvatar", inicialUsuario);
+  setText("accountInitial", inicialProductora);
 
-  document.title = `${nombre} | Cosmic Pass`;
+  document.title = `${nombreProductora} | Cosmic Pass`;
 }
-
 function configurarBotones() {
   document.getElementById("logoutBtn")?.addEventListener("click", cerrarSesion);
 
@@ -121,17 +134,21 @@ async function cargarDashboard() {
 
     const metricas = data.metricas || {};
 
-    const accesosDescargados =
-      Number(metricas.tickets || 0);
-
-    const cortesiasGeneradas =
-      Number(metricas.cortesias || 0);
-
-    const accesosDisponibles =
-      Number(metricas.disponibles || 0);
-
     const accesosEmitidos =
-      accesosDescargados + accesosDisponibles;
+    Number(metricas.emitidos || 0);
+
+  const accesosDescargados =
+    Number(
+      metricas.asignados ??
+      metricas.tickets ??
+      0
+    );
+
+  const cortesiasGeneradas =
+    Number(metricas.cortesias || 0);
+
+  const accesosDisponibles =
+    Number(metricas.disponibles || 0);
 
     const ticketsPagados =
       Math.max(
