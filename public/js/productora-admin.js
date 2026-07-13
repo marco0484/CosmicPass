@@ -69,7 +69,6 @@ function configurarUsuario() {
   setText("sidebarProductoraName", nombreProductora);
   setText("productoraName", nombreProductora);
   setText("welcomeTitle", `Hola, ${nombreUsuario}`);
-  setText("accountName", nombreProductora);  setText("welcomeTitle", `Hola, ${nombreUsuario}`);
   setText("accountName", nombreProductora);
   setText("accountId", `Productora #${idProductora}`);
   setText("userAvatar", inicialUsuario);
