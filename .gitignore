@@ -1,14 +1,5 @@
 # dependencias
 node_modules/
 
-# variables sensibles
-.env
-
 # logs
 *.log
-
-# sistema (Mac)
-.DS_Store
-
-# bases de datos locales (por si acaso)
-db/
