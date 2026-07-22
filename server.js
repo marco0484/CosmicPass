@@ -276,27 +276,25 @@ app.post("/login", async (req, res) => {
       });
     }
 
-    const { data, error } = await supabase
-      .from("cosmic_usuarios")
-      .select(`
-        id,
-        nombre,
-        usuario,
-        rol,
-        activo,
-        id_productora
-      `)
-      .eq("usuario", user)
-      .eq("password", password)
-      .eq("activo", true)
-      .maybeSingle();
+const { data: usuarios, error } = await supabase.rpc(
+  "validar_login_cosmic",
+  {
+    p_usuario: user,
+    p_password: password
+  }
+);
 
-    if (error || !data) {
-      return res.status(401).json({
-        success: false,
-        error: "Credenciales incorrectas"
-      });
-    }
+const data =
+  usuarios && usuarios.length > 0
+    ? usuarios[0]
+    : null;
+
+if (error || !data) {
+  return res.status(401).json({
+    success: false,
+    error: "Credenciales incorrectas"
+  });
+}
 
     let nombreProductora = "Cosmic Pass";
 
