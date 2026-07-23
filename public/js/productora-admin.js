@@ -126,9 +126,16 @@ console.log("Módulo:", modulo);
   const mostrarDashboard =
     modulo === "dashboard";
 
+    const eventosSection =
+  document.getElementById("eventosSection");
+
   dashboardElements.forEach(element => {
     element.hidden = !mostrarDashboard;
   });
+
+  if (eventosSection) {
+  eventosSection.hidden = modulo !== "eventos";
+}
 
   document
     .querySelectorAll("[data-section]")
