@@ -127,35 +127,26 @@ activeEvents.forEach(evento => {
             ? "Free Access"
             : "Pagar Mi Ticket"
         }
-
       </button>
-
     </div>
-
   `;
 
   container.appendChild(card);
 
 });
-// load
 
 const pastContainer =
   document.querySelector(".past-cards");
 
 if(pastContainer){
-
   pastContainer.innerHTML = "";
-
   pastEvents.forEach(evento => {
 
     const card =
-      document.createElement("div");
-
-    card.classList.add("event-card");
-
-    card.classList.add("past-event-card");
-
-    card.innerHTML = `
+        document.createElement("div");
+        card.classList.add("event-card");
+        card.classList.add("past-event-card");
+        card.innerHTML = `
 
       <img 
         src="${evento.image}" 
@@ -324,73 +315,6 @@ function renderProducer(data, eventos) {
 
 }
 
-/* =========================
-   MOCK DATA LOCAL TESTING
-   =========================
-
-async function loadData() {
-
-  const mockData = {
-
-    productora: {
-      name: "Sefarán Events",
-      historia:
-        "Eventos underground de techno y hard groove en CDMX.",
-      instagram: "https://instagram.com/sefaran",
-      facebook: "https://facebook.com/sefaran",
-      whatsapp: "https://wa.me/525512345678",
-      logo:
-        "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200",
-    },
-
-    eventos: [
-
-      {
-        id: 1,
-        name: "Hard Techno Ritual",
-        city: "CDMX",
-        event_date: "2026-06-20",
-        price: 350,
-        image:
-          "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?q=80&w=1200"
-      }
-
-    ],
-
-    features: [
-
-      {
-        level: 1,
-        icon: "🔥",
-        name: "Techno Underground"
-      }
-
-    ]
-
-  };
-
-  renderProducer(
-    mockData.productora,
-    mockData.eventos
-  );
-
-  renderEvents(
-    mockData.eventos
-  );
-
-  renderFeatures(
-    mockData.features
-  );
-
-}
-
-========================= */
-
-
-/* =========================
-   REAL DATABASE LOADER
-   ========================= */
-
 async function loadData() {
 
   try {
@@ -439,7 +363,6 @@ function irEvento(id) {
 function irHome() {
   window.location.href = "index.html";
 }
-
 
 async function openTicketModal(eventName, eventId) {
   const modal = document.getElementById("ticket-modal");
