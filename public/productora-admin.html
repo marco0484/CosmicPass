@@ -28,11 +28,11 @@
   </div>
 </div>
 
-<nav>
-<a class="active" href="productora-admin.html">
-<span class="nav-icon">⌂</span>
-<span>Dashboard</span>
-</a>
+<nav> 
+    <a class="active" href="#" data-section="dashboard">
+      <span class="nav-icon">⌂</span>
+        <span>Dashboard</span>
+    </a>
 
 <a href="#" data-section="eventos">
 <span class="nav-icon">▣</span>
@@ -97,8 +97,8 @@ P
 
 </header>
 
-<section class="welcome-row">
-<div>
+<section class="welcome-row" data-module="dashboard">
+  <div>
 <span class="welcome-label">
 Resumen general
 </span>
@@ -120,8 +120,7 @@ Nuevo evento
 
 </section>
 
-<section class="stats-grid">
-
+<section class="stats-grid" data-module="dashboard">
 <article class="stat-card">
 <div class="stat-icon tickets">◈</div>
 <div class="stat-content">
@@ -159,21 +158,13 @@ Nuevo evento
 </article>
 </section>
 
-<section class="dashboard-grid">
-<article class="panel chart-panel">
-<div class="panel-head">
-
-<div>
-
-<span>
-Distribución
-</span>
-
-<h3>
-Accesos por tipo
-</h3>
-
-</div>
+<section class="dashboard-grid" data-module="dashboard">
+  <article class="panel chart-panel">
+    <div class="panel-head">
+      <div>
+      <span> Distribución </span>
+        <h3> Accesos por tipo </h3>
+        </div>
 
 <select id="chartPeriod">
 
@@ -214,20 +205,14 @@ La gráfica mostrará cuántos accesos fueron pagados y cuántos fueron cortesí
 </article>
 </section>
 
-<section class="bottom-grid">
-<article class="panel events-panel">
-<div class="panel-head">
-<div>
-<span>
-Actividad
-</span>
-<h3>
-Mis eventos recientes
-</h3>
-</div>
-<button class="secondary-button" id="viewAllEvents" type="button">
-Ver todos
-</button>
+<section class="bottom-grid" data-module="dashboard">
+  <article class="panel events-panel">
+    <div class="panel-head">
+      <div>
+        <span> Actividad </span>
+          <h3> Mis eventos recientes </h3>
+      </div>
+<button class="secondary-button" id="viewAllEvents" type="button"> Ver todos </button>
 </div>
 <div class="table-wrap">
 

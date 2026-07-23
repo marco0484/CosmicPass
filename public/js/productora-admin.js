@@ -78,7 +78,6 @@ function configurarUsuario() {
 }
 function configurarBotones() {
   document.getElementById("logoutBtn")?.addEventListener("click", cerrarSesion);
-
   document.getElementById("createEventBtn")?.addEventListener("click", () => {
     mostrarPendiente("Creación de eventos");
   });
@@ -107,11 +106,41 @@ function configurarBotones() {
   });
 
   document.querySelectorAll("[data-section]").forEach(link => {
-    link.addEventListener("click", event => {
-      event.preventDefault();
-      mostrarPendiente(link.textContent.trim());
-    });
+  link.addEventListener("click", event => {
+    event.preventDefault();
+    const modulo = link.dataset.section;
+    mostrarModulo(modulo);
   });
+
+});
+}
+
+
+function mostrarModulo(modulo) {
+
+  const dashboardElements =
+    document.querySelectorAll(
+      '[data-module="dashboard"]'
+    );
+
+  const mostrarDashboard =
+    modulo === "dashboard";
+
+  dashboardElements.forEach(element => {
+    element.hidden = !mostrarDashboard;
+  });
+
+  document
+    .querySelectorAll("[data-section]")
+    .forEach(link => {
+
+      link.classList.toggle(
+        "active",
+        link.dataset.section === modulo
+      );
+
+    });
+
 }
 
 async function cargarDashboard() {
