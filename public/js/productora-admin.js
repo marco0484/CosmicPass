@@ -262,7 +262,7 @@ async function cargarEventos() {
       .slice(0, 6);
 
     renderEventos(eventosOrdenados);
-
+    renderTodosEventos(eventosGlobal);
   } catch (error) {
     console.error("ERROR EVENTOS:", error);
 
@@ -341,6 +341,62 @@ function renderEventos(eventos) {
       </tr>
     `;
   }).join("");
+}
+
+function renderTodosEventos(eventos) {
+
+  const tabla = document.getElementById("tablaTodosEventos");
+
+  if (!tabla) return;
+
+  if (!eventos.length) {
+    tabla.innerHTML = `
+      <tr>
+        <td colspan="5" class="empty-cell">
+          Todavía no tienes eventos registrados.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  const hoy = new Date();
+  hoy.setHours(0,0,0,0);
+
+  tabla.innerHTML = eventos.map(evento => {
+
+    const fechaValor =
+      evento.event_date ||
+      evento.date ||
+      evento.fecha;
+
+    const fecha = fechaValor
+      ? new Date(String(fechaValor).replace(" ","T"))
+      : null;
+
+    const activa =
+      fecha &&
+      !Number.isNaN(fecha.getTime()) &&
+      fecha >= hoy;
+
+    const precio = Number(evento.price || 0);
+
+    return `
+      <tr>
+        <td>${escapeHtml(evento.name || "Evento")}</td>
+        <td>${escapeHtml(evento.city || "Por confirmar")}</td>
+        <td>${formatoFecha(fechaValor)}</td>
+        <td>${precio === 0 ? "Cortesía" : formatoMoneda(precio)}</td>
+        <td>
+          <span class="event-status ${activa ? "active" : "finished"}">
+            ${activa ? "Activo" : "Finalizado"}
+          </span>
+        </td>
+      </tr>
+    `;
+
+  }).join("");
+
 }
 
 function crearGrafica() {
