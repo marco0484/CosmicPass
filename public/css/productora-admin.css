@@ -779,6 +779,10 @@ color:var(--green);
 color:var(--danger);
 }
 
+.module-section {
+  display: block !important;
+}
+
 @media(max-width:1200px){
 .stats-grid{
 grid-template-columns:repeat(2,minmax(0,1fr));
