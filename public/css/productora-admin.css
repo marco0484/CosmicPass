@@ -779,8 +779,9 @@ color:var(--green);
 color:var(--danger);
 }
 
-.module-section {
-  display: block !important;
+
+[hidden] {
+  display: none !important;
 }
 
 @media(max-width:1200px){
