@@ -117,7 +117,7 @@ function configurarBotones() {
 
 
 function mostrarModulo(modulo) {
-
+console.log("Módulo:", modulo);
   const dashboardElements =
     document.querySelectorAll(
       '[data-module="dashboard"]'
