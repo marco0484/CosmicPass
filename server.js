@@ -90,21 +90,10 @@ app.post(
     .maybeSingle();
 
 if (existe) {
-
-  console.log(
-    "PAGO YA REGISTRADO"
-  );
-
   return res.json({
     received: true
   });
-
 }
-
-        console.log(
-  "PAGO OK",
-  session.metadata
-);
 
 const ticketToken =
   crypto.randomUUID();
@@ -171,27 +160,9 @@ telefono:
     }]);
 
 if (error) {
-  console.error(
-    "ERROR INSERT TICKET:",
-    error
-  );
-} else {
-  console.log(
-    "TICKET GUARDADO"
-  );
 
-  console.log(
-  "DESCONTAR STOCK",
-  {
-    ticket_id: Number(
-      session.metadata.ticket_id
-    ),
-    cantidad: Number(
-      session.metadata.cantidad
-    ),
-    metadata: session.metadata
-  }
-);
+} else {
+
 
  const rpcResult =
   await supabase.rpc(
@@ -206,34 +177,14 @@ if (error) {
     }
   );
 
-console.log(
-  "RPC RESULT:",
-  JSON.stringify(
-    rpcResult,
-    null,
-    2
-  )
-);
-
 const {
   data: nuevoStock,
   error: stockError
 } = rpcResult;
 
 if (stockError) {
-
-  console.error(
-    "ERROR STOCK:",
-    stockError
-  );
-
-} else {
-
-  console.log(
-    "STOCK ACTUALIZADO:",
-    nuevoStock
-  );
-
+} 
+else {
 }
 }
 
@@ -407,152 +358,6 @@ app.get("/admin/dashboard", async (req, res) => {
   }
 });
 
-/*
-app.get("/admin/dashboard", async (req, res) => {
-  try {
-    const idProductora = req.query.id_productora
-      ? Number(req.query.id_productora)
-      : null;
-
-  let eventosQuery = supabase
-  .from("cat_events")
-  .select("id", { count: "exact", head: true });
-
-let ticketsQuery = supabase
-  .from("tickets")
-  .select("cantidad,evento_id");
-
-let ventasQuery = supabase
-  .from("tickets")
-  .select("monto,payment_status,evento_id");
-
-let cortesiasQuery = supabase
-  .from("tickets")
-  .select("cantidad,evento_id")
-  .or("metodo_pago.eq.FREE_ACCESS,payment_status.eq.free");
-
-  let stockQuery = supabase
-  .from("ticket_types")
-  .select("stock_disponible,id_evento")
-  .eq("precio", 0)
-  .eq("ind_activo", 1);
-
-let productorasQuery = supabase
-  .from("cat_productoras")
-  .select("id", { count: "exact", head: true });
-    if (idProductora) {
-      eventosQuery = eventosQuery.eq("id_productora", idProductora);
-
-      const { data: eventosProductora, error: eventosError } =
-        await supabase
-          .from("cat_events")
-          .select("id")
-          .eq("id_productora", idProductora);
-
-      if (eventosError) throw eventosError;
-
-      const eventosIds = eventosProductora.map(e => e.id);
-
-      if (eventosIds.length === 0) {
-        return res.json({
-          success: true,
-          scope: "productora",
-          id_productora: idProductora,
-          metricas: {
-  eventos: 0,
-  tickets: 0,
-  disponibles: 0,
-  ingresos: 0,
-  cortesias: 0,
-  productoras: 1
-}
-        });
-      }
-
-ticketsQuery = ticketsQuery.in("evento_id", eventosIds);
-ventasQuery = ventasQuery.in("evento_id", eventosIds);
-cortesiasQuery = cortesiasQuery.in("evento_id", eventosIds);
-stockQuery = stockQuery.in("id_evento", eventosIds);
-productorasQuery = productorasQuery.eq("id", idProductora);
-    }
-
-const [
-  eventosResult,
-  ticketsResult,
-  ventasResult,
-  cortesiasResult,
-  stockResult,
-  productorasResult
-] = await Promise.all([
-  eventosQuery,
-  ticketsQuery,
-  ventasQuery,
-  cortesiasQuery,
-  stockQuery,
-  productorasQuery
-]);
-
-if (eventosResult.error) throw eventosResult.error;
-if (ticketsResult.error) throw ticketsResult.error;
-if (ventasResult.error) throw ventasResult.error;
-if (cortesiasResult.error) throw cortesiasResult.error;
-if (productorasResult.error) throw productorasResult.error;
-if (stockResult.error) throw stockResult.error;
-
-    const ingresos = (ventasResult.data || [])
-      .filter(t =>
-        t.payment_status === "paid" ||
-        t.payment_status === "approved" ||
-        t.payment_status === "free"
-      )
-      .reduce((total, t) => total + Number(t.monto || 0), 0);
-
-  const ticketsEntregados =
-    (ticketsResult.data || []).reduce(
-      (total, ticket) =>
-        total + Number(ticket.cantidad || 1),
-      0
-    );
-
-  const cortesiasGeneradas =
-    (cortesiasResult.data || []).reduce(
-      (total, ticket) =>
-        total + Number(ticket.cantidad || 1),
-      0
-    );
-
-    const accesosDisponibles =
-  (stockResult.data || []).reduce(
-    (total, ticket) =>
-      total + Number(ticket.stock_disponible || 0),
-    0
-  );
-    
-    res.json({
-      success: true,
-      scope: idProductora ? "productora" : "admin",
-      id_productora: idProductora,
-      metricas: {
-  eventos: eventosResult.count || 0,
-  tickets: ticketsEntregados,
-  disponibles: accesosDisponibles,
-  ingresos,
-  cortesias: cortesiasGeneradas,
-  productoras: productorasResult.count || 0
-}
-    });
-
-  } catch (error) {
-    console.error("ERROR /admin/dashboard:", error);
-
-    res.status(500).json({
-      success: false,
-      error: "Error cargando dashboard"
-    });
-  }
-});
-*/
-
 app.post("/admin/activar-cortesias", async (req, res) => {
   try {
     const {
@@ -707,7 +512,6 @@ app.get("/productora-full/:id", async (req, res) => {
     });
 
   } catch (error) {
-    //console.error("Error en /productora-full:", error);
     res.status(500).json({
       error: "Error en servidor"
     });
@@ -781,7 +585,6 @@ if (productoraError || !productora?.stripe_account_id) {
     },
 
     payment_method_types: ["card"],
-
     phone_number_collection: {
       enabled: true
     },
@@ -803,22 +606,17 @@ if (productoraError || !productora?.stripe_account_id) {
   }
 ],
     mode: "payment",
-
     success_url:
       "https://www.cosmicpass.space/successful.html",
 
     cancel_url:
       "https://www.cosmicpass.space/error.html",
-
       payment_intent_data: {
-
   application_fee_amount: 0,
-
   transfer_data: {
     destination:
       productora.stripe_account_id
   }
-
 },
 
   });
@@ -847,8 +645,7 @@ app.get("/events", async (req, res) => {
   try {
 
     const { id_productora } = req.query;
-    const key = id_productora || "all"; // 👈 clave única
-
+    const key = id_productora || "all";
     const now = Date.now();
     if (
       cacheEventos[key] &&
@@ -875,7 +672,6 @@ app.get("/events", async (req, res) => {
   }
 });
 
-
 app.get("/events/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -897,7 +693,6 @@ app.get("/events/:id", async (req, res) => {
   }
 });
 
-
 app.get("/productoras/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -907,7 +702,6 @@ app.get("/productoras/:id", async (req, res) => {
     });
 
     if (error) throw error;
-
     if (!data || data.length === 0) {
       return res.status(404).json({ error: "Productora no encontrada" });
     }
@@ -1024,7 +818,6 @@ app.get("/productoras/:id/features", async (req, res) => {
 app.get("/eventos/:id/tickets", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-
     const { data, error } = await supabase
       .from("ticket_types")
       .select("*")
@@ -1107,7 +900,6 @@ app.post("/mis-boletos", async (req, res) => {
 app.post("/crear-ticket-gratis", async (req, res) => {
   try {
     const { ticket_id, cantidad = 1, nombre, correo, telefono } = req.body;
-
     const correoNormalizado =
   String(correo || "")
     .trim()
@@ -1296,16 +1088,6 @@ const {
   telefono
 } = req.body;
 
-console.log(
-  "DATOS CLIENTE MP:",
-  {
-    nombre,
-    correo,
-    telefono
-  }
-);
-
-
     if (!ticket_id) {
       return res.status(400).json({
         error: "ticket_id es requerido"
@@ -1363,11 +1145,9 @@ console.log(
     }
 
     const preference = new Preference(mpClient);
-
     const result = await preference.create({
 
       body: {
-
        items: [
   {
     title: ticket.tipo_ticket,
@@ -1382,18 +1162,14 @@ metadata: {
   correo,
   telefono
 },
-
 notification_url:
   "https://www.cosmicpass.space/webhook-mp",
-
 back_urls: {
   success: "https://www.cosmicpass.space",
   failure: "https://www.cosmicpass.space",
   pending: "https://www.cosmicpass.space"
 },
-
 auto_return: "approved",
-
 external_reference: String(ticket.id)
       }
 
@@ -1412,63 +1188,22 @@ external_reference: String(ticket.id)
       success: false,
       error: err.message
     });
-
   }
-
 });
 
 app.post("/webhook-mp", async (req, res) => {
-
   try {
-
-    console.log(
-      "MP WEBHOOK:",
-      JSON.stringify(req.body, null, 2)
-    );
-
- console.log(
-  "BODY COMPLETO:",
-  JSON.stringify(req.body, null, 2)
-);
 
 if (
   (req.body.type || req.body.topic)
   !== "payment"
 ) {
-
-  console.log(
-    "WEBHOOK IGNORADO:",
-    req.body.type ||
-    req.body.topic
-  );
-
   return res.sendStatus(200);
-
 }
 
 const paymentId =
   req.body.data?.id ||
   req.body.resource;
-
-console.log(
-  "TIPO:",
-  req.body.type || req.body.topic
-);
-
-console.log(
-  "RESOURCE:",
-  req.body.resource
-);
-
-console.log(
-  "DATA:",
-  req.body.data
-);
-
-    console.log(
-      "PAYMENT ID:",
-      paymentId
-    );
 
     if (!paymentId) {
       return res.sendStatus(200);
@@ -1482,9 +1217,7 @@ console.log(
     id: paymentId
   });
 
-
-
-      const { data: existe } =
+const { data: existe } =
   await supabase
     .from("tickets")
     .select("id")
@@ -1590,11 +1323,6 @@ telefono:
       p_cantidad: cantidad
     }
   );
-
-  console.log(
-    "TICKET MP GUARDADO"
-  );
-
 }
 
 if (insertError) {
@@ -1607,28 +1335,12 @@ if (insertError) {
       2
     )
   );
-
   return res.sendStatus(200);
-
 }
-
-console.log(
-  "TICKET MP GUARDADO"
-);
     res.sendStatus(200);
-
-  } catch (err) {
-
-    console.error(
-      "ERROR WEBHOOK MP:",
-      err
-    );
-
+  } 
+  catch (err) {
     res.sendStatus(200);
-
   }
-
 });
-
-
 module.exports = app;
