@@ -230,9 +230,9 @@ async function cargarDashboard() {
 }
 
 async function cargarEventos() {
-  const tabla = document.getElementById("tablaEventos");
+const tabla = document.getElementById("tablaTodosEventos");
 
-  if (!tabla) return;
+if (!tabla) return;
 
   try {
     const res = await fetch(
@@ -261,8 +261,8 @@ async function cargarEventos() {
       })
       .slice(0, 6);
 
-    renderEventos(eventosOrdenados);
     renderTodosEventos(eventosGlobal);
+
   } catch (error) {
     console.error("ERROR EVENTOS:", error);
 
