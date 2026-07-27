@@ -683,6 +683,94 @@ app.get("/mp/connect/:productoraId", async (req, res) => {
 
 });
 
+
+app.get("/mp/oauth/callback", async (req, res) => {
+
+  try {
+
+    const { code, state } = req.query;
+
+    if (!code || !state) {
+      return res.status(400).send("Solicitud inválida.");
+    }
+
+    const {
+      productoraId
+    } = JSON.parse(
+      Buffer.from(state, "base64url").toString("utf8")
+    );
+
+    const response = await fetch(
+      "https://api.mercadopago.com/oauth/token",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+
+          client_id: process.env.MP_CLIENT_ID,
+
+          client_secret: process.env.MP_CLIENT_SECRET,
+
+          grant_type: "authorization_code",
+
+          code,
+
+          redirect_uri: process.env.MP_REDIRECT_URI
+
+        })
+      }
+    );
+
+    const tokenData = await response.json();
+
+    if (!response.ok) {
+
+      console.error(tokenData);
+
+      return res.status(400).json(tokenData);
+
+    }
+
+    const { error } = await supabase
+      .from("cat_productoras")
+      .update({
+
+        mp_access_token: tokenData.access_token,
+
+        mp_refresh_token: tokenData.refresh_token,
+
+        mp_user_id: String(tokenData.user_id),
+
+        mp_connected: true,
+
+        mp_token_expires_at: new Date(
+          Date.now() + tokenData.expires_in * 1000
+        )
+
+      })
+      .eq("id", productoraId);
+
+    if (error)
+      throw error;
+
+    res.redirect(
+      `/productora.html?id=${productoraId}&mp=connected`
+    );
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).send(
+      "Error conectando Mercado Pago."
+    );
+
+  }
+
+});
+
 app.get("/events", async (req, res) => {
   try {
 
