@@ -640,6 +640,48 @@ if (productoraError || !productora?.stripe_account_id) {
 
 });
 
+app.get("/mp/connect/:productoraId", async (req, res) => {
+
+  try {
+
+    const productoraId = Number(req.params.productoraId);
+
+    if (!productoraId) {
+
+      return res.status(400).json({
+        success: false,
+        error: "Productora inválida"
+      });
+
+    }
+
+    const state = Buffer
+      .from(JSON.stringify({
+        productoraId
+      }))
+      .toString("base64url");
+
+    const authorizationUrl =
+      "https://auth.mercadopago.com/authorization" +
+      "?response_type=code" +
+      `&client_id=${encodeURIComponent(process.env.MP_CLIENT_ID)}` +
+      `&redirect_uri=${encodeURIComponent(process.env.MP_REDIRECT_URI)}` +
+      `&state=${encodeURIComponent(state)}`;
+
+    return res.redirect(authorizationUrl);
+
+  } catch (error) {
+
+    console.error(error);
+
+    return res.status(500).json({
+      success:false,
+      error:"No fue posible iniciar la conexión."
+    });
+
+  }
+
+});
 
 app.get("/events", async (req, res) => {
   try {
