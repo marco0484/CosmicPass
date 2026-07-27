@@ -1156,7 +1156,6 @@ const {
     currency_id: "MXN"
   }
 ],
-
 metadata: {
   nombre,
   correo,
