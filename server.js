@@ -1165,8 +1165,8 @@ metadata: {
 notification_url:
   "https://www.cosmicpass.space/webhook-mp",
 back_urls: {
-  success: "https://www.cosmicpass.space",
-  failure: "https://www.cosmicpass.space",
+  success: "https://www.cosmicpass.space/successful.html",
+  failure: "https://www.cosmicpass.space/error.html",
   pending: "https://www.cosmicpass.space"
 },
 auto_return: "approved",
