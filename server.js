@@ -1317,6 +1317,9 @@ external_reference: JSON.stringify({
 
     });
 
+    console.log("PREFERENCE CREADA:");
+console.log(JSON.stringify(result, null, 2));
+
     res.json({
       success: true,
       init_point: result.init_point
