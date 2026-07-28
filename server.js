@@ -1339,6 +1339,7 @@ console.log(JSON.stringify(result, null, 2));
 app.post("/webhook-mp", async (req, res) => {
   try {
 
+    // Aceptar ambos formatos de webhook
     if ((req.body.type || req.body.topic) !== "payment") {
       return res.sendStatus(200);
     }
@@ -1348,22 +1349,41 @@ app.post("/webhook-mp", async (req, res) => {
       req.body.resource;
 
     if (!paymentId) {
+      console.log("WEBHOOK SIN PAYMENT ID");
       return res.sendStatus(200);
     }
 
-console.log("========== WEBHOOK MP ==========");
-console.log("BODY:");
-console.log(JSON.stringify(req.body, null, 2));
-console.log("USER_ID:", req.body.user_id);
-console.log("================================");
+    console.log("========== WEBHOOK MP ==========");
+    console.log(JSON.stringify(req.body, null, 2));
 
-    // Buscar la productora por el user_id del webhook
-    const { data: productora, error: productoraError } =
-      await supabase
-        .from("cat_productoras")
-        .select("mp_access_token")
-        .eq("mp_user_id", String(req.body.user_id))
-        .single();
+    // El webhook antiguo no envía user_id
+    if (!req.body.user_id) {
+      console.log("Webhook sin user_id. Se ignora.");
+      return res.sendStatus(200);
+    }
+
+    console.log("USER_ID RECIBIDO:", req.body.user_id);
+
+    // Buscar la productora
+    const {
+      data: productora,
+      error: productoraError
+    } = await supabase
+      .from("cat_productoras")
+      .select(`
+        id,
+        name,
+        mp_user_id,
+        mp_access_token
+      `)
+      .eq("mp_user_id", String(req.body.user_id))
+      .single();
+
+    console.log("PRODUCTORA ENCONTRADA:");
+    console.log(productora);
+
+    console.log("ERROR SUPABASE:");
+    console.log(productoraError);
 
     if (productoraError || !productora) {
       console.error("PRODUCTORA NO ENCONTRADA");
@@ -1380,12 +1400,15 @@ console.log("================================");
       new Payment(mpClientProductora);
 
     // Obtener información del pago
-    const pago =
-      await payment.get({
-        id: paymentId
-      });
+    const pago = await payment.get({
+      id: paymentId
+    });
+
+    console.log("PAGO:");
+    console.log(JSON.stringify(pago, null, 2));
 
     if (pago.status !== "approved") {
+      console.log("PAGO NO APROBADO:", pago.status);
       return res.sendStatus(200);
     }
 
@@ -1398,12 +1421,16 @@ console.log("================================");
         .maybeSingle();
 
     if (existe) {
+      console.log("TICKET YA EXISTE");
       return res.sendStatus(200);
     }
 
     // Obtener ticket desde external_reference
     const reference =
       JSON.parse(pago.external_reference);
+
+    console.log("REFERENCE:");
+    console.log(reference);
 
     const ticketId =
       Number(reference.ticket_id);
@@ -1414,14 +1441,17 @@ console.log("================================");
       );
 
     // Obtener información del ticket
-    const { data: ticketInfo, error: ticketError } =
-      await supabase
-        .from("ticket_types")
-        .select("*")
-        .eq("id", ticketId)
-        .single();
+    const {
+      data: ticketInfo,
+      error: ticketError
+    } = await supabase
+      .from("ticket_types")
+      .select("*")
+      .eq("id", ticketId)
+      .single();
 
     if (ticketError || !ticketInfo) {
+      console.error("ERROR TICKET:");
       console.error(ticketError);
       return res.sendStatus(200);
     }
@@ -1436,9 +1466,7 @@ console.log("================================");
       await supabase
         .from("tickets")
         .insert([{
-
-          evento_id:
-            ticketInfo.id_evento,
+          evento_id: ticketInfo.id_evento,
 
           nombre_cliente:
             pago.metadata?.nombre ||
@@ -1480,15 +1508,12 @@ console.log("================================");
             ticketToken,
 
           folio
-
         }]);
 
     if (insertError) {
-
+      console.error("ERROR INSERTANDO TICKET:");
       console.error(insertError);
-
       return res.sendStatus(200);
-
     }
 
     await supabase.rpc(
@@ -1499,15 +1524,17 @@ console.log("================================");
       }
     );
 
+    console.log("TICKET CREADO CORRECTAMENTE");
+
     return res.sendStatus(200);
 
   } catch (err) {
 
+    console.error("ERROR WEBHOOK MP:");
     console.error(err);
 
     return res.sendStatus(200);
 
   }
 });
-
 module.exports = app;
