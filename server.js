@@ -40,9 +40,6 @@ const {
   Payment
 } = require("mercadopago");
 
-const mpClient = new MercadoPagoConfig({
-  accessToken: process.env.MP_TOKEN
-});
 
 const Stripe = require('stripe');
 
@@ -1207,7 +1204,6 @@ if (eventoError || !evento) {
 });
 
 app.post("/crear-pago-ticket", async (req, res) => {
-
   try {
 
 const {
@@ -1224,20 +1220,34 @@ const {
       });
     }
 
-    const { data: ticket, error } = await supabase
-      .from("ticket_types")
-      .select(`
+const { data: ticket, error } = await supabase
+  .from("ticket_types")
+  .select(`
         id,
+        id_productora,
         tipo_ticket,
         precio,
         stock_disponible,
         fecha_inicio,
         fecha_fin,
         ind_activo
-      `)
-      .eq("id", ticket_id)
-      .eq("ind_activo", 1)
-      .single();
+  `)
+  .eq("id", ticket_id)
+  .eq("ind_activo", 1)
+  .single();
+
+  const { data: productora, error: errorProductora } =
+await supabase
+    .from("cat_productoras")
+    .select("mp_access_token")
+    .eq("id", ticket.id_productora)
+    .single();
+
+if (errorProductora || !productora?.mp_access_token) {
+    return res.status(400).json({
+        error: "La productora no tiene Mercado Pago conectado."
+    });
+}
 
     if (error || !ticket) {
       return res.status(404).json({
@@ -1274,8 +1284,8 @@ const {
       });
     }
 
-    const preference = new Preference(mpClient);
-    const result = await preference.create({
+const mpClientProductora = new MercadoPagoConfig({ accessToken: productora.mp_access_token });
+const preference = new Preference(mpClientProductora);    const result = await preference.create({
 
       body: {
        items: [
@@ -1299,7 +1309,10 @@ back_urls: {
   pending: "https://www.cosmicpass.space"
 },
 auto_return: "approved",
-external_reference: String(ticket.id)
+external_reference: JSON.stringify({
+    ticket_id: ticket.id,
+    productora_id: ticket.id_productora
+})
       }
 
     });
@@ -1323,153 +1336,175 @@ external_reference: String(ticket.id)
 app.post("/webhook-mp", async (req, res) => {
   try {
 
-if (
-  (req.body.type || req.body.topic)
-  !== "payment"
-) {
-  return res.sendStatus(200);
-}
+    if ((req.body.type || req.body.topic) !== "payment") {
+      return res.sendStatus(200);
+    }
 
-const paymentId =
-  req.body.data?.id ||
-  req.body.resource;
+    const paymentId =
+      req.body.data?.id ||
+      req.body.resource;
 
     if (!paymentId) {
       return res.sendStatus(200);
     }
 
-    const payment =
-      new Payment(mpClient);
+console.log("========== WEBHOOK MP ==========");
+console.log("BODY:");
+console.log(JSON.stringify(req.body, null, 2));
+console.log("USER_ID:", req.body.user_id);
+console.log("================================");
 
-    const pago =
-  await payment.get({
-    id: paymentId
-  });
+    // Buscar la productora por el user_id del webhook
+    const { data: productora, error: productoraError } =
+      await supabase
+        .from("cat_productoras")
+        .select("mp_access_token")
+        .eq("mp_user_id", String(req.body.user_id))
+        .single();
 
-const { data: existe } =
-  await supabase
-    .from("tickets")
-    .select("id")
-    .eq("payment_id", String(pago.id))
-    .maybeSingle();
-
-if (existe) {
-  return res.sendStatus(200);
-}
-
-if (pago.status !== "approved") {
-  return res.sendStatus(200);
-}
-
-const ticketId =
-  Number(pago.external_reference);
-
-const cantidad =
-  Number(
-    pago.additional_info?.items?.[0]?.quantity || 1
-  );
-
-const { data: ticketInfo, error: ticketError } =
-  await supabase
-    .from("ticket_types")
-    .select("*")
-    .eq("id", ticketId)
-    .single();
-
-if (ticketError || !ticketInfo) {
-
-  console.error(
-    "TICKET NO ENCONTRADO",
-    ticketError
-  );
-
-  return res.sendStatus(200);
-}
-
-const ticketToken =
-  crypto.randomUUID();
-
-const folio =
-  `CP-${Date.now()}`;
-
-const { error: insertError } =
-  await supabase
-    .from("tickets")
-    .insert([{
-
-      evento_id:
-        ticketInfo.id_evento,
-
-     nombre_cliente:
-  pago.metadata?.nombre || "Cliente Mercado Pago",
-
-correo:
-  pago.metadata?.correo ||
-  pago.payer?.email ||
-  null,
-
-telefono:
-  pago.metadata?.telefono || null,
-
-      cantidad:
-        cantidad,
-
-      monto:
-        pago.transaction_amount,
-
-      metodo_pago:
-        "MERCADO_PAGO",
-
-      payment_id:
-        String(pago.id),
-
-      payment_status:
-        pago.status,
-
-      fecha_pago:
-        new Date(),
-
-      estatus:
-        "pendiente",
-
-      ticket_type_id:
-        ticketInfo.id,
-
-      ticket_token:
-        ticketToken,
-
-      folio:
-        folio
-
-    }]);
-
-    if (!insertError) {
-
-  await supabase.rpc(
-    "descontar_stock",
-    {
-      p_ticket_id: ticketInfo.id,
-      p_cantidad: cantidad
+    if (productoraError || !productora) {
+      console.error("PRODUCTORA NO ENCONTRADA");
+      return res.sendStatus(200);
     }
-  );
-}
 
-if (insertError) {
+    // Cliente Mercado Pago de la productora
+    const mpClientProductora =
+      new MercadoPagoConfig({
+        accessToken: productora.mp_access_token
+      });
 
-  console.error(
-    "ERROR INSERT MP:",
-    JSON.stringify(
-      insertError,
-      null,
-      2
-    )
-  );
-  return res.sendStatus(200);
-}
-    res.sendStatus(200);
-  } 
-  catch (err) {
-    res.sendStatus(200);
+    const payment =
+      new Payment(mpClientProductora);
+
+    // Obtener información del pago
+    const pago =
+      await payment.get({
+        id: paymentId
+      });
+
+    if (pago.status !== "approved") {
+      return res.sendStatus(200);
+    }
+
+    // Evitar tickets duplicados
+    const { data: existe } =
+      await supabase
+        .from("tickets")
+        .select("id")
+        .eq("payment_id", String(pago.id))
+        .maybeSingle();
+
+    if (existe) {
+      return res.sendStatus(200);
+    }
+
+    // Obtener ticket desde external_reference
+    const reference =
+      JSON.parse(pago.external_reference);
+
+    const ticketId =
+      Number(reference.ticket_id);
+
+    const cantidad =
+      Number(
+        pago.additional_info?.items?.[0]?.quantity || 1
+      );
+
+    // Obtener información del ticket
+    const { data: ticketInfo, error: ticketError } =
+      await supabase
+        .from("ticket_types")
+        .select("*")
+        .eq("id", ticketId)
+        .single();
+
+    if (ticketError || !ticketInfo) {
+      console.error(ticketError);
+      return res.sendStatus(200);
+    }
+
+    const ticketToken =
+      crypto.randomUUID();
+
+    const folio =
+      `CP-${Date.now()}`;
+
+    const { error: insertError } =
+      await supabase
+        .from("tickets")
+        .insert([{
+
+          evento_id:
+            ticketInfo.id_evento,
+
+          nombre_cliente:
+            pago.metadata?.nombre ||
+            "Cliente Mercado Pago",
+
+          correo:
+            pago.metadata?.correo ||
+            pago.payer?.email ||
+            null,
+
+          telefono:
+            pago.metadata?.telefono ||
+            null,
+
+          cantidad,
+
+          monto:
+            pago.transaction_amount,
+
+          metodo_pago:
+            "MERCADO_PAGO",
+
+          payment_id:
+            String(pago.id),
+
+          payment_status:
+            pago.status,
+
+          fecha_pago:
+            new Date(),
+
+          estatus:
+            "pendiente",
+
+          ticket_type_id:
+            ticketInfo.id,
+
+          ticket_token:
+            ticketToken,
+
+          folio
+
+        }]);
+
+    if (insertError) {
+
+      console.error(insertError);
+
+      return res.sendStatus(200);
+
+    }
+
+    await supabase.rpc(
+      "descontar_stock",
+      {
+        p_ticket_id: ticketInfo.id,
+        p_cantidad: cantidad
+      }
+    );
+
+    return res.sendStatus(200);
+
+  } catch (err) {
+
+    console.error(err);
+
+    return res.sendStatus(200);
+
   }
 });
+
 module.exports = app;
