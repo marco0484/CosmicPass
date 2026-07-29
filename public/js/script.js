@@ -287,15 +287,14 @@ const pastEvents =
 
     `;
 
-    card.addEventListener("click", () => {
+card.addEventListener("click", () => {
 
-      localStorage.setItem(
-        `prefetch_productora_${evento.id_productora}`,
-        JSON.stringify(evento)
-      );
+  console.log(evento);
+  console.log("SLUG:", evento.desc_slug);
 
-      window.location.href =`/productora/${evento.desc_slug}`;
-    });
+  window.location.href = `/productora/${evento.desc_slug}`;
+
+});
 
     container.appendChild(card);
 
