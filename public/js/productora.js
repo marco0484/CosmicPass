@@ -332,13 +332,14 @@ const res = await fetch(
 
     }
 
-    const data =
-      await res.json();
+const data = await res.json();
 
-    renderProducer(
-      data.productora,
-      data.eventos || []
-    );
+console.log("DATA:", data);
+
+renderProducer(
+  data.productora,
+  data.eventos || []
+);
 
     renderEvents(
       data.eventos || []
