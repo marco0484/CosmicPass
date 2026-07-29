@@ -11,7 +11,7 @@ let pendingPaymentMethod = null;
 const slug = window.location.pathname.split("/").pop();
 
 if (!slug) {
-  return;
+  console.error("Slug no encontrado");
 }
 
 function scrollToEvents() {
