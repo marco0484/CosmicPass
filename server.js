@@ -24,6 +24,7 @@ const crypto = require("crypto");
 
 
 app.use(cors());
+app.use(express.static(path.join(__dirname, "public")));
 app.use((req, res, next) => {
 
   if (req.originalUrl === "/webhook-stripe") {
@@ -204,13 +205,15 @@ else {
   }
 );
 
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+app.get("/productora/:slug", (req, res) => {
+  res.sendFile(
+    path.join(__dirname, "public", "productora.html")
+  );
 });
 
 const supabase = createClient(
   "https://uqrbykxgsarsfyyvmibr.supabase.co",
-   process.env.SUPABASE_SECRET_KEY
+  process.env.SUPABASE_SECRET_KEY
 );
 
 app.post("/login", async (req, res) => {
@@ -480,8 +483,7 @@ app.post("/stripe/connect/:productoraId", async (req, res) => {
   }
 });
 
-app.get("/productora/:slug", async (req, res) => {
-  try {
+app.get("/api/productora/:slug", async (req, res) => {  try {
 
     const slug = req.params.slug;
 

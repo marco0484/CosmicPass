@@ -321,7 +321,7 @@ async function loadData() {
   try {
 
 const res = await fetch(
-  `${API}/productora/${slug}`
+  `${API}/api/productora/${slug}`
 );
 
     if (!res.ok) {
