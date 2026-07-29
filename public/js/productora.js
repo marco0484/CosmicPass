@@ -86,10 +86,10 @@ activeEvents.forEach(evento => {
 
   card.classList.add("event-card");
 
-  card.innerHTML = `
+card.innerHTML = `
 
-    <img 
-      src="${evento.image}" 
+    <img
+      src="/${evento.image}"
       alt="${evento.name}"
       loading="lazy"
     >
@@ -149,11 +149,11 @@ if(pastContainer){
         card.classList.add("past-event-card");
         card.innerHTML = `
 
-      <img 
-        src="${evento.image}" 
-        alt="${evento.name}"
-        loading="lazy"
-      >
+<img
+  src="/${evento.image}"
+  alt="${evento.name}"
+  loading="lazy"
+>
 
       <div class="info">
 
@@ -261,10 +261,12 @@ function renderProducer(data, eventos) {
 
   if (cover) {
 
-    cover.src =
-      eventos?.[0]?.image ||
-      data.cover ||
-      "";
+cover.src =
+  eventos?.[0]?.image
+    ? `/${eventos[0].image}`
+    : data.cover
+      ? `/${data.cover}`
+      : "";
 
     cover.onerror = () => {
       cover.style.display = "none";
@@ -278,9 +280,11 @@ function renderProducer(data, eventos) {
   if (logo) {
 
     logo.src =
-      eventos?.[0]?.logo ||
-      data.logo ||
-      "";
+  (eventos?.[0]?.logo
+    ? `/${eventos[0].logo}`
+    : data.logo
+      ? `/${data.logo}`
+      : "");
 
     logo.onerror = () => {
       logo.style.display = "none";
