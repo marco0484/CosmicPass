@@ -294,9 +294,7 @@ const pastEvents =
         JSON.stringify(evento)
       );
 
-      window.location.href =
-        `productora.html?id=${evento.id_productora}`;
-
+      window.location.href =`/productora/${evento.desc_slug}`;
     });
 
     container.appendChild(card);

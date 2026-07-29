@@ -8,10 +8,11 @@ let ticketQuantity = 1;
 let generatingTicket = false;
 let selectedEventId = null;
 let pendingPaymentMethod = null;
-const params = new URLSearchParams(window.location.search);
-const idProductora = params.get("id");
-// reload
-if (!idProductora) { }
+const slug = window.location.pathname.split("/").pop();
+
+if (!slug) {
+  return;
+}
 
 function scrollToEvents() {
   document.querySelector(".producer-events-section")
@@ -319,10 +320,9 @@ async function loadData() {
 
   try {
 
-    const res =
-      await fetch(
-        `${API}/productora-full/${idProductora}`
-      );
+const res = await fetch(
+  `${API}/productora/${slug}`
+);
 
     if (!res.ok) {
 

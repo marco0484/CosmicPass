@@ -480,11 +480,31 @@ app.post("/stripe/connect/:productoraId", async (req, res) => {
   }
 });
 
-app.get("/productora-full/:id", async (req, res) => {
+app.get("/productora/:slug", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+
+    const slug = req.params.slug;
+
+    // Buscar el ID a partir del slug
+    const { data: productoraSlug, error: slugError } =
+      await supabase
+        .from("cat_productoras")
+        .select("id")
+        .eq("desc_slug", slug)
+        .single();
+
+    if (slugError || !productoraSlug) {
+      return res.status(404).json({
+        error: "Productora no encontrada"
+      });
+    }
+
+    const id = productoraSlug.id;
+
+    // ↓↓↓ A partir de aquí TODO queda igual ↓↓↓
 
     const [prod, eventos, features] = await Promise.all([
+
       supabase.rpc("get_productora_by_id", {
         p_id: id
       }),
@@ -496,6 +516,7 @@ app.get("/productora-full/:id", async (req, res) => {
       supabase.rpc("get_productora_features", {
         p_id: id
       })
+
     ]);
 
     if (prod.error) throw prod.error;
@@ -509,9 +530,13 @@ app.get("/productora-full/:id", async (req, res) => {
     });
 
   } catch (error) {
+
+    console.error(error);
+
     res.status(500).json({
       error: "Error en servidor"
     });
+
   }
 });
 
