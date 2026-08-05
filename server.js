@@ -19,6 +19,10 @@ const { createClient } = require("@supabase/supabase-js");
 const HOST = "0.0.0.0";
 const PORT = process.env.PORT || 3000;
 const app = express();
+
+console.log("DIRECTORIO:", __dirname);
+console.log("PUBLIC:", path.join(__dirname, "public"));
+
 const QRCode = require("qrcode");
 const crypto = require("crypto");
 
