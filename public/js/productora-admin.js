@@ -120,10 +120,7 @@ document.querySelectorAll("[data-action]").forEach(button => {
           return;
         }
 
-        window.open(
-          `https://validador-ok.vercel.app/?token=${data.token}`,
-          "_blank"
-        );
+alert(JSON.stringify(data));
 
       } catch (err) {
 
