@@ -297,6 +297,107 @@ if (error || !data) {
   }
 });
 
+app.post("/scanner/token", async (req, res) => {
+
+  try {
+
+    const { user_id, evento_id = null } = req.body;
+
+    if (!user_id) {
+      return res.status(400).json({
+        success: false,
+        error: "Usuario requerido"
+      });
+    }
+
+    const { data: user, error } = await supabase
+      .from("cosmic_usuarios")
+      .select(`
+        id,
+        nombre,
+        usuario,
+        rol,
+        activo,
+        id_productora
+      `)
+      .eq("id", user_id)
+      .maybeSingle();
+
+    if (error || !user) {
+      return res.status(404).json({
+        success: false,
+        error: "Usuario no encontrado"
+      });
+    }
+
+    if (!user.activo) {
+      return res.status(403).json({
+        success: false,
+        error: "Usuario inactivo"
+      });
+    }
+
+    const rol = String(user.rol || "").toLowerCase();
+
+    if (!["owner", "admin", "scanner"].includes(rol)) {
+      return res.status(403).json({
+        success: false,
+        error: "Sin permisos"
+      });
+    }
+
+    if (!user.id_productora) {
+      return res.status(403).json({
+        success: false,
+        error: "Sin productora asignada"
+      });
+    }
+
+    const token = crypto.randomUUID();
+
+    const expires_at = new Date(
+      Date.now() + (5 * 60 * 1000)
+    );
+
+    const { error: insertError } =
+      await supabase
+        .from("scanner_sessions")
+        .insert({
+          token,
+          user_id: user.id,
+          id_productora: user.id_productora,
+          id_evento: evento_id,
+          expires_at,
+          used: false
+        });
+
+    if (insertError) {
+      console.error(insertError);
+
+      return res.status(500).json({
+        success: false,
+        error: "No fue posible crear el token"
+      });
+    }
+
+    return res.json({
+      success: true,
+      token,
+      expires_at
+    });
+
+  } catch (err) {
+
+    console.error(err);
+
+    return res.status(500).json({
+      success: false,
+      error: "Error interno"
+    });
+
+  }
+
+});
 
 app.get("/admin/dashboard", async (req, res) => {
   try {
@@ -360,6 +461,114 @@ app.get("/admin/dashboard", async (req, res) => {
       error: "Error cargando dashboard"
     });
   }
+});
+
+app.get("/scanner/validate", async (req, res) => {
+
+  try {
+
+    const token = req.query.token;
+
+    if (!token) {
+      return res.status(400).json({
+        success:false,
+        error:"Token requerido"
+      });
+    }
+
+    const { data, error } =
+      await supabase
+      .from("scanner_sessions")
+      .select("*")
+      .eq("token", token)
+      .maybeSingle();
+
+    if (error || !data) {
+      return res.status(401).json({
+        success:false,
+        error:"Token inválido"
+      });
+    }
+
+    if (data.used) {
+      return res.status(401).json({
+        success:false,
+        error:"Token ya utilizado"
+      });
+    }
+
+    if (new Date(data.expires_at) < new Date()) {
+
+      return res.status(401).json({
+        success:false,
+        error:"Token expirado"
+      });
+
+    }
+
+    const {
+      data:user,
+      error:userError
+    } = await supabase
+      .from("cosmic_usuarios")
+      .select(`
+        id,
+        nombre,
+        usuario,
+        rol,
+        activo,
+        id_productora
+      `)
+      .eq("id", data.user_id)
+      .maybeSingle();
+
+    if (userError || !user || !user.activo) {
+
+      return res.status(401).json({
+        success:false
+      });
+
+    }
+
+    await supabase
+      .from("scanner_sessions")
+      .update({
+        used:true
+      })
+      .eq("token", token);
+
+    return res.json({
+
+      success:true,
+
+      user:{
+
+        id:user.id,
+
+        nombre:user.nombre,
+
+        usuario:user.usuario,
+
+        rol:user.rol,
+
+        id_productora:user.id_productora,
+
+        id_evento:data.id_evento
+
+      }
+
+    });
+
+  } catch(err){
+
+    console.error(err);
+
+    res.status(500).json({
+      success:false
+    });
+
+  }
+
 });
 
 app.post("/admin/activar-cortesias", async (req, res) => {

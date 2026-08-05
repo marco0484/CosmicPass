@@ -90,20 +90,66 @@ function configurarBotones() {
     cargarDashboard();
   });
 
-  document.querySelectorAll("[data-action]").forEach(button => {
-    button.addEventListener("click", () => {
-      const action = button.dataset.action;
+document.querySelectorAll("[data-action]").forEach(button => {
 
-      const nombres = {
-        scanner: "Validación QR",
-        cortesia: "Generación de cortesías",
-        tickets: "Administración de tickets",
-        evento: "Creación de eventos"
-      };
+  button.addEventListener("click", async () => {
 
-      mostrarPendiente(nombres[action] || "Esta sección");
-    });
+    const action = button.dataset.action;
+
+    if (action === "scanner") {
+
+      try {
+
+        const response = await fetch(
+          `${API}/scanner/token`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+              user_id: user.id
+            })
+          }
+        );
+
+        const data = await response.json();
+
+        if (!data.success) {
+          alert(data.error);
+          return;
+        }
+
+        window.open(
+          `https://validador-ok.vercel.app/?token=${data.token}`,
+          "_blank"
+        );
+
+      } catch (err) {
+
+        console.error(err);
+
+        alert("No fue posible abrir el Validador QR.");
+
+      }
+
+      return;
+
+    }
+
+    const nombres = {
+      cortesia: "Generación de cortesías",
+      tickets: "Administración de tickets",
+      evento: "Creación de eventos"
+    };
+
+    mostrarPendiente(
+      nombres[action] || "Esta sección"
+    );
+
   });
+
+});
 
   document.querySelectorAll("[data-section]").forEach(link => {
   link.addEventListener("click", event => {
