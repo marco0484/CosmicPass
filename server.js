@@ -337,14 +337,12 @@ app.post("/scanner/token", async (req, res) => {
       });
     }
 
-    const rol = String(user.rol || "").toLowerCase();
-
-    if (!["owner", "admin", "scanner"].includes(rol)) {
-      return res.status(403).json({
+if (!user.id_productora) {
+    return res.status(403).json({
         success: false,
-        error: "Sin permisos"
-      });
-    }
+        error: "Sin productora asignada"
+    });
+}
 
     if (!user.id_productora) {
       return res.status(403).json({
