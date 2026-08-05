@@ -113,14 +113,19 @@ document.querySelectorAll("[data-action]").forEach(button => {
           }
         );
 
-        const data = await response.json();
+       const data = await response.json();
 
-        if (!data.success) {
-          alert(data.error);
-          return;
-        }
+if (!data.success) {
+    alert(data.error);
+    return;
+}
 
-alert(JSON.stringify(data));
+window.open(
+    `https://validador-ok.vercel.app/?token=${data.token}`,
+    "_blank"
+);
+
+return;
 
       } catch (err) {
 
