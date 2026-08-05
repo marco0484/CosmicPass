@@ -537,27 +537,45 @@ app.get("/scanner/validate", async (req, res) => {
       })
       .eq("token", token);
 
-    return res.json({
+      let nombreProductora = "Cosmic Pass";
 
-      success:true,
+if (user.id_productora) {
 
-      user:{
+  const { data: productora } = await supabase
+    .from("cat_productoras")
+    .select("name")
+    .eq("id", user.id_productora)
+    .maybeSingle();
 
-        id:user.id,
+  if (productora?.name) {
+    nombreProductora = productora.name;
+  }
 
-        nombre:user.nombre,
+}
 
-        usuario:user.usuario,
+ return res.json({
 
-        rol:user.rol,
+  success: true,
 
-        id_productora:user.id_productora,
+  user: {
 
-        id_evento:data.id_evento
+    id: user.id,
 
-      }
+    nombre: user.nombre,
 
-    });
+    usuario: user.usuario,
+
+    rol: user.rol,
+
+    id_productora: user.id_productora,
+
+    productora_nombre: nombreProductora,
+
+    id_evento: data.id_evento
+
+  }
+
+});
 
   } catch(err){
 
