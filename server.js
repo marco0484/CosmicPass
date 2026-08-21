@@ -51,6 +51,95 @@ function crearSessionToken(usuario) {
   return `${encodedPayload}.${signature}`;
 }
 
+function verificarSessionToken(token) {
+  try {
+
+    if (!token) {
+      return null;
+    }
+
+    const partes = token.split(".");
+
+    if (partes.length !== 2) {
+      return null;
+    }
+
+    const [encodedPayload, signature] = partes;
+
+    const expectedSignature = crypto
+      .createHmac("sha256", SESSION_SECRET)
+      .update(encodedPayload)
+      .digest("base64url");
+
+    const firmaReal = Buffer.from(signature);
+    const firmaEsperada = Buffer.from(expectedSignature);
+
+    if (
+      firmaReal.length !== firmaEsperada.length ||
+      !crypto.timingSafeEqual(firmaReal, firmaEsperada)
+    ) {
+      return null;
+    }
+
+    const payload = JSON.parse(
+      Buffer
+        .from(encodedPayload, "base64url")
+        .toString("utf8")
+    );
+
+    if (!payload.exp || Date.now() > payload.exp) {
+      return null;
+    }
+
+    return payload;
+
+  } catch (error) {
+    console.error("Error verificando sesión:", error);
+    return null;
+  }
+}
+
+
+function requerirSesion(req, res, next) {
+
+  const cookieHeader = req.headers.cookie || "";
+
+  const cookies = Object.fromEntries(
+    cookieHeader
+      .split(";")
+      .map(cookie => cookie.trim())
+      .filter(Boolean)
+      .map(cookie => {
+
+        const index = cookie.indexOf("=");
+
+        if (index === -1) {
+          return [cookie, ""];
+        }
+
+        return [
+          cookie.substring(0, index),
+          cookie.substring(index + 1)
+        ];
+      })
+  );
+
+  const token = cookies.cp_session;
+
+  const sesion = verificarSessionToken(token);
+
+  if (!sesion) {
+    return res.status(401).json({
+      success: false,
+      error: "Sesión inválida o expirada"
+    });
+  }
+
+  req.usuario = sesion;
+
+  next();
+}
+
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 app.use((req, res, next) => {
