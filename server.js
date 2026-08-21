@@ -516,21 +516,29 @@ if (!user.id_productora) {
 
 });
 
-app.get("/admin/dashboard", async (req, res) => {
+app.get("/admin/dashboard", requerirSesion, async (req, res) => {
   try {
-    const idProductora = req.query.id_productora
-      ? Number(req.query.id_productora)
-      : null;
+const rol =
+  String(req.usuario.rol || "").toLowerCase();
 
-    if (
-      req.query.id_productora &&
-      (!Number.isInteger(idProductora) || idProductora <= 0)
-    ) {
-      return res.status(400).json({
-        success: false,
-        error: "id_productora inválido"
-      });
-    }
+const idProductoraSesion =
+  Number(req.usuario.id_productora) || null;
+
+const esOwner =
+  rol === "owner" ||
+  (rol === "admin" && !idProductoraSesion);
+
+if (!esOwner && !idProductoraSesion) {
+  return res.status(403).json({
+    success: false,
+    error: "Usuario sin productora asignada"
+  });
+}
+
+const idProductora =
+  esOwner
+    ? null
+    : idProductoraSesion;
 
     const { data, error } = await supabase.rpc("get_dashboard",
       {
