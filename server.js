@@ -19,13 +19,37 @@ const { createClient } = require("@supabase/supabase-js");
 const HOST = "0.0.0.0";
 const PORT = process.env.PORT || 3000;
 const app = express();
-
-console.log("DIRECTORIO:", __dirname);
-console.log("PUBLIC:", path.join(__dirname, "public"));
-
 const QRCode = require("qrcode");
 const crypto = require("crypto");
+const SESSION_SECRET = process.env.SESSION_SECRET;
 
+if (!SESSION_SECRET) {
+  throw new Error("Falta la variable SESSION_SECRET");
+}
+
+function crearSessionToken(usuario) {
+
+  const payload = {
+    id: Number(usuario.id),
+    rol: String(usuario.rol || ""),
+    id_productora: usuario.id_productora
+      ? Number(usuario.id_productora)
+      : null,
+    exp: Date.now() + (8 * 60 * 60 * 1000)
+  };
+
+  const encodedPayload =
+    Buffer.from(JSON.stringify(payload))
+      .toString("base64url");
+
+  const signature =
+    crypto
+      .createHmac("sha256", SESSION_SECRET)
+      .update(encodedPayload)
+      .digest("base64url");
+
+  return `${encodedPayload}.${signature}`;
+}
 
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
@@ -215,10 +239,7 @@ app.get("/productora/:slug", (req, res) => {
   );
 });
 
-const supabase = createClient(
-  "https://uqrbykxgsarsfyyvmibr.supabase.co",
-  process.env.SUPABASE_SECRET_KEY
-);
+const supabase = createClient("https://uqrbykxgsarsfyyvmibr.supabase.co",process.env.SUPABASE_SECRET_KEY);
 
 app.post("/login", async (req, res) => {
   try {
@@ -275,17 +296,26 @@ if (error || !data) {
       }
     }
 
-    return res.json({
-      success: true,
-      user: {
-        id: data.id,
-        nombre: data.nombre || data.usuario,
-        usuario: data.usuario,
-        rol: data.rol || "admin",
-        id_productora: data.id_productora,
-        productora_nombre: nombreProductora
-      }
-    });
+const usuarioSesion = {
+  id: data.id,
+  nombre: data.nombre || data.usuario,
+  usuario: data.usuario,
+  rol: data.rol || "admin",
+  id_productora: data.id_productora,
+  productora_nombre: nombreProductora
+};
+
+const sessionToken = crearSessionToken(usuarioSesion);
+
+res.setHeader(
+  "Set-Cookie",
+  `cp_session=${sessionToken}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=28800`
+);
+
+return res.json({
+  success: true,
+  user: usuarioSesion
+});
 
   } catch (err) {
     console.error("ERROR LOGIN:", err);
@@ -552,27 +582,16 @@ if (user.id_productora) {
 }
 
  return res.json({
-
   success: true,
-
   user: {
-
     id: user.id,
-
     nombre: user.nombre,
-
     usuario: user.usuario,
-
     rol: user.rol,
-
     id_productora: user.id_productora,
-
     productora_nombre: nombreProductora,
-
     id_evento: data.id_evento
-
   }
-
 });
 
   } catch(err){
@@ -716,7 +735,6 @@ app.get("/api/productora/:slug", async (req, res) => {  try {
 
     const slug = req.params.slug;
 
-    // Buscar el ID a partir del slug
     const { data: productoraSlug, error: slugError } =
       await supabase
         .from("cat_productoras")
@@ -961,17 +979,11 @@ app.get("/mp/oauth/callback", async (req, res) => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-
           client_id: process.env.MP_CLIENT_ID,
-
           client_secret: process.env.MP_CLIENT_SECRET,
-
           grant_type: "authorization_code",
-
           code,
-
           redirect_uri: process.env.MP_REDIRECT_URI
-
         })
       }
     );
@@ -1573,9 +1585,6 @@ external_reference: JSON.stringify({
 
     });
 
-    console.log("PREFERENCE CREADA:");
-console.log(JSON.stringify(result, null, 2));
-
     res.json({
       success: true,
       init_point: result.init_point
@@ -1595,7 +1604,6 @@ console.log(JSON.stringify(result, null, 2));
 app.post("/webhook-mp", async (req, res) => {
   try {
 
-    // Aceptar ambos formatos de webhook
     if ((req.body.type || req.body.topic) !== "payment") {
       return res.sendStatus(200);
     }
@@ -1605,22 +1613,13 @@ app.post("/webhook-mp", async (req, res) => {
       req.body.resource;
 
     if (!paymentId) {
-      console.log("WEBHOOK SIN PAYMENT ID");
       return res.sendStatus(200);
     }
 
-    console.log("========== WEBHOOK MP ==========");
-    console.log(JSON.stringify(req.body, null, 2));
-
-    // El webhook antiguo no envía user_id
     if (!req.body.user_id) {
-      console.log("Webhook sin user_id. Se ignora.");
       return res.sendStatus(200);
     }
 
-    console.log("USER_ID RECIBIDO:", req.body.user_id);
-
-    // Buscar la productora
     const {
       data: productora,
       error: productoraError
@@ -1635,18 +1634,11 @@ app.post("/webhook-mp", async (req, res) => {
       .eq("mp_user_id", String(req.body.user_id))
       .single();
 
-    console.log("PRODUCTORA ENCONTRADA:");
-    console.log(productora);
-
-    console.log("ERROR SUPABASE:");
-    console.log(productoraError);
-
     if (productoraError || !productora) {
       console.error("PRODUCTORA NO ENCONTRADA");
       return res.sendStatus(200);
     }
 
-    // Cliente Mercado Pago de la productora
     const mpClientProductora =
       new MercadoPagoConfig({
         accessToken: productora.mp_access_token
@@ -1655,20 +1647,14 @@ app.post("/webhook-mp", async (req, res) => {
     const payment =
       new Payment(mpClientProductora);
 
-    // Obtener información del pago
     const pago = await payment.get({
       id: paymentId
     });
 
-    console.log("PAGO:");
-    console.log(JSON.stringify(pago, null, 2));
-
     if (pago.status !== "approved") {
-      console.log("PAGO NO APROBADO:", pago.status);
       return res.sendStatus(200);
     }
 
-    // Evitar tickets duplicados
     const { data: existe } =
       await supabase
         .from("tickets")
@@ -1677,19 +1663,11 @@ app.post("/webhook-mp", async (req, res) => {
         .maybeSingle();
 
     if (existe) {
-      console.log("TICKET YA EXISTE");
       return res.sendStatus(200);
     }
 
-    // Obtener ticket desde external_reference
-    const reference =
-      JSON.parse(pago.external_reference);
-
-    console.log("REFERENCE:");
-    console.log(reference);
-
-    const ticketId =
-      Number(reference.ticket_id);
+    const reference = JSON.parse(pago.external_reference);
+    const ticketId = Number(reference.ticket_id);
 
     const cantidad =
       Number(
@@ -1780,15 +1758,12 @@ app.post("/webhook-mp", async (req, res) => {
       }
     );
 
-    console.log("TICKET CREADO CORRECTAMENTE");
-
     return res.sendStatus(200);
 
   } catch (err) {
 
     console.error("ERROR WEBHOOK MP:");
     console.error(err);
-
     return res.sendStatus(200);
 
   }
