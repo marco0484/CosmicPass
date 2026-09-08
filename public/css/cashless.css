@@ -1,0 +1,1115 @@
+:root{
+  --cc-bg:#08090d;
+  --cc-bg-soft:#0d0f15;
+  --cc-surface:#11141b;
+  --cc-surface-2:#151923;
+  --cc-surface-hover:#1a1f2b;
+
+  --cc-primary:#725cff;
+  --cc-primary-hover:#826dff;
+  --cc-primary-soft:rgba(114,92,255,.12);
+  --cc-primary-border:rgba(114,92,255,.28);
+
+  --cc-success:#35d6a0;
+  --cc-success-soft:rgba(53,214,160,.11);
+  --cc-warning:#f4b84f;
+
+  --cc-text:#f5f7fb;
+  --cc-text-soft:#d6dae4;
+  --cc-muted:#8b93a4;
+  --cc-muted-dark:#626a79;
+
+  --cc-border:rgba(255,255,255,.07);
+  --cc-border-strong:rgba(255,255,255,.13);
+
+  --cc-radius-sm:10px;
+  --cc-radius-md:16px;
+  --cc-radius-lg:22px;
+  --cc-radius-xl:28px;
+
+  --cc-max:1180px;
+  --cc-shadow:0 20px 50px rgba(0,0,0,.38);
+  --cc-transition:.25s ease;
+}
+
+*,
+*::before,
+*::after{box-sizing:border-box}
+
+html{
+  scroll-behavior:smooth;
+  background:var(--cc-bg);
+}
+
+body{
+  margin:0;
+  min-width:320px;
+  background:
+    radial-gradient(circle at 82% 0%,rgba(114,92,255,.08),transparent 32rem),
+    var(--cc-bg);
+  color:var(--cc-text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+a{color:inherit}
+button{font:inherit}
+img{max-width:100%;display:block}
+
+/* ========================= NAV ========================= */
+
+nav{
+  position:sticky;
+  top:0;
+  z-index:100;
+  min-height:72px;
+  padding:0 32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  background:rgba(8,9,13,.86);
+  border-bottom:1px solid var(--cc-border);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+}
+
+.logo a{
+  color:var(--cc-text);
+  font-size:1.05rem;
+  font-weight:800;
+  letter-spacing:-.02em;
+  text-decoration:none;
+}
+
+.nav-links{
+  margin:0;
+  padding:0;
+  list-style:none;
+  display:flex;
+  align-items:center;
+  gap:26px;
+}
+
+.nav-links a{
+  color:var(--cc-muted);
+  font-size:.86rem;
+  font-weight:650;
+  text-decoration:none;
+  transition:color var(--cc-transition);
+}
+
+.nav-links a:hover{color:var(--cc-text)}
+
+.nav-links .cta{
+  padding:10px 16px;
+  border:1px solid var(--cc-primary-border);
+  border-radius:var(--cc-radius-sm);
+  background:var(--cc-primary);
+  color:#fff;
+}
+
+.nav-links .cta:hover{
+  background:var(--cc-primary-hover);
+  color:#fff;
+}
+
+.menu-toggle{
+  display:none;
+  color:var(--cc-text);
+  font-size:1.35rem;
+  cursor:pointer;
+}
+
+/* ========================= BASE ========================= */
+
+.cashless-pill,
+.why-kicker{
+  display:inline-flex;
+  align-items:center;
+  width:fit-content;
+  color:var(--cc-primary-hover);
+  font-size:.72rem;
+  font-weight:800;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+
+.cashless-pill{
+  padding:7px 10px;
+  border:1px solid var(--cc-primary-border);
+  border-radius:999px;
+  background:var(--cc-primary-soft);
+}
+
+.why-kicker{margin-bottom:12px}
+
+.btn-primary,
+.btn-secondary{
+  min-height:48px;
+  padding:0 21px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:var(--cc-radius-sm);
+  font-size:.9rem;
+  font-weight:750;
+  text-decoration:none;
+  cursor:pointer;
+  transition:
+    transform var(--cc-transition),
+    background var(--cc-transition),
+    border-color var(--cc-transition),
+    color var(--cc-transition);
+}
+
+.btn-primary{
+  border:1px solid var(--cc-primary-border);
+  background:var(--cc-primary);
+  color:#fff;
+}
+
+.btn-primary:hover{
+  background:var(--cc-primary-hover);
+  transform:translateY(-1px);
+}
+
+.btn-secondary{
+  border:1px solid var(--cc-border-strong);
+  background:transparent;
+  color:var(--cc-text-soft);
+}
+
+.btn-secondary:hover{
+  border-color:var(--cc-primary-border);
+  background:var(--cc-surface-hover);
+  color:var(--cc-text);
+}
+
+/* ========================= HERO ========================= */
+
+.cashless-dashboard-hero{
+  width:min(var(--cc-max),calc(100% - 48px));
+  min-height:calc(100vh - 72px);
+  margin:auto;
+  padding:88px 0 76px;
+  display:grid;
+  grid-template-columns:minmax(0,.9fr) minmax(520px,1.1fr);
+  align-items:center;
+  gap:70px;
+}
+
+.cashless-hero-copy{max-width:570px}
+
+.cashless-hero-copy h1{
+  margin:20px 0;
+  max-width:650px;
+  font-size:clamp(2.7rem,5vw,5rem);
+  line-height:.98;
+  letter-spacing:-.055em;
+  font-weight:850;
+}
+
+.cashless-hero-copy p{
+  max-width:570px;
+  margin:0;
+  color:var(--cc-muted);
+  font-size:1.02rem;
+  line-height:1.75;
+}
+
+.cashless-hero-actions{
+  margin-top:30px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+/* ========================= DASHBOARD ========================= */
+
+.cashless-dashboard-card{
+  min-width:0;
+  padding:26px;
+  border:1px solid var(--cc-border-strong);
+  border-radius:var(--cc-radius-xl);
+  background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012)),var(--cc-surface);
+  box-shadow:var(--cc-shadow);
+}
+
+.dashboard-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  padding-bottom:22px;
+  border-bottom:1px solid var(--cc-border);
+}
+
+.dashboard-head span,
+.dashboard-kpi>span,
+.dashboard-section-title span,
+.money-flow-header span{
+  display:block;
+  color:var(--cc-muted);
+  font-size:.72rem;
+  font-weight:750;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+}
+
+.dashboard-head strong{
+  display:block;
+  margin-top:4px;
+  font-size:1rem;
+}
+
+.dashboard-status{
+  color:var(--cc-success);
+  font-size:.76rem;
+  font-weight:750;
+  white-space:nowrap;
+}
+
+.dashboard-kpis{
+  margin:22px 0;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.dashboard-kpi{
+  min-width:0;
+  padding:17px;
+  border:1px solid var(--cc-border);
+  border-radius:var(--cc-radius-md);
+  background:rgba(255,255,255,.018);
+}
+
+.dashboard-kpi strong{
+  display:block;
+  margin:8px 0 2px;
+  font-size:1.18rem;
+  letter-spacing:-.025em;
+}
+
+.dashboard-kpi small{
+  color:var(--cc-muted-dark);
+  font-size:.72rem;
+}
+
+.money-flow{
+  padding:20px;
+  border:1px solid var(--cc-border);
+  border-radius:var(--cc-radius-md);
+  background:var(--cc-bg-soft);
+}
+
+.money-flow-header,
+.dashboard-section-title,
+.offline-control-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+}
+
+.money-flow-header small,
+.dashboard-section-title small,
+.offline-control-head small{
+  color:var(--cc-muted-dark);
+  font-size:.72rem;
+}
+
+.money-flow-track{
+  margin-top:22px;
+  display:grid;
+  grid-template-columns:1fr auto 1fr auto 1fr;
+  align-items:center;
+  gap:12px;
+}
+
+.money-flow-step{text-align:center}
+
+.money-flow-icon{
+  width:44px;
+  height:44px;
+  margin:0 auto 9px;
+  display:grid;
+  place-items:center;
+  border:1px solid var(--cc-primary-border);
+  border-radius:50%;
+  background:var(--cc-primary-soft);
+}
+
+.money-flow-step span{
+  display:block;
+  color:var(--cc-muted);
+  font-size:.74rem;
+}
+
+.money-flow-step strong{
+  display:block;
+  margin-top:3px;
+  font-size:.96rem;
+}
+
+.money-flow-arrow,
+.money-arrow{
+  color:var(--cc-primary-hover);
+  font-size:1.2rem;
+}
+
+.dashboard-sales{margin-top:20px}
+.dashboard-section-title{margin-bottom:10px}
+
+.sales-row{
+  padding:13px 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  border-bottom:1px solid var(--cc-border);
+}
+
+.sales-row:last-child{border-bottom:0}
+
+.sales-row span{
+  display:block;
+  font-size:.82rem;
+  font-weight:700;
+}
+
+.sales-row small{
+  display:block;
+  margin-top:2px;
+  color:var(--cc-muted-dark);
+  font-size:.7rem;
+}
+
+.sales-row>strong{font-size:.84rem}
+
+.live-movements{
+  margin-top:18px;
+  padding-top:16px;
+  border-top:1px solid var(--cc-border);
+}
+
+.live-movements>div{
+  display:grid;
+  grid-template-columns:48px 1fr;
+  gap:10px;
+  padding:8px 0;
+}
+
+.live-movements span{
+  color:var(--cc-muted-dark);
+  font-size:.68rem;
+  font-variant-numeric:tabular-nums;
+}
+
+.live-movements p{
+  margin:0;
+  color:var(--cc-muted);
+  font-size:.72rem;
+}
+
+/* ========================= SECTIONS ========================= */
+
+.cashless-how,
+.cashless-ops,
+.cashless-money,
+.cashless-flow{
+  width:min(var(--cc-max),calc(100% - 48px));
+  margin:auto;
+  padding:110px 0;
+}
+
+.how-header{
+  max-width:720px;
+  margin-bottom:58px;
+}
+
+.how-header h2,
+.why-header h2{
+  margin:16px 0 18px;
+  font-size:clamp(2.1rem,4vw,3.5rem);
+  line-height:1.02;
+  letter-spacing:-.045em;
+}
+
+.how-header p,
+.why-sub{
+  max-width:700px;
+  margin:0;
+  color:var(--cc-muted);
+  font-size:.98rem;
+  line-height:1.75;
+}
+
+/* ========================= PROCESS ========================= */
+
+.cashless-process{
+  display:grid;
+  grid-template-columns:1fr auto 1fr auto 1fr auto 1fr auto 1fr;
+  align-items:start;
+  gap:14px;
+}
+
+.process-step{
+  min-width:0;
+  padding:24px 18px;
+  border:1px solid var(--cc-border);
+  border-radius:var(--cc-radius-lg);
+  background:var(--cc-surface);
+  transition:transform var(--cc-transition),border-color var(--cc-transition);
+}
+
+.process-step:hover{
+  transform:translateY(-3px);
+  border-color:var(--cc-primary-border);
+}
+
+.process-number{
+  color:var(--cc-primary-hover);
+  font-size:.68rem;
+  font-weight:800;
+}
+
+.process-icon{
+  margin:25px 0 18px;
+  font-size:1.7rem;
+}
+
+.process-step h3{margin:0 0 9px;font-size:1rem}
+
+.process-step p{
+  margin:0;
+  color:var(--cc-muted);
+  font-size:.78rem;
+  line-height:1.65;
+}
+
+.process-label{
+  display:inline-block;
+  margin-top:20px;
+  color:var(--cc-muted-dark);
+  font-size:.61rem;
+  font-weight:800;
+  letter-spacing:.1em;
+}
+
+.process-connector{
+  align-self:center;
+  padding-top:32px;
+  color:var(--cc-primary-hover);
+}
+
+.cashless-control-message{
+  margin-top:28px;
+  padding:20px 22px;
+  display:flex;
+  align-items:flex-start;
+  gap:16px;
+  border:1px solid var(--cc-primary-border);
+  border-radius:var(--cc-radius-md);
+  background:var(--cc-primary-soft);
+}
+
+.control-message-icon{flex:0 0 auto;font-size:1.25rem}
+
+.cashless-control-message strong{display:block;font-size:.9rem}
+
+.cashless-control-message p{
+  margin:5px 0 0;
+  color:var(--cc-muted);
+  font-size:.78rem;
+}
+
+/* ========================= OPERATION ========================= */
+
+.why-header{
+  max-width:760px;
+  margin-bottom:52px;
+}
+
+.cashless-pos-demo{
+  display:grid;
+  grid-template-columns:1fr auto 1.2fr auto 1fr;
+  align-items:center;
+  gap:20px;
+}
+
+.pos-demo-card{
+  min-width:0;
+  padding:26px;
+  border:1px solid var(--cc-border);
+  border-radius:var(--cc-radius-lg);
+  background:var(--cc-surface);
+}
+
+.pos-demo-main{
+  border-color:var(--cc-primary-border);
+  box-shadow:0 16px 42px rgba(114,92,255,.08);
+}
+
+.pos-demo-label{
+  color:var(--cc-muted-dark);
+  font-size:.64rem;
+  font-weight:800;
+  letter-spacing:.1em;
+}
+
+.pos-demo-icon{margin:22px 0 14px;font-size:1.8rem}
+.pos-demo-card h3{margin:0;font-size:1rem}
+
+.wallet-balance{
+  display:block;
+  margin-top:12px;
+  font-size:1.65rem;
+  letter-spacing:-.035em;
+}
+
+.pos-demo-card small{color:var(--cc-muted-dark);font-size:.7rem}
+
+.pos-product{
+  margin:20px 0;
+  padding:12px 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-top:1px solid var(--cc-border);
+  border-bottom:1px solid var(--cc-border);
+}
+
+.pos-product span{color:var(--cc-muted);font-size:.78rem}
+.pos-product strong{font-size:.82rem}
+
+.pos-demo-button{
+  width:100%;
+  min-height:44px;
+  border:0;
+  border-radius:var(--cc-radius-sm);
+  background:var(--cc-primary);
+  color:#fff;
+  font-size:.78rem;
+  font-weight:750;
+  cursor:pointer;
+}
+
+.pos-demo-arrow{color:var(--cc-primary-hover);font-size:1.25rem}
+
+.ops-grid{
+  margin-top:48px;
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+}
+
+.ops-card{
+  padding:24px;
+  border:1px solid var(--cc-border);
+  border-radius:var(--cc-radius-lg);
+  background:var(--cc-surface);
+  transition:transform var(--cc-transition),border-color var(--cc-transition);
+}
+
+.ops-card:hover{
+  transform:translateY(-3px);
+  border-color:var(--cc-primary-border);
+}
+
+.ops-card>span{
+  color:var(--cc-primary-hover);
+  font-size:.68rem;
+  font-weight:800;
+}
+
+.ops-card h3{margin:24px 0 9px;font-size:.98rem}
+
+.ops-card p{
+  margin:0;
+  color:var(--cc-muted);
+  font-size:.78rem;
+  line-height:1.65;
+}
+
+.cashless-operation-highlight,
+.cashless-money-highlight,
+.cashless-offline-highlight{
+  margin-top:26px;
+  padding:25px;
+  border:1px solid var(--cc-border-strong);
+  border-radius:var(--cc-radius-lg);
+  background:var(--cc-surface-2);
+}
+
+.cashless-operation-highlight strong,
+.cashless-money-highlight strong,
+.cashless-offline-highlight strong{
+  display:block;
+  font-size:1rem;
+}
+
+.cashless-operation-highlight p,
+.cashless-money-highlight p,
+.cashless-offline-highlight p{
+  margin:7px 0 0;
+  color:var(--cc-muted);
+  font-size:.8rem;
+}
+
+/* ========================= FINANCIAL ========================= */
+
+.cashless-money .money-flow{
+  padding:0;
+  border:0;
+  background:transparent;
+  display:grid;
+  grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;
+  align-items:stretch;
+  gap:14px;
+}
+
+.money-step{
+  padding:25px 20px;
+  border:1px solid var(--cc-border);
+  border-radius:var(--cc-radius-lg);
+  background:var(--cc-surface);
+}
+
+.money-step-number{
+  color:var(--cc-primary-hover);
+  font-size:.68rem;
+  font-weight:800;
+}
+
+.money-icon{
+  width:44px;
+  height:44px;
+  margin:20px 0 17px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:var(--cc-primary-soft);
+  border:1px solid var(--cc-primary-border);
+  color:var(--cc-primary-hover);
+  font-weight:800;
+}
+
+.money-step h3{margin:0;font-size:.95rem}
+.money-step strong{display:block;margin-top:8px;font-size:1.25rem}
+.money-step small{display:block;margin-top:4px;color:var(--cc-muted-dark);font-size:.7rem}
+
+.money-arrow{align-self:center}
+
+.money-control-grid{
+  margin-top:28px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.money-control-card{
+  padding:24px;
+  border:1px solid var(--cc-border);
+  border-radius:var(--cc-radius-lg);
+  background:var(--cc-surface);
+}
+
+.money-control-label{
+  color:var(--cc-muted-dark);
+  font-size:.65rem;
+  font-weight:800;
+  letter-spacing:.1em;
+}
+
+.money-control-card strong{
+  display:block;
+  margin:12px 0 7px;
+  font-size:1.45rem;
+}
+
+.money-control-card p{
+  margin:0;
+  color:var(--cc-muted);
+  font-size:.76rem;
+}
+
+/* ========================= ONLINE / OFFLINE ========================= */
+
+.connectivity-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.connectivity-card{
+  min-height:245px;
+  padding:25px;
+  border:1px solid var(--cc-border);
+  border-radius:var(--cc-radius-lg);
+  background:var(--cc-surface);
+}
+
+.connectivity-number{
+  color:var(--cc-primary-hover);
+  font-size:.68rem;
+  font-weight:800;
+}
+
+.connectivity-icon{
+  margin:28px 0 13px;
+  color:var(--cc-success);
+  font-size:1.45rem;
+}
+
+.connectivity-status{
+  color:var(--cc-success);
+  font-size:.62rem;
+  font-weight:800;
+  letter-spacing:.1em;
+}
+
+.connectivity-card h3{margin:10px 0 8px;font-size:.98rem}
+
+.connectivity-card p{
+  margin:0;
+  color:var(--cc-muted);
+  font-size:.77rem;
+}
+
+.cashless-offline-highlight{
+  display:flex;
+  align-items:flex-start;
+  gap:16px;
+  border-color:rgba(53,214,160,.2);
+  background:var(--cc-success-soft);
+}
+
+.offline-highlight-icon{color:var(--cc-success);font-size:1.3rem}
+
+.offline-control{
+  margin-top:28px;
+  padding:24px;
+  border:1px solid var(--cc-border);
+  border-radius:var(--cc-radius-lg);
+  background:var(--cc-surface);
+}
+
+.offline-control-head{
+  padding-bottom:14px;
+  border-bottom:1px solid var(--cc-border);
+}
+
+.offline-control-head span{
+  color:var(--cc-text-soft);
+  font-size:.68rem;
+  font-weight:800;
+}
+
+.offline-point{
+  padding:15px 0;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  border-bottom:1px solid var(--cc-border);
+}
+
+.offline-point:last-child{
+  border-bottom:0;
+  padding-bottom:0;
+}
+
+.offline-point strong{display:block;font-size:.8rem}
+.offline-point small{display:block;color:var(--cc-muted-dark);font-size:.68rem}
+.point-online,.point-offline{font-size:.68rem;font-weight:750;white-space:nowrap}
+.point-online{color:var(--cc-success)}
+.point-offline{color:var(--cc-warning)}
+
+/* ========================= CONTACT ========================= */
+
+.cashless-contact{
+  width:min(var(--cc-max),calc(100% - 48px));
+  margin:auto;
+  padding:90px 0 110px;
+}
+
+.cashless-contact-inner{
+  padding:65px;
+  border:1px solid var(--cc-primary-border);
+  border-radius:var(--cc-radius-xl);
+  background:
+    radial-gradient(circle at 90% 20%,rgba(114,92,255,.14),transparent 25rem),
+    var(--cc-surface);
+}
+
+.cashless-contact-inner h2{
+  max-width:780px;
+  margin:18px 0;
+  font-size:clamp(2rem,4vw,3.6rem);
+  line-height:1.02;
+  letter-spacing:-.045em;
+}
+
+.cashless-contact-inner>p{
+  max-width:650px;
+  margin:0;
+  color:var(--cc-muted);
+  font-size:.95rem;
+}
+
+.cashless-contact-actions{
+  margin-top:30px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.whatsapp-btn{
+  min-height:48px;
+  padding:0 21px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(53,214,160,.25);
+  border-radius:var(--cc-radius-sm);
+  background:var(--cc-success);
+  color:#06120d;
+  font-size:.86rem;
+  font-weight:800;
+  text-decoration:none;
+  transition:transform var(--cc-transition),background var(--cc-transition);
+}
+
+.whatsapp-btn:hover{
+  background:#42e8b1;
+  transform:translateY(-1px);
+}
+
+.cashless-contact-email{
+  color:var(--cc-muted);
+  font-size:.82rem;
+  font-weight:650;
+  text-decoration:none;
+}
+
+.cashless-contact-email:hover{color:var(--cc-text)}
+
+.cashless-contact-points{
+  margin-top:48px;
+  padding-top:24px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:20px;
+  border-top:1px solid var(--cc-border);
+}
+
+.cashless-contact-points strong,
+.cashless-contact-points span{display:block}
+
+.cashless-contact-points strong{font-size:.78rem}
+.cashless-contact-points span{margin-top:3px;color:var(--cc-muted-dark);font-size:.7rem}
+
+/* ========================= FOOTER ========================= */
+
+.legal-footer{
+  border-top:1px solid var(--cc-border);
+  background:#06070a;
+  color:var(--cc-muted);
+}
+
+.footer-container{
+  width:min(var(--cc-max),calc(100% - 48px));
+  margin:auto;
+  padding:42px 0 28px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:30px;
+}
+
+.footer-container h4{margin:0 0 10px;color:var(--cc-text-soft);font-size:.75rem}
+
+.footer-container a{
+  display:block;
+  margin:5px 0;
+  color:var(--cc-muted-dark);
+  font-size:.72rem;
+  text-decoration:none;
+}
+
+.footer-container a:hover{color:var(--cc-text)}
+
+.legal-footer>p{
+  width:min(var(--cc-max),calc(100% - 48px));
+  margin:auto;
+  padding-bottom:30px;
+  color:var(--cc-muted-dark);
+  font-size:.68rem;
+  text-align:center;
+}
+
+.legal-footer strong{color:var(--cc-muted)}
+
+/* ========================= RESPONSIVE ========================= */
+
+@media(max-width:1100px){
+  .cashless-dashboard-hero{
+    grid-template-columns:1fr;
+    gap:48px;
+    padding-top:70px;
+  }
+
+  .cashless-hero-copy{max-width:760px}
+
+  .cashless-process{grid-template-columns:repeat(2,1fr)}
+  .process-connector{display:none}
+
+  .cashless-pos-demo{grid-template-columns:1fr}
+  .pos-demo-arrow{
+    justify-self:center;
+    transform:rotate(90deg);
+  }
+
+  .ops-grid{grid-template-columns:repeat(2,1fr)}
+
+  .cashless-money .money-flow{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .money-arrow{display:none}
+}
+
+@media(max-width:820px){
+  nav{
+    min-height:66px;
+    padding:0 20px;
+  }
+
+  .menu-toggle{display:block}
+
+  .nav-links{
+    position:absolute;
+    top:66px;
+    left:0;
+    right:0;
+    display:none;
+    flex-direction:column;
+    align-items:stretch;
+    gap:0;
+    padding:10px 20px 20px;
+    border-bottom:1px solid var(--cc-border);
+    background:rgba(8,9,13,.97);
+  }
+
+  .nav-links.active{display:flex}
+
+  .nav-links li{border-bottom:1px solid var(--cc-border)}
+  .nav-links li:last-child{border-bottom:0}
+
+  .nav-links a{display:block;padding:14px 4px}
+  .nav-links .cta{margin-top:10px;text-align:center}
+
+  .cashless-dashboard-hero,
+  .cashless-how,
+  .cashless-ops,
+  .cashless-money,
+  .cashless-flow,
+  .cashless-contact{
+    width:min(100% - 40px,var(--cc-max));
+  }
+
+  .dashboard-kpis{grid-template-columns:repeat(2,1fr)}
+  .connectivity-grid,.money-control-grid{grid-template-columns:1fr}
+
+  .cashless-contact-inner{padding:42px 30px}
+  .cashless-contact-points{grid-template-columns:1fr}
+}
+
+@media(max-width:600px){
+  .cashless-dashboard-hero{
+    min-height:auto;
+    padding:58px 0 70px;
+  }
+
+  .cashless-hero-copy h1{font-size:clamp(2.35rem,12vw,3.4rem)}
+  .cashless-hero-copy p{font-size:.92rem}
+
+  .cashless-hero-actions,
+  .cashless-contact-actions{
+    flex-direction:column;
+    align-items:stretch;
+  }
+
+  .cashless-hero-actions .btn-primary,
+  .cashless-hero-actions .btn-secondary,
+  .whatsapp-btn,
+  .cashless-contact-email{
+    width:100%;
+  }
+
+  .cashless-contact-email{
+    padding:8px 0;
+    text-align:center;
+  }
+
+  .cashless-dashboard-card{
+    padding:18px;
+    border-radius:var(--cc-radius-lg);
+  }
+
+  .dashboard-kpis{grid-template-columns:1fr 1fr}
+
+  .money-flow-track{grid-template-columns:1fr}
+
+  .money-flow-arrow{
+    transform:rotate(90deg);
+    justify-self:center;
+  }
+
+  .cashless-process,
+  .ops-grid,
+  .cashless-money .money-flow{
+    grid-template-columns:1fr;
+  }
+
+  .cashless-how,
+  .cashless-ops,
+  .cashless-money,
+  .cashless-flow{
+    padding:78px 0;
+  }
+
+  .cashless-contact{padding:55px 0 75px}
+
+  .cashless-contact-inner{
+    padding:36px 22px;
+    border-radius:var(--cc-radius-lg);
+  }
+
+  .cashless-contact-inner h2{font-size:2.25rem}
+
+  .offline-point{
+    align-items:flex-start;
+    flex-direction:column;
+    gap:7px;
+  }
+
+  .footer-container{
+    width:min(100% - 40px,var(--cc-max));
+    grid-template-columns:1fr;
+    gap:20px;
+  }
+
+  .legal-footer>p{
+    width:min(100% - 40px,var(--cc-max));
+  }
+}
+
+@media(max-width:380px){
+  .dashboard-kpis{grid-template-columns:1fr}
+  .cashless-contact-inner h2{font-size:2rem}
+  .cashless-dashboard-card{padding:15px}
+  .money-flow,.offline-control{padding:16px}
+}
