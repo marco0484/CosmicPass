@@ -3231,6 +3231,156 @@ section{
   line-height: 1.75;
 }
 
+/* =========================================================
+   COSMIC CASHLESS — OTROS SERVICIOS
+   ========================================================= */
+
+.cashless-banner {
+  width: min(1100px, calc(100% - 40px));
+  margin: 80px auto;
+  padding: 42px 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(0, 229, 255, 0.08),
+      rgba(255, 255, 255, 0.035)
+    );
+
+  border: 1px solid rgba(0, 229, 255, 0.18);
+  border-radius: 24px;
+
+  box-shadow:
+    0 20px 50px rgba(0, 0, 0, 0.35);
+
+  position: relative;
+  overflow: hidden;
+}
+
+/* Efecto de luz sutil */
+.cashless-banner::before {
+  content: "";
+  position: absolute;
+  width: 280px;
+  height: 280px;
+
+  top: -160px;
+  right: -100px;
+
+  background: rgba(0, 229, 255, 0.08);
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+/* Contenido */
+.cashless-banner > div {
+  position: relative;
+  z-index: 1;
+}
+
+.cashless-banner span {
+  display: inline-block;
+
+  margin-bottom: 10px;
+
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+
+  color: var(--primary);
+}
+
+.cashless-banner h2 {
+  margin: 0 0 10px;
+
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+
+  color: var(--text);
+}
+
+.cashless-banner p {
+  max-width: 620px;
+  margin: 0;
+
+  font-size: 1rem;
+  line-height: 1.65;
+
+  color: var(--muted);
+}
+
+/* Botón */
+.cashless-banner .btn-primary {
+  position: relative;
+  z-index: 1;
+
+  flex-shrink: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 14px 22px;
+
+  border-radius: 12px;
+
+  background: var(--primary);
+  color: #02040a;
+
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-decoration: none;
+
+  white-space: nowrap;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.cashless-banner .btn-primary:hover {
+  transform: translateY(-2px);
+
+  background: var(--primary-hover, #00d5ed);
+
+  box-shadow:
+    0 10px 28px rgba(0, 229, 255, 0.22);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .cashless-banner {
+    width: calc(100% - 32px);
+    margin: 60px auto;
+    padding: 32px 26px;
+
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 26px;
+  }
+
+  .cashless-banner p {
+    font-size: 0.95rem;
+  }
+
+  .cashless-banner .btn-primary {
+    width: 100%;
+  }
+}
+
+
+
 @media (max-width: 480px){
   .producer-hero {
     padding: 70px 15px 30px;
@@ -3247,6 +3397,26 @@ section{
   .event-container,
   .checkout-container{
     grid-template-columns:1fr;
+  }
+
+   .cashless-banner {
+    width: calc(100% - 24px);
+    padding: 28px 22px;
+
+    border-radius: 20px;
+  }
+
+  .cashless-banner h2 {
+    font-size: 1.8rem;
+  }
+
+  .cashless-banner span {
+    font-size: 0.65rem;
+  }
+
+  .cashless-banner p {
+    font-size: 0.9rem;
+    line-height: 1.55;
   }
 
 }
