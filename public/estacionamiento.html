@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Estacionamiento | Cosmic Pass</title>
+
+  <link rel="stylesheet" href="css/estacionamiento.css">
+  <link rel="icon" type="image/png" href="images/cp.webp">
+</head>
+
+<body>
+
+<div class="parking-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="brand">
+      <img src="images/cp.webp" alt="Cosmic Pass">
+
+      <div>
+        <strong id="sidebarProductoraName">Productora</strong>
+        <span>Panel de productora</span>
+      </div>
+    </div>
+
+
+    <nav>
+
+      <a href="productora-admin.html">
+        <span class="nav-icon">⌂</span>
+        <span>Dashboard</span>
+      </a>
+
+      <a href="productora-admin.html">
+        <span class="nav-icon">▣</span>
+        <span>Mis eventos</span>
+      </a>
+
+      <a href="productora-admin.html">
+        <span class="nav-icon">◈</span>
+        <span>Accesos</span>
+      </a>
+
+      <a href="productora-admin.html">
+        <span class="nav-icon">$</span>
+        <span>Ventas</span>
+      </a>
+
+      <a href="rp.html">
+        <span class="nav-icon">👥</span>
+        <span>Gestionar RP</span>
+      </a>
+
+      <a href="estacionamiento.html" class="active">
+        <span class="nav-icon">🚗</span>
+        <span>Estacionamiento</span>
+      </a>
+
+    </nav>
+
+
+    <a href="productora-admin.html" class="back-button">
+      ← Regresar al panel
+    </a>
+
+  </aside>
+
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+
+      <div>
+        <p>Operación del evento</p>
+        <h1>Estacionamiento</h1>
+      </div>
+
+      <div class="topbar-actions">
+
+        <button
+          type="button"
+          class="secondary-button"
+          id="historialBtn">
+          Historial
+        </button>
+
+        <button
+          type="button"
+          class="primary-button"
+          id="registrarEntradaBtn">
+          ＋ Registrar entrada
+        </button>
+
+      </div>
+
+    </header>
+
+
+    <!-- INTRO -->
+    <section class="page-intro">
+
+      <div>
+
+        <span class="section-label">
+          CONTROL VEHICULAR
+        </span>
+
+        <h2>Gestión de estacionamiento</h2>
+
+        <p>
+          Controla las entradas, salidas y ocupación del estacionamiento
+          de tus eventos.
+        </p>
+
+      </div>
+
+
+      <div class="event-selector">
+
+        <label for="eventoSelect">
+          Evento
+        </label>
+
+        <select id="eventoSelect">
+
+          <option value="">
+            Selecciona un evento
+          </option>
+
+        </select>
+
+      </div>
+
+    </section>
+
+
+    <!-- STATS -->
+    <section class="stats-grid">
+
+      <article class="stat-card">
+
+        <div class="stat-icon capacity">
+          ▦
+        </div>
+
+        <div class="stat-content">
+
+          <span>Capacidad</span>
+
+          <strong id="capacidadTotal">
+            0
+          </strong>
+
+          <small>
+            Espacios disponibles en el evento
+          </small>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <div class="stat-icon entries">
+          ↓
+        </div>
+
+        <div class="stat-content">
+
+          <span>Entradas</span>
+
+          <strong id="totalEntradas">
+            0
+          </strong>
+
+          <small>
+            Vehículos registrados
+          </small>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <div class="stat-icon inside">
+          🚗
+        </div>
+
+        <div class="stat-content">
+
+          <span>Vehículos dentro</span>
+
+          <strong id="vehiculosDentro">
+            0
+          </strong>
+
+          <small>
+            Actualmente en estacionamiento
+          </small>
+
+        </div>
+
+      </article>
+
+
+      <article class="stat-card">
+
+        <div class="stat-icon available">
+          ✓
+        </div>
+
+        <div class="stat-content">
+
+          <span>Disponibles</span>
+
+          <strong id="espaciosDisponibles">
+            0
+          </strong>
+
+          <small>
+            Espacios libres
+          </small>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- CAPACITY -->
+    <section class="capacity-panel">
+
+      <div class="capacity-header">
+
+        <div>
+
+          <span>
+            OCUPACIÓN
+          </span>
+
+          <h3>
+            Estado del estacionamiento
+          </h3>
+
+        </div>
+
+        <strong id="porcentajeOcupacion">
+          0%
+        </strong>
+
+      </div>
+
+
+      <div class="progress-container">
+
+        <div
+          class="progress-bar"
+          id="progressBar">
+        </div>
+
+      </div>
+
+
+      <div class="capacity-footer">
+
+        <span>
+          <strong id="ocupadosLabel">0</strong>
+          espacios ocupados
+        </span>
+
+        <span>
+          <strong id="disponiblesLabel">0</strong>
+          espacios libres
+        </span>
+
+      </div>
+
+    </section>
+
+
+    <!-- TOOLBAR -->
+    <section class="toolbar">
+
+      <div class="search-box">
+
+        <span>⌕</span>
+
+        <input
+          type="search"
+          id="buscarPlaca"
+          placeholder="Buscar por placa..."
+        >
+
+      </div>
+
+
+      <select id="estadoFiltro">
+
+        <option value="">
+          Todos los vehículos
+        </option>
+
+        <option value="dentro">
+          Dentro
+        </option>
+
+        <option value="salio">
+          Salieron
+        </option>
+
+      </select>
+
+
+      <button
+        class="secondary-button"
+        id="actualizarBtn"
+        type="button">
+
+        ↻ Actualizar
+
+      </button>
+
+    </section>
+
+
+    <!-- TABLE -->
+    <section class="panel">
+
+      <div class="panel-header">
+
+        <div>
+
+          <span>
+            REGISTROS
+          </span>
+
+          <h3>
+            Vehículos
+          </h3>
+
+        </div>
+
+        <span
+          class="records-count"
+          id="registrosCount">
+          0 registros
+        </span>
+
+      </div>
+
+
+      <div class="table-wrap">
+
+        <table>
+
+          <thead>
+
+            <tr>
+
+              <th>Placa</th>
+
+              <th>Vehículo</th>
+
+              <th>Entrada</th>
+
+              <th>Salida</th>
+
+              <th>Estado</th>
+
+              <th>Acción</th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody id="tablaVehiculos">
+
+            <tr>
+
+              <td
+                colspan="6"
+                class="loading-cell">
+
+                Selecciona un evento para comenzar.
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- MODAL REGISTRAR ENTRADA -->
+
+<div
+  class="modal-overlay"
+  id="entradaModal">
+
+  <div class="modal-card">
+
+    <button
+      class="modal-close"
+      id="cerrarEntradaModal"
+      type="button">
+
+      ×
+
+    </button>
+
+
+    <div class="modal-header">
+
+      <span>
+        ESTACIONAMIENTO
+      </span>
+
+      <h2>
+        Registrar entrada
+      </h2>
+
+      <p>
+        Registra los datos del vehículo que ingresa.
+      </p>
+
+    </div>
+
+
+    <form id="entradaForm">
+
+
+      <label for="placaInput">
+        Placa
+      </label>
+
+      <input
+        type="text"
+        id="placaInput"
+        placeholder="ABC-1234"
+        maxlength="10"
+        required
+      >
+
+
+      <label for="vehiculoInput">
+        Vehículo
+      </label>
+
+      <input
+        type="text"
+        id="vehiculoInput"
+        placeholder="Ej. Nissan Versa"
+      >
+
+
+      <label for="colorInput">
+        Color
+      </label>
+
+      <input
+        type="text"
+        id="colorInput"
+        placeholder="Ej. Negro"
+      >
+
+
+      <label for="espacioInput">
+        Espacio
+      </label>
+
+      <input
+        type="text"
+        id="espacioInput"
+        placeholder="Ej. A-25"
+      >
+
+
+      <button
+        type="submit"
+        class="modal-submit">
+
+        Registrar entrada
+
+      </button>
+
+
+      <p
+        class="modal-message"
+        id="entradaMessage">
+      </p>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<!-- MODAL SALIDA -->
+
+<div
+  class="modal-overlay"
+  id="salidaModal">
+
+  <div class="modal-card">
+
+    <button
+      class="modal-close"
+      id="cerrarSalidaModal"
+      type="button">
+
+      ×
+
+    </button>
+
+
+    <div class="modal-header">
+
+      <span>
+        ESTACIONAMIENTO
+      </span>
+
+      <h2>
+        Registrar salida
+      </h2>
+
+      <p>
+        Confirma la salida del vehículo.
+      </p>
+
+    </div>
+
+
+    <div class="vehicle-summary">
+
+      <div class="summary-item">
+
+        <span>Placa</span>
+
+        <strong id="salidaPlaca">
+          —
+        </strong>
+
+      </div>
+
+
+      <div class="summary-item">
+
+        <span>Entrada</span>
+
+        <strong id="salidaEntrada">
+          —
+        </strong>
+
+      </div>
+
+
+      <div class="summary-item">
+
+        <span>Espacio</span>
+
+        <strong id="salidaEspacio">
+          —
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <button
+      type="button"
+      class="modal-submit"
+      id="confirmarSalidaBtn">
+
+      Confirmar salida
+
+    </button>
+
+
+    <p
+      class="modal-message"
+      id="salidaMessage">
+    </p>
+
+  </div>
+
+</div>
+
+
+<script src="js/estacionamiento.js"></script>
+
+</body>
+</html>

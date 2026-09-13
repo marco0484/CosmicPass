@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Gestionar RP | Cosmic Pass</title>
+
+  <link rel="stylesheet" href="css/rp.css">
+  <link rel="icon" type="image/png" href="images/cp.webp">
+</head>
+
+<body>
+
+<div class="rp-shell">
+
+  <aside class="sidebar">
+
+    <div class="brand">
+      <img src="images/cp.webp" alt="Cosmic Pass">
+
+      <div>
+        <strong>Cosmic Pass</strong>
+        <span>Panel de productora</span>
+      </div>
+    </div>
+
+    <nav>
+      <a href="productora-admin.html">
+        <span class="nav-icon">⌂</span>
+        <span>Dashboard</span>
+      </a>
+
+      <a href="productora-admin.html">
+        <span class="nav-icon">▣</span>
+        <span>Mis eventos</span>
+      </a>
+
+      <a href="productora-admin.html">
+        <span class="nav-icon">◈</span>
+        <span>Accesos</span>
+      </a>
+
+      <a href="productora-admin.html">
+        <span class="nav-icon">$</span>
+        <span>Ventas</span>
+      </a>
+
+      <a href="rp.html" class="active">
+        <span class="nav-icon">👥</span>
+        <span>Gestionar RP</span>
+      </a>
+
+      <a href="estacionamiento.html">
+        <span class="nav-icon">🚗</span>
+        <span>Estacionamiento</span>
+      </a>
+    </nav>
+
+    <a href="productora-admin.html" class="back-button">
+      ← Regresar al panel
+    </a>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div>
+        <p>Administración</p>
+        <h1>Gestionar RP</h1>
+      </div>
+
+      <button class="primary-button" id="nuevoRPBtn">
+        ＋ Nuevo RP
+      </button>
+
+    </header>
+
+
+    <section class="page-intro">
+
+      <div>
+        <span class="section-label">RELACIONES PÚBLICAS</span>
+
+        <h2>RPs activos</h2>
+
+        <p>
+          Administra tus relaciones públicas y consulta los accesos
+          asignados a cada RP.
+        </p>
+      </div>
+
+    </section>
+
+
+    <section class="stats-grid">
+
+      <article class="stat-card">
+        <span class="stat-icon">👥</span>
+
+        <div>
+          <span>RPs activos</span>
+          <strong id="totalRPs">0</strong>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-icon">🎟️</span>
+
+        <div>
+          <span>Boletos asignados</span>
+          <strong id="boletosAsignados">0</strong>
+        </div>
+      </article>
+
+      <article class="stat-card">
+        <span class="stat-icon">✓</span>
+
+        <div>
+          <span>Accesos utilizados</span>
+          <strong id="accesosUtilizados">0</strong>
+        </div>
+      </article>
+
+    </section>
+
+
+    <section class="toolbar">
+
+      <div class="search-box">
+        <span>⌕</span>
+        <input
+          type="search"
+          id="buscarRP"
+          placeholder="Buscar RP..."
+        >
+      </div>
+
+      <select id="eventoFiltro">
+        <option value="">Todos los eventos</option>
+      </select>
+
+    </section>
+
+
+    <section class="rp-grid" id="rpGrid">
+
+      <div class="empty-state">
+
+        <div class="empty-icon">👥</div>
+
+        <h3>No hay RPs registrados</h3>
+
+        <p>
+          Cuando agregues relaciones públicas aparecerán aquí.
+        </p>
+
+        <button class="primary-button" id="nuevoRPEmptyBtn">
+          ＋ Agregar primer RP
+        </button>
+
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- MODAL NUEVO RP -->
+
+<div class="modal-overlay" id="rpModal">
+
+  <div class="modal-card">
+
+    <button
+      class="modal-close"
+      id="cerrarRPModal"
+      type="button">
+      ×
+    </button>
+
+    <div class="modal-header">
+
+      <span>RELACIONES PÚBLICAS</span>
+
+      <h2>Agregar RP</h2>
+
+      <p>
+        Registra una nueva relación pública para tus eventos.
+      </p>
+
+    </div>
+
+
+    <form id="rpForm">
+
+      <label for="rpNombre">
+        Nombre
+      </label>
+
+      <input
+        type="text"
+        id="rpNombre"
+        placeholder="Nombre completo"
+        required
+      >
+
+
+      <label for="rpTelefono">
+        Teléfono
+      </label>
+
+      <input
+        type="tel"
+        id="rpTelefono"
+        placeholder="55 0000 0000"
+      >
+
+
+      <label for="rpInstagram">
+        Instagram
+      </label>
+
+      <input
+        type="text"
+        id="rpInstagram"
+        placeholder="@usuario"
+      >
+
+
+      <label for="rpEvento">
+        Evento
+      </label>
+
+      <select id="rpEvento" required>
+
+        <option value="">
+          Selecciona un evento
+        </option>
+
+      </select>
+
+
+      <button
+        type="submit"
+        class="modal-submit">
+        Guardar RP
+      </button>
+
+      <p id="rpMessage" class="modal-message"></p>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<script src="js/rp.js"></script>
+
+</body>
+</html>

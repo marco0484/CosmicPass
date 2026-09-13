@@ -248,6 +248,13 @@ function renderProducer(data, eventos) {
   document.getElementById("producer-name").textContent =
     data.name;
 
+    const productoraLogo =
+  document.getElementById("productoraLogo");
+
+if (productoraLogo) {
+  productoraLogo.textContent = data.name;
+}
+
   document.getElementById("historia").textContent =
     data.historia ||
     data.description ||
