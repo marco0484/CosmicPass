@@ -1925,62 +1925,220 @@ app.post("/stripe/connect/:productoraId",requerirSesion,async (req, res) => {
 
   }
 );
-app.get("/api/productora/:slug", async (req, res) => {  try {
 
-    const slug = req.params.slug;
+app.get("/api/productora/:slug", async (req, res) => {
 
-    const { data: productoraSlug, error: slugError } =
-      await supabase
-        .from("cat_productoras")
-        .select("id")
-        .eq("desc_slug", slug)
-        .single();
+  try {
 
-    if (slugError || !productoraSlug) {
-      return res.status(404).json({
-        error: "Productora no encontrada"
+    const slugOriginal =
+      String(req.params.slug || "").trim();
+
+    if (!slugOriginal) {
+      return res.status(400).json({
+        error: "Slug requerido"
       });
     }
 
-    const id = productoraSlug.id;
+    /*
+    ==========================================
+    NORMALIZAR SLUG
+    ==========================================
+    */
 
-    // ↓↓↓ A partir de aquí TODO queda igual ↓↓↓
+    const slugNormalizado =
+      slugOriginal
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .trim();
 
-    const [prod, eventos, features] = await Promise.all([
 
-      supabase.rpc("get_productora_by_id", {
-        p_id: id
-      }),
+    /*
+    ==========================================
+    BUSCAR PRODUCTORA
+    ==========================================
+    */
 
-      supabase.rpc("get_events_by_productora", {
-        p_id: id
-      }),
+    let productoraSlug = null;
 
-      supabase.rpc("get_productora_features", {
-        p_id: id
-      })
+
+    // Primero buscamos por desc_slug
+    const {
+      data: productoraPorSlug,
+      error: slugError
+    } = await supabase
+      .from("cat_productoras")
+      .select("id, name, desc_slug")
+      .ilike("desc_slug", slugNormalizado)
+      .maybeSingle();
+
+
+    if (slugError) {
+      console.error(
+        "ERROR BUSCANDO POR SLUG:",
+        slugError
+      );
+    }
+
+
+    if (productoraPorSlug) {
+
+      productoraSlug =
+        productoraPorSlug;
+
+    } else {
+
+      /*
+      ==========================================
+      RESPALDO:
+      BUSCAR POR NOMBRE
+      ==========================================
+      */
+
+      const nombreBuscado =
+        slugOriginal.replace(/-/g, " ");
+
+
+      const {
+        data: productoras,
+        error: nombreError
+      } = await supabase
+        .from("cat_productoras")
+        .select("id, name, desc_slug");
+
+
+      if (nombreError) {
+        throw nombreError;
+      }
+
+
+      productoraSlug =
+        (productoras || []).find(productora => {
+
+          const nombreNormalizado =
+            String(productora.name || "")
+              .toLowerCase()
+              .trim();
+
+          return (
+            nombreNormalizado ===
+            nombreBuscado.toLowerCase().trim()
+          );
+
+        });
+
+    }
+
+
+    /*
+    ==========================================
+    SI NO EXISTE
+    ==========================================
+    */
+
+    if (!productoraSlug) {
+
+      console.error(
+        "PRODUCTORA NO ENCONTRADA:",
+        {
+          slugOriginal,
+          slugNormalizado
+        }
+      );
+
+      return res.status(404).json({
+        error: "Productora no encontrada"
+      });
+
+    }
+
+
+    const id =
+      Number(productoraSlug.id);
+
+
+    /*
+    ==========================================
+    CARGAR INFORMACIÓN
+    ==========================================
+    */
+
+    const [
+      prod,
+      eventos,
+      features
+    ] = await Promise.all([
+
+      supabase.rpc(
+        "get_productora_by_id",
+        {
+          p_id: id
+        }
+      ),
+
+      supabase.rpc(
+        "get_events_by_productora",
+        {
+          p_id: id
+        }
+      ),
+
+      supabase.rpc(
+        "get_productora_features",
+        {
+          p_id: id
+        }
+      )
 
     ]);
 
-    if (prod.error) throw prod.error;
-    if (eventos.error) throw eventos.error;
-    if (features.error) throw features.error;
 
-    res.json({
-      productora: prod.data?.[0] || null,
-      eventos: eventos.data || [],
-      features: features.data || []
+    if (prod.error) {
+      throw prod.error;
+    }
+
+    if (eventos.error) {
+      throw eventos.error;
+    }
+
+    if (features.error) {
+      throw features.error;
+    }
+
+
+    /*
+    ==========================================
+    RESPUESTA
+    ==========================================
+    */
+
+    return res.json({
+
+      productora:
+        prod.data?.[0] || null,
+
+      eventos:
+        eventos.data || [],
+
+      features:
+        features.data || []
+
     });
+
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "ERROR /api/productora/:slug:",
+      error
+    );
 
-    res.status(500).json({
+    return res.status(500).json({
       error: "Error en servidor"
     });
 
   }
+
 });
 
 
@@ -2105,8 +2263,7 @@ if (productoraError || !productora?.stripe_account_id) {
 
 });
 
-app.get(
-  "/mp/connect/:productoraId",
+app.get("/mp/connect/:productoraId",
   requerirSesion,
   async (req, res) => {
 
