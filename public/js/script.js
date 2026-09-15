@@ -94,10 +94,8 @@ function initMisBoletos() {
     try {
       const res = await fetch(`${API}/mis-boletos`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
+        headers: { "Content-Type": "application/json"},
+           body: JSON.stringify({
           email,
           telefono
         })
@@ -153,24 +151,16 @@ async function cargarEventos() {
   try {
     const res = await fetch(`${API}/events`);
     const eventos = await res.json();
-
     eventosGlobal = eventos;
     eventosCache = eventos;
-
     renderEventos(eventos);
-
-  } catch (error) {
-    console.error(error);
-  }
+  } 
+  catch (error) { console.error(error);}
 }
 
 function renderEventos(lista){
-
-  const container =
-    document.querySelector(".cards");
-
-  const pastContainer =
-    document.querySelector(".past-cards");
+  const container     = document.querySelector(".cards");
+  const pastContainer = document.querySelector(".past-cards");
 
   if (!container) return;
 
@@ -274,18 +264,10 @@ const pastEvents =
             class="card-img"
             loading="lazy"
           >
-
         </div>
-
       </div>
-
     `;
-
-card.addEventListener("click", () => {
-                                        window.location.href = `/productora/${evento.desc_slug}`;
-
-                                      });
-
+card.addEventListener("click", () => { window.location.href = `/productora/${evento.desc_slug}`;});
     container.appendChild(card);
 
   });
