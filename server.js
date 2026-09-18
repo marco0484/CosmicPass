@@ -3,9 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const nodemailer = require("nodemailer");
-
 require("dotenv").config();
-
 const transporter = nodemailer.createTransport({
   host: "smtp-relay.brevo.com",
   port: 587,
@@ -17,16 +15,15 @@ const transporter = nodemailer.createTransport({
 });
 
 const { createClient } = require("@supabase/supabase-js");
-const HOST = "0.0.0.0";
-const PORT = process.env.PORT || 3000;
-const app = express();
-const QRCode = require("qrcode");
-const crypto = require("crypto");
-const SESSION_SECRET = process.env.SESSION_SECRET;
+const HOST             = "0.0.0.0";
+const PORT             = process.env.PORT || 3000;
+const app              = express();
+const QRCode           = require("qrcode");
+const crypto           = require("crypto");
+const PDFDocument      = require("pdfkit");
+const SESSION_SECRET   = process.env.SESSION_SECRET;
 
-if (!SESSION_SECRET) {
-  throw new Error("Falta la variable SESSION_SECRET");
-}
+if (!SESSION_SECRET) { throw new Error("Falta la variable SESSION_SECRET");}
 
 function crearSessionToken(usuario) {
 
@@ -39,17 +36,11 @@ function crearSessionToken(usuario) {
     exp: Date.now() + (8 * 60 * 60 * 1000)
   };
 
-  const encodedPayload =
-    Buffer.from(JSON.stringify(payload))
-      .toString("base64url");
-
-  const signature =
-    crypto
-      .createHmac("sha256", SESSION_SECRET)
-      .update(encodedPayload)
-      .digest("base64url");
-
-  return `${encodedPayload}.${signature}`;
+  const encodedPayload = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  const signature = crypto.createHmac("sha256", SESSION_SECRET)
+                          .update(encodedPayload)
+                          .digest("base64url");
+                           return `${encodedPayload}.${signature}`;
 }
 
 function verificarSessionToken(token) {
@@ -540,6 +531,284 @@ app.get("/productora/:slug", (req, res) => {
 });
 
 const supabase = createClient("https://uqrbykxgsarsfyyvmibr.supabase.co",process.env.SUPABASE_SECRET_KEY);
+
+async function generarBoletoPDF({
+  evento,
+  nombre,
+  tipoTicket,
+  ticketToken,
+  qrImage
+}) {
+
+  return new Promise((resolve, reject) => {
+
+    try {
+
+      const doc = new PDFDocument({
+        size: "A4",
+        margin: 0
+      });
+
+      const chunks = [];
+
+      doc.on("data", chunk => {
+        chunks.push(chunk);
+      });
+
+      doc.on("end", () => {
+        resolve(Buffer.concat(chunks));
+      });
+
+      doc.on("error", reject);
+
+
+      /* =========================
+         FONDO
+      ========================= */
+
+      doc
+        .rect(0, 0, 595, 842)
+        .fill("#f5f5f5");
+
+
+      /* =========================
+         TARJETA
+      ========================= */
+
+      doc
+        .roundedRect(
+          55,
+          50,
+          485,
+          742,
+          18
+        )
+        .fill("#ffffff");
+
+
+      /* =========================
+         LOGO
+      ========================= */
+
+      doc
+        .fontSize(24)
+        .fillColor("#111111")
+        .font("Helvetica-Bold")
+        .text(
+          "COSMIC PASS",
+          0,
+          85,
+          {
+            width: 595,
+            align: "center"
+          }
+        );
+
+
+      /* =========================
+         EVENTO
+      ========================= */
+
+      doc
+        .fontSize(22)
+        .fillColor("#111111")
+        .font("Helvetica-Bold")
+        .text(
+          evento.name || "Evento",
+          90,
+          150,
+          {
+            width: 415,
+            align: "center"
+          }
+        );
+
+
+      /* =========================
+         COMPRADOR
+      ========================= */
+
+      doc
+        .fontSize(12)
+        .fillColor("#777777")
+        .font("Helvetica")
+        .text(
+          "Nombre",
+          90,
+          220,
+          {
+            width: 415,
+            align: "center"
+          }
+        );
+
+      doc
+        .fontSize(17)
+        .fillColor("#111111")
+        .font("Helvetica-Bold")
+        .text(
+          nombre,
+          90,
+          240,
+          {
+            width: 415,
+            align: "center"
+          }
+        );
+
+
+      /* =========================
+         TIPO DE ACCESO
+      ========================= */
+
+      doc
+        .fontSize(12)
+        .fillColor("#777777")
+        .font("Helvetica")
+        .text(
+          "Tipo de acceso",
+          90,
+          285,
+          {
+            width: 415,
+            align: "center"
+          }
+        );
+
+      doc
+        .fontSize(16)
+        .fillColor("#111111")
+        .font("Helvetica-Bold")
+        .text(
+          tipoTicket || "Acceso general",
+          90,
+          305,
+          {
+            width: 415,
+            align: "center"
+          }
+        );
+
+
+      /* =========================
+         QR
+      ========================= */
+
+      const qrBase64 =
+        qrImage.split("base64,")[1];
+
+      const qrBuffer =
+        Buffer.from(
+          qrBase64,
+          "base64"
+        );
+
+      doc.image(
+        qrBuffer,
+        197,
+        350,
+        {
+          width: 200,
+          height: 200
+        }
+      );
+
+
+      /* =========================
+         INSTRUCCIÓN
+      ========================= */
+
+      doc
+        .fontSize(11)
+        .fillColor("#555555")
+        .font("Helvetica")
+        .text(
+          "Presenta este código QR en el acceso",
+          90,
+          570,
+          {
+            width: 415,
+            align: "center"
+          }
+        );
+
+
+      /* =========================
+         INFORMACIÓN EVENTO
+      ========================= */
+
+      doc
+        .fontSize(11)
+        .fillColor("#333333")
+        .text(
+          `Fecha: ${evento.date || "Por confirmar"}`,
+          90,
+          620,
+          {
+            width: 415,
+            align: "center"
+          }
+        );
+
+      doc
+        .text(
+          `Lugar: ${evento.city || "Por confirmar"}`,
+          90,
+          640,
+          {
+            width: 415,
+            align: "center"
+          }
+        );
+
+
+      /* =========================
+         FOLIO
+      ========================= */
+
+      doc
+        .fontSize(8)
+        .fillColor("#999999")
+        .text(
+          `Folio: ${ticketToken}`,
+          90,
+          700,
+          {
+            width: 415,
+            align: "center"
+          }
+        );
+
+
+      /* =========================
+         AVISO
+      ========================= */
+
+      doc
+        .fontSize(9)
+        .fillColor("#777777")
+        .text(
+          "Este boleto es único y válido para un solo ingreso. No compartas tu código QR.",
+          90,
+          735,
+          {
+            width: 415,
+            align: "center"
+          }
+        );
+
+
+      doc.end();
+
+    } catch (error) {
+
+      reject(error);
+
+    }
+
+  });
+
+}
 
 app.post("/login", async (req, res) => {
   try {
@@ -1323,15 +1592,11 @@ app.post("/admin/rps/asignar", requerirSesion, async (req, res) => {
 
 app.get("/admin/dashboard", requerirSesion, async (req, res) => {
   try {
-const rol =
-  String(req.usuario.rol || "").toLowerCase();
 
-const idProductoraSesion =
-  Number(req.usuario.id_productora) || null;
+const rol = String(req.usuario.rol || "").toLowerCase();
+const idProductoraSesion = Number(req.usuario.id_productora) || null;
 
-const esOwner =
-  rol === "owner" ||
-  (rol === "admin" && !idProductoraSesion);
+const esOwner = rol === "owner" || (rol === "admin" && !idProductoraSesion);
 
 if (!esOwner && !idProductoraSesion) {
   return res.status(403).json({
@@ -1513,16 +1778,10 @@ if (user.id_productora) {
    GENERADOR - VALIDAR TOKEN
 ========================================================= */
 
-app.get(
-  "/generator/validate",
-  async (req, res) => {
-
+app.get( "/generator/validate",async (req, res) => {
     try {
 
-      const token =
-        String(
-          req.query.token || ""
-        ).trim();
+      const token = String(req.query.token || "").trim();
 
 
       if (!token) {
@@ -1623,12 +1882,7 @@ app.get(
 
 
     } catch (error) {
-
-      console.error(
-        "ERROR /generator/validate:",
-        error
-      );
-
+      console.error("ERROR /generator/validate:",error);
       return res.status(500).json({
         success: false,
         error: "Error validando acceso"
@@ -2827,11 +3081,20 @@ if (eventoError || !evento) {
     }
 
     const ticketToken = crypto.randomUUID();
+
     const qrImage = await QRCode.toDataURL(ticketToken, {
-      width:300,
-      margin:2,
-      errorCorrectionLevel:"H"
-    });
+                                                          width:300,
+                                                          margin:2,
+                                                          errorCorrectionLevel:"H"
+                                                        });
+
+    const pdfBuffer = await generarBoletoPDF({
+                                                evento,
+                                                nombre,
+                                                tipoTicket: ticket.tipo_ticket,
+                                                ticketToken,
+                                                qrImage
+                                              });
 
     const { error: insertError } = await supabase
       .from("tickets")
@@ -2863,58 +3126,365 @@ if (eventoError || !evento) {
     });
 
     try {
-      await transporter.sendMail({
-        from:'"Cosmic Pass" <cosmicpass0484@gmail.com>',
-        to:correo,
-        subject:"Tu acceso Cosmic Pass 🎟️",
-       html:`
-  <div style="font-family:Arial,sans-serif;background:#f4f4f4;padding:24px;">
-    <div style="max-width:560px;margin:auto;background:#ffffff;border-radius:16px;overflow:hidden;">
-      
-      <img src="${evento.image}" style="width:100%;display:block;" />
+await transporter.sendMail({
 
-      <div style="padding:24px;">
-        <h1 style="margin:0 0 10px;">🎉 Tu acceso está listo</h1>
+  from: '"Cosmic Pass" <cosmicpass0484@gmail.com>',
 
-        <h2 style="margin:0 0 16px;color:#111;">
-          ${evento.name}
-        </h2>
+  to: correo,
 
-        <p><strong>📍 Lugar:</strong> ${evento.city || "Por confirmar"}</p>
-        <p><strong>📅 Fecha:</strong> ${evento.date || "Por confirmar"}</p>
+  subject: `¡Tus boletos están listos! 🎟️`,
 
-        <hr style="border:none;border-top:1px solid #ddd;margin:20px 0;" />
+  html: `
+<!DOCTYPE html>
+<html lang="es">
 
-        <p><strong>👤 Nombre:</strong> ${nombre}</p>
-        <p><strong>🎟️ Tipo de acceso:</strong> ${ticket.tipo_ticket}</p>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 
-        <div style="text-align:center;margin:28px 0;">
-          <p><strong>Presenta este QR en el acceso:</strong></p>
-          <img src="cid:ticketqr" width="260" />
-        </div>
+<body style="
+  margin:0;
+  padding:0;
+  background:#f4f5f8;
+  font-family:Arial,Helvetica,sans-serif;
+  color:#222;
+">
 
-        <p style="font-size:14px;color:#555;">
-          Este QR es único y válido para un solo ingreso. No lo compartas con terceros.
-        </p>
+<table
+  width="100%"
+  cellpadding="0"
+  cellspacing="0"
+  border="0"
+  style="background:#f4f5f8;"
+>
 
-        <p style="margin-top:24px;">
-          Gracias por usar <strong>Cosmic Pass</strong> 🚀
-        </p>
-      </div>
+<tr>
 
-    </div>
-  </div>
+<td
+  align="center"
+  style="padding:30px 15px;"
+>
+
+<!-- TARJETA -->
+
+<table
+  width="100%"
+  cellpadding="0"
+  cellspacing="0"
+  border="0"
+  style="
+    max-width:520px;
+    background:#ffffff;
+  "
+>
+
+<!-- LOGO / MARCA -->
+
+<tr>
+
+<td
+  align="center"
+  style="padding:28px 20px 15px;"
+>
+
+<div style="
+  font-size:22px;
+  font-weight:bold;
+  letter-spacing:1px;
+  color:#111111;
+">
+  COSMIC PASS
+</div>
+
+</td>
+
+</tr>
+
+
+<!-- CONTENIDO -->
+
+<tr>
+
+<td
+  style="
+    padding:10px 32px 30px;
+  "
+>
+
+<h1 style="
+  margin:0 0 20px;
+  font-size:20px;
+  line-height:1.4;
+  color:#111111;
+">
+
+¡Tus boletos están listos ${nombre}!
+
+</h1>
+
+
+<p style="
+  margin:0 0 18px;
+  font-size:14px;
+  line-height:1.6;
+  color:#444444;
+">
+
+Ya está lista tu entrada para
+<strong>${evento.name}</strong>.
+
+</p>
+
+
+<p style="
+  margin:0 0 18px;
+  font-size:14px;
+  line-height:1.6;
+  color:#444444;
+">
+
+Adjunto encontrarás tu boleto en formato PDF.
+Puedes descargarlo y mostrarlo desde tu teléfono
+el día del evento.
+
+</p>
+
+
+<p style="
+  margin:0 0 20px;
+  font-size:13px;
+  line-height:1.6;
+  color:#e11d48;
+  font-weight:bold;
+">
+
+⚠️ Recuerda que el boleto es único e intransferible.
+No compartas el código QR en redes sociales ni con terceros.
+
+</p>
+
+
+<!-- INFORMACIÓN -->
+
+<table
+  width="100%"
+  cellpadding="0"
+  cellspacing="0"
+  border="0"
+  style="
+    background:#f7f7f7;
+    padding:15px;
+    margin-bottom:20px;
+  "
+>
+
+<tr>
+
+<td style="
+  padding:8px 12px;
+  font-size:13px;
+  color:#333333;
+">
+
+<strong>Evento:</strong>
+${evento.name}
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td style="
+  padding:8px 12px;
+  font-size:13px;
+  color:#333333;
+">
+
+<strong>Fecha:</strong>
+${evento.date || "Por confirmar"}
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td style="
+  padding:8px 12px;
+  font-size:13px;
+  color:#333333;
+">
+
+<strong>Lugar:</strong>
+${evento.city || "Por confirmar"}
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td style="
+  padding:8px 12px;
+  font-size:13px;
+  color:#333333;
+">
+
+<strong>Acceso:</strong>
+${ticket.tipo_ticket}
+
+</td>
+
+</tr>
+
+</table>
+
+
+<p style="
+  margin:0;
+  font-size:13px;
+  line-height:1.6;
+  color:#444444;
+">
+
+¡Esperamos verte en el evento y que disfrutes
+de una experiencia increíble! 🚀
+
+</p>
+
+</td>
+
+</tr>
+
+
+<!-- SEPARADOR -->
+
+<tr>
+
+<td style="padding:0 32px;">
+
+<div style="
+  border-top:1px solid #eeeeee;
+"></div>
+
+</td>
+
+</tr>
+
+
+<!-- CONTACTO -->
+
+<tr>
+
+<td
+  align="center"
+  style="
+    padding:22px 32px 28px;
+  "
+>
+
+<p style="
+  margin:0 0 8px;
+  font-size:11px;
+  line-height:1.5;
+  color:#999999;
+">
+
+Si tienes algún problema con tu boleto,
+contáctanos por WhatsApp.
+
+</p>
+
+
+<p style="
+  margin:0;
+  font-size:11px;
+  color:#999999;
+">
+
+WhatsApp:
+<strong>55 6434 9230</strong>
+
+</p>
+
+</td>
+
+</tr>
+
+</table>
+
+
+<!-- FOOTER -->
+
+<table
+  width="100%"
+  cellpadding="0"
+  cellspacing="0"
+  border="0"
+  style="max-width:520px;"
+>
+
+<tr>
+
+<td
+  align="center"
+  style="padding:20px 10px;"
+>
+
+<div style="
+  font-size:12px;
+  font-weight:bold;
+  letter-spacing:1px;
+  color:#555555;
+">
+  COSMIC PASS
+</div>
+
+
+<p style="
+  margin:6px 0 0;
+  font-size:10px;
+  color:#999999;
+">
+
+© 2026 Cosmic Pass
+
+</p>
+
+</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+</html>
 `,
-        attachments:[
-          {
-            filename:"ticket-qr.png",
-            content:qrImage.split("base64,")[1],
-            encoding:"base64",
-            cid:"ticketqr"
-          }
-        ]
-      });
-    } catch (mailError) {
+
+  attachments: [
+
+    {
+      filename: `Boleto-${evento.name}.pdf`,
+      content: pdfBuffer,
+      contentType: "application/pdf"
+    }
+
+  ]
+
+});
+    } 
+    catch (mailError) {
       console.error("ERROR ENVIANDO CORREO FREE ACCESS:", mailError);
     }
 
@@ -3150,9 +3720,7 @@ app.post("/webhook-mp", async (req, res) => {
       return res.sendStatus(200);
     }
 
-    const ticketToken =
-      crypto.randomUUID();
-
+    const ticketToken = crypto.randomUUID();
 
     const { error: insertError } =
       await supabase
@@ -3195,4 +3763,5 @@ app.post("/webhook-mp", async (req, res) => {
 
   }
 });
+
 module.exports = app;
