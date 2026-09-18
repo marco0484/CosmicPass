@@ -500,9 +500,463 @@ const {
 } = rpcResult;
 
 if (stockError) {
-} 
-else {
+  console.error("ERROR DESCONTANDO STOCK:");
+  console.error(stockError);
 }
+
+console.log("NUEVO STOCK:", nuevoStock);
+
+
+/* ================================
+   OBTENER TIPO DE TICKET
+================================ */
+
+const {
+  data: ticketInfo,
+  error: ticketError
+} = await supabase
+  .from("ticket_types")
+  .select(`
+    id,
+    id_evento,
+    tipo_ticket
+  `)
+  .eq(
+    "id",
+    Number(session.metadata.ticket_id)
+  )
+  .single();
+
+if (ticketError || !ticketInfo) {
+
+  console.error(
+    "ERROR OBTENIENDO TIPO DE TICKET:"
+  );
+
+  console.error(ticketError);
+
+  return res.sendStatus(200);
+
+}
+
+
+/* ================================
+   OBTENER EVENTO
+================================ */
+
+const {
+  data: evento,
+  error: eventoError
+} = await supabase
+  .from("cat_events")
+  .select(`
+    name,
+    city,
+    date
+  `)
+  .eq(
+    "id",
+    Number(session.metadata.evento_id)
+  )
+  .single();
+
+if (eventoError || !evento) {
+
+  console.error(
+    "ERROR OBTENIENDO EVENTO:"
+  );
+
+  console.error(eventoError);
+
+  return res.sendStatus(200);
+
+}
+
+
+/* ================================
+   GENERAR QR
+================================ */
+
+const qrImage =
+  await QRCode.toDataURL(
+    ticketToken,
+    {
+      width: 300,
+      margin: 2,
+      errorCorrectionLevel: "H"
+    }
+  );
+
+
+/* ================================
+   GENERAR PDF
+================================ */
+
+const pdfBuffer =
+  await generarBoletoPDF({
+    evento,
+
+    nombre:
+      session.customer_details?.name ||
+      "Cliente Stripe",
+
+    tipoTicket:
+      ticketInfo.tipo_ticket,
+
+    ticketToken,
+
+    qrImage
+  });
+
+  /* ================================
+   ENVIAR BOLETO POR CORREO
+================================ */
+
+const correoCliente =
+  session.customer_details?.email || null;
+
+const nombreCliente =
+  session.customer_details?.name ||
+  "Cliente Stripe";
+
+if (correoCliente) {
+
+  try {
+
+    await transporter.sendMail({
+
+      from: '"Cosmic Pass" <cosmicpass0484@gmail.com>',
+
+      to: correoCliente,
+
+      subject: `¡Tus boletos están listos! 🎟️`,
+
+      html: `
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body style="
+  margin:0;
+  padding:0;
+  background:#f4f5f8;
+  font-family:Arial,Helvetica,sans-serif;
+  color:#222;
+">
+
+<table
+  width="100%"
+  cellpadding="0"
+  cellspacing="0"
+  border="0"
+  style="background:#f4f5f8;"
+>
+
+<tr>
+
+<td
+  align="center"
+  style="padding:30px 15px;"
+>
+
+<table
+  width="100%"
+  cellpadding="0"
+  cellspacing="0"
+  border="0"
+  style="
+    max-width:520px;
+    background:#ffffff;
+  "
+>
+
+<tr>
+
+<td
+  align="center"
+  style="padding:28px 20px 15px;"
+>
+
+<div style="
+  font-size:22px;
+  font-weight:bold;
+  letter-spacing:1px;
+  color:#111111;
+">
+  COSMIC PASS
+</div>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td
+  style="
+    padding:10px 32px 30px;
+  "
+>
+
+<h1 style="
+  margin:0 0 20px;
+  font-size:20px;
+  line-height:1.4;
+  color:#111111;
+">
+
+¡Tus boletos están listos ${nombreCliente}!
+
+</h1>
+
+<p style="
+  margin:0 0 18px;
+  font-size:14px;
+  line-height:1.6;
+  color:#444444;
+">
+
+Ya está lista tu entrada para
+<strong>${evento.name}</strong>.
+
+</p>
+
+<p style="
+  margin:0 0 18px;
+  font-size:14px;
+  line-height:1.6;
+  color:#444444;
+">
+
+Adjunto encontrarás tu boleto en formato PDF.
+Puedes descargarlo y mostrarlo desde tu teléfono
+el día del evento.
+
+</p>
+
+<p style="
+  margin:0 0 20px;
+  font-size:13px;
+  line-height:1.6;
+  color:#e11d48;
+  font-weight:bold;
+">
+
+⚠️ Recuerda que el boleto es único e intransferible.
+No compartas el código QR en redes sociales ni con terceros.
+
+</p>
+
+<table
+  width="100%"
+  cellpadding="0"
+  cellspacing="0"
+  border="0"
+  style="
+    background:#f7f7f7;
+    margin-bottom:20px;
+  "
+>
+
+<tr>
+<td style="
+  padding:8px 12px;
+  font-size:13px;
+  color:#333333;
+">
+<strong>Evento:</strong>
+${evento.name}
+</td>
+</tr>
+
+<tr>
+<td style="
+  padding:8px 12px;
+  font-size:13px;
+  color:#333333;
+">
+<strong>Fecha:</strong>
+${evento.date || "Por confirmar"}
+</td>
+</tr>
+
+<tr>
+<td style="
+  padding:8px 12px;
+  font-size:13px;
+  color:#333333;
+">
+<strong>Lugar:</strong>
+${evento.city || "Por confirmar"}
+</td>
+</tr>
+
+<tr>
+<td style="
+  padding:8px 12px;
+  font-size:13px;
+  color:#333333;
+">
+<strong>Acceso:</strong>
+${ticketInfo.tipo_ticket}
+</td>
+</tr>
+
+</table>
+
+<p style="
+  margin:0;
+  font-size:13px;
+  line-height:1.6;
+  color:#444444;
+">
+
+¡Esperamos verte en el evento y que disfrutes
+de una experiencia increíble! 🚀
+
+</p>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td style="padding:0 32px;">
+
+<div style="
+  border-top:1px solid #eeeeee;
+"></div>
+
+</td>
+
+</tr>
+
+<tr>
+
+<td
+  align="center"
+  style="
+    padding:22px 32px 28px;
+  "
+>
+
+<p style="
+  margin:0 0 8px;
+  font-size:11px;
+  line-height:1.5;
+  color:#999999;
+">
+
+Si tienes algún problema con tu boleto,
+contáctanos por WhatsApp.
+
+</p>
+
+<p style="
+  margin:0;
+  font-size:11px;
+  color:#999999;
+">
+
+WhatsApp:
+<strong>55 6434 9230</strong>
+
+</p>
+
+</td>
+
+</tr>
+
+</table>
+
+<table
+  width="100%"
+  cellpadding="0"
+  cellspacing="0"
+  border="0"
+  style="max-width:520px;"
+>
+
+<tr>
+
+<td
+  align="center"
+  style="padding:20px 10px;"
+>
+
+<div style="
+  font-size:12px;
+  font-weight:bold;
+  letter-spacing:1px;
+  color:#555555;
+">
+  COSMIC PASS
+</div>
+
+<p style="
+  margin:6px 0 0;
+  font-size:10px;
+  color:#999999;
+">
+
+© 2026 Cosmic Pass
+
+</p>
+
+</td>
+
+</tr>
+
+</table>
+
+</td>
+
+</tr>
+
+</table>
+
+</body>
+</html>
+`,
+
+      attachments: [
+
+        {
+          filename:
+            `Boleto-${evento.name}.pdf`,
+
+          content:
+            pdfBuffer,
+
+          contentType:
+            "application/pdf"
+        }
+
+      ]
+
+    });
+
+    console.log(
+      "BOLETO STRIPE ENVIADO A:",
+      correoCliente
+    );
+
+  } catch (mailError) {
+
+    console.error(
+      "ERROR ENVIANDO CORREO STRIPE:",
+      mailError
+    );
+
+  }
+
+}
+
 }
 
       }
@@ -3719,6 +4173,30 @@ app.post("/webhook-mp", async (req, res) => {
       console.error(ticketError);
       return res.sendStatus(200);
     }
+
+    /* tt */
+
+    const {
+  data: evento,
+  error: eventoError
+} = await supabase
+  .from("cat_events")
+  .select(`
+    name,
+    city,
+    date
+  `)
+  .eq("id", ticketInfo.id_evento)
+  .single();
+
+if (eventoError || !evento) {
+  console.error("ERROR OBTENIENDO EVENTO:");
+  console.error(eventoError);
+  return res.sendStatus(200);
+}
+
+
+/* TT */
 
     const ticketToken = crypto.randomUUID();
 
