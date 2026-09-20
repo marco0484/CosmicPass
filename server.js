@@ -167,12 +167,9 @@ function verificarMPState(state) {
       return null;
     }
 
-    if (
-      !Number(payload.productoraId) ||
-      !Number(payload.userId)
-    ) {
-      return null;
-    }
+   if (!Number(payload.productoraId)) {
+                                        return null;
+                                      }
 
     return payload;
 
@@ -2970,16 +2967,9 @@ if (productoraError || !productora?.stripe_account_id) {
   }
 
 });
-
-app.get("/mp/connect/:productoraId",
-  requerirSesion,
-  async (req, res) => {
-
+app.get("/mp/connect/:productoraId",async (req, res) => {
     try {
-
-      const productoraSolicitada =
-        Number(req.params.productoraId);
-
+      const productoraSolicitada = Number(req.params.productoraId);
       if (
         !Number.isInteger(productoraSolicitada) ||
         productoraSolicitada <= 0
@@ -2990,43 +2980,7 @@ app.get("/mp/connect/:productoraId",
         });
       }
 
-      const rol =
-        String(req.usuario.rol || "")
-          .toLowerCase();
-
-      const idProductoraSesion =
-        Number(req.usuario.id_productora) || null;
-
-      const esOwner =
-        rol === "owner" ||
-        (rol === "admin" && !idProductoraSesion);
-
-      if (!esOwner) {
-
-        if (!idProductoraSesion) {
-          return res.status(403).json({
-            success: false,
-            error: "Usuario sin productora asignada"
-          });
-        }
-
-        if (
-          productoraSolicitada !==
-          idProductoraSesion
-        ) {
-          return res.status(403).json({
-            success: false,
-            error:
-              "No tienes permisos sobre esta productora"
-          });
-        }
-
-      }
-
-      const productoraId =
-        esOwner
-          ? productoraSolicitada
-          : idProductoraSesion;
+     const productoraId = productoraSolicitada;
 
       const {
         data: productora,
@@ -3048,11 +3002,10 @@ app.get("/mp/connect/:productoraId",
         });
       }
 
-      const state =
-        crearMPState(
-          productoraId,
-          req.usuario.id
-        );
+   const state = crearMPState(
+                              productoraId,
+                                  0
+                            );
 
       const authorizationUrl =
         "https://auth.mercadopago.com/authorization" +
@@ -3109,64 +3062,64 @@ app.get(
           );
       }
 
-      const productoraId =
-        Number(stateData.productoraId);
-
-      const userId =
-        Number(stateData.userId);
-
+      const productoraId = Number(stateData.productoraId);
+      const userId       = Number(stateData.userId);
+      const esConexionCliente = !userId;
       /*
         Revalidamos al usuario desde BD.
         No confiamos solamente en lo que
         existía cuando comenzó el OAuth.
       */
-      const {
-        data: usuario,
-        error: usuarioError
-      } = await supabase
-        .from("cosmic_usuarios")
-        .select(`
-          id,
-          rol,
-          activo,
-          id_productora
-        `)
-        .eq("id", userId)
-        .maybeSingle();
+ if (!esConexionCliente) {
 
-      if (
-        usuarioError ||
-        !usuario ||
-        !usuario.activo
-      ) {
-        return res
-          .status(403)
-          .send("Usuario no autorizado.");
-      }
+  const {
+    data: usuario,
+    error: usuarioError
+  } = await supabase
+    .from("cosmic_usuarios")
+    .select(`
+      id,
+      rol,
+      activo,
+      id_productora
+    `)
+    .eq("id", userId)
+    .maybeSingle();
 
-      const rol =
-        String(usuario.rol || "")
-          .toLowerCase();
+  if (
+    usuarioError ||
+    !usuario ||
+    !usuario.activo
+  ) {
+    return res
+      .status(403)
+      .send("Usuario no autorizado.");
+  }
 
-      const idProductoraUsuario =
-        Number(usuario.id_productora) || null;
+  const rol =
+    String(usuario.rol || "")
+      .toLowerCase();
 
-      const esOwner =
-        rol === "owner" ||
-        (
-          rol === "admin" &&
-          !idProductoraUsuario
-        );
+  const idProductoraUsuario =
+    Number(usuario.id_productora) || null;
 
-      if (
-        !esOwner &&
-        idProductoraUsuario !== productoraId
-      ) {
-        return res
-          .status(403)
-          .send(
-            "No tienes permisos sobre esta productora."
-          );
+  const esOwner =
+    rol === "owner" ||
+    (
+      rol === "admin" &&
+      !idProductoraUsuario
+    );
+
+  if (
+    !esOwner &&
+    idProductoraUsuario !== productoraId
+  ) {
+    return res
+      .status(403)
+      .send(
+        "No tienes permisos sobre esta productora."
+      );
+  }
       }
 
       const response =
