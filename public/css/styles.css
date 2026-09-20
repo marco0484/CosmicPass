@@ -740,7 +740,7 @@ nav li a:hover::after{
   padding-top: 110px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   text-align: center;
   gap: 3px;
@@ -3432,11 +3432,45 @@ section{
 
 @media(max-width:600px){
 
-    .hero-sub {
-    max-width: 330px;
-    font-size: 14px;
-    line-height: 1.55;
+    .hero{
+    background-position: center 28%;
+    padding: 70px 18px 24px;
   }
+
+  .hero-content-main{
+    margin-bottom: 18px;
+  }
+
+.hero-sub {
+  max-width: 315px;
+  margin: 0 auto;
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.hero-sub-extra {
+  display: block;
+  margin-top: 3px;
+  color: rgba(255,255,255,.58);
+}
+
+.hero-domain-message{
+  width: min(340px, calc(100% - 24px));
+  margin: 14px auto 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  gap: 2px;
+}
+
+.hero-domain-message strong{
+  font-size: 12px;
+}
+
+.hero-domain-message span{
+  max-width: 300px;
+  font-size: 11px;
+  line-height: 1.35;
+}
 
     .access-feed{
     gap:8px;
@@ -3818,10 +3852,10 @@ section{
 
 
   .hero h1{
-    font-size:28px;
-    line-height:1.1;
-    letter-spacing:-.8px;
-    max-width:350px;
+    font-size:26px;
+  line-height:1.08;
+  letter-spacing:-.7px;
+  max-width:330px;
   }
 
   .rocket{
