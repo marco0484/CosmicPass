@@ -2485,8 +2485,7 @@ app.post("/admin/activar-cortesias",requerirSesion,async (req, res) => {
 app.get("/stripe/connect/:productoraId", async (req, res) => {
     try {
 
-      const productoraSolicitada =
-        Number(req.params.productoraId);
+      const productoraSolicitada = Number(req.params.productoraId);
 
       if (
         !Number.isInteger(productoraSolicitada) ||
@@ -2498,43 +2497,7 @@ app.get("/stripe/connect/:productoraId", async (req, res) => {
         });
       }
 
-      const rol =
-        String(req.usuario.rol || "")
-          .toLowerCase();
-
-      const idProductoraSesion =
-        Number(req.usuario.id_productora) || null;
-
-      const esOwner =
-        rol === "owner" ||
-        (rol === "admin" && !idProductoraSesion);
-
-      if (!esOwner) {
-
-        if (!idProductoraSesion) {
-          return res.status(403).json({
-            success: false,
-            error: "Usuario sin productora asignada"
-          });
-        }
-
-        if (
-          productoraSolicitada !==
-          idProductoraSesion
-        ) {
-          return res.status(403).json({
-            success: false,
-            error:
-              "No tienes permisos sobre esta productora"
-          });
-        }
-
-      }
-
-      const productoraId =
-        esOwner
-          ? productoraSolicitada
-          : idProductoraSesion;
+const productoraId = productoraSolicitada;
 
       const {
         data: productora,
@@ -2596,22 +2559,12 @@ app.get("/stripe/connect/:productoraId", async (req, res) => {
       const accountLink =
         await stripe.accountLinks.create({
           account: stripeAccountId,
-
-          refresh_url:
-            `https://www.cosmicpass.space/productora.html?id=${productoraId}`,
-
-          return_url:
-            `https://www.cosmicpass.space/productora.html?id=${productoraId}`,
-
+          refresh_url: `https://www.cosmicpass.space/productora.html?id=${productoraId}`,
+          return_url: `https://www.cosmicpass.space/productora.html?id=${productoraId}`,
           type: "account_onboarding"
         });
 
-      return res.json({
-        success: true,
-        url: accountLink.url,
-        stripe_account_id:
-          stripeAccountId
-      });
+return res.redirect(accountLink.url);
 
     } catch (error) {
 
