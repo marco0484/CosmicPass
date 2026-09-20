@@ -475,6 +475,12 @@ const { error } =
 
 if (error) {
 
+  console.error(
+    "ERROR INSERTANDO TICKET STRIPE:"
+  );
+
+  console.error(error);
+
 } else {
 
 
