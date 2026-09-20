@@ -2482,7 +2482,7 @@ app.post("/admin/activar-cortesias",requerirSesion,async (req, res) => {
   }
 );
 
-app.post("/stripe/connect/:productoraId",requerirSesion,async (req, res) => {
+app.get("/stripe/connect/:productoraId", async (req, res) => {
     try {
 
       const productoraSolicitada =
