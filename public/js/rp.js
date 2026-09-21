@@ -119,6 +119,77 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  async function cargarEventos() {
+  try {
+    const response = await fetch(
+      `${API}/events?id_productora=${idProductora}`,
+      {
+        credentials: "include"
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "No fue posible cargar los eventos."
+      );
+    }
+
+    console.log("Eventos de la productora:", data);
+
+    const eventos = data.events || data;
+
+    if (!rpEvento) return;
+
+    rpEvento.innerHTML = `
+      <option value="">Selecciona un evento</option>
+    `;
+
+    eventos.forEach((evento) => {
+      const option = document.createElement("option");
+
+      option.value = evento.id;
+      option.textContent =
+        evento.nombre ||
+        evento.nombre_evento ||
+        evento.title ||
+        `Evento #${evento.id}`;
+
+      rpEvento.appendChild(option);
+    });
+
+    // También llenar filtro si existe
+    if (eventoFiltro) {
+      eventoFiltro.innerHTML = `
+        <option value="">Todos los eventos</option>
+      `;
+
+      eventos.forEach((evento) => {
+        const option = document.createElement("option");
+
+        option.value = evento.id;
+        option.textContent =
+          evento.nombre ||
+          evento.nombre_evento ||
+          evento.title ||
+          `Evento #${evento.id}`;
+
+        eventoFiltro.appendChild(option);
+      });
+    }
+
+  } catch (error) {
+    console.error("Error cargando eventos:", error);
+
+    if (rpEvento) {
+      rpEvento.innerHTML = `
+        <option value="">No fue posible cargar eventos</option>
+      `;
+    }
+  }
+}
+
   // =========================
   // RESUMEN
   // =========================
@@ -329,9 +400,8 @@ document.addEventListener("DOMContentLoaded", () => {
     cargarRPs();
   });
 
-  // =========================
-  // UTILIDAD
-  // =========================
+
+  // UTILIDAD //
 
   function escapeHTML(value) {
     return String(value ?? "")
@@ -342,10 +412,9 @@ document.addEventListener("DOMContentLoaded", () => {
       .replaceAll("'", "&#039;");
   }
 
-  // =========================
-  // INICIO
-  // =========================
+  //   INICIO //
 
-  cargarRPs();
-  cargarResumen();
+cargarEventos();
+cargarRPs();
+cargarResumen();
 });
