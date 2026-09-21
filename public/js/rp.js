@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  async function cargarEventos() {
+async function cargarEventos() {
   try {
     const response = await fetch(
       `${API}/events?id_productora=${idProductora}`,
@@ -137,6 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     console.log("Eventos de la productora:", data);
+    console.table(data.events || data);
 
     const eventos = data.events || data;
 
@@ -159,7 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
       rpEvento.appendChild(option);
     });
 
-    // También llenar filtro si existe
     if (eventoFiltro) {
       eventoFiltro.innerHTML = `
         <option value="">Todos los eventos</option>
@@ -189,7 +189,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 }
-
 
 console.log("Eventos de la productora:", data);
 console.table(data.events || data);
