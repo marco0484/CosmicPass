@@ -1616,6 +1616,129 @@ app.post(
   }
 );
 
+
+app.post("/admin/rps", requerirSesion, async (req, res) => {
+  try {
+    const usuarioSesion = req.usuario;
+
+    if (
+      usuarioSesion.rol !== "owner" &&
+      usuarioSesion.rol !== "admin"
+    ) {
+      return res.status(403).json({
+        ok: false,
+        error: "No tienes permisos para crear RP."
+      });
+    }
+
+    const { nombre, usuario, password } = req.body;
+
+    if (!nombre || !usuario || !password) {
+      return res.status(400).json({
+        ok: false,
+        error: "Nombre, usuario y contraseña son obligatorios."
+      });
+    }
+
+    const idProductora = Number(usuarioSesion.id_productora);
+
+    if (!idProductora) {
+      return res.status(400).json({
+        ok: false,
+        error: "No se encontró la productora."
+      });
+    }
+
+    const usuarioNormalizado = String(usuario)
+      .trim()
+      .toLowerCase();
+
+    // Verificar que no exista
+    const { data: existente, error: errorExistente } =
+      await supabase
+        .from("cosmic_usuarios")
+        .select("id")
+        .eq("usuario", usuarioNormalizado)
+        .maybeSingle();
+
+    if (errorExistente) {
+      console.error("Error verificando usuario RP:", errorExistente);
+
+      return res.status(500).json({
+        ok: false,
+        error: "No fue posible validar el usuario."
+      });
+    }
+
+    if (existente) {
+      return res.status(409).json({
+        ok: false,
+        error: "Ese usuario ya existe."
+      });
+    }
+
+    // Generar password hash
+    const { data: passwordHash, error: hashError } =
+      await supabase.rpc("generar_password_hash", {
+        p_password: String(password)
+      });
+
+    if (hashError) {
+      console.error("Error generando password hash:", hashError);
+
+      return res.status(500).json({
+        ok: false,
+        error: "No fue posible generar la contraseña."
+      });
+    }
+
+    // Crear RP
+    const { data: nuevoRP, error: errorRP } =
+      await supabase
+        .from("cosmic_usuarios")
+        .insert({
+          usuario: usuarioNormalizado,
+          nombre: String(nombre).trim(),
+          rol: "rp",
+          activo: true,
+          id_productora: idProductora,
+          password_hash: passwordHash
+        })
+        .select(`
+          id,
+          usuario,
+          nombre,
+          rol,
+          activo,
+          id_productora
+        `)
+        .single();
+
+    if (errorRP) {
+      console.error("Error creando RP:", errorRP);
+
+      return res.status(500).json({
+        ok: false,
+        error: "No fue posible crear el RP."
+      });
+    }
+
+    return res.status(201).json({
+      ok: true,
+      rp: nuevoRP
+    });
+
+  } catch (error) {
+    console.error("Error POST /admin/rps:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Error interno del servidor."
+    });
+  }
+});
+
+
 app.get("/admin/rps", requerirSesion, async (req, res) => {
   try {
     const rol = String(req.usuario.rol || "").toLowerCase();
@@ -1759,6 +1882,127 @@ app.get("/admin/rps/resumen", requerirSesion, async (req, res) => {
       throw asignacionesError;
     }
 
+    app.post("/admin/rps", requerirSesion, async (req, res) => {
+  try {
+    const usuarioSesion = req.usuario;
+
+    // Solo owner o admin de productora
+    if (
+      usuarioSesion.rol !== "owner" &&
+      usuarioSesion.rol !== "admin"
+    ) {
+      return res.status(403).json({
+        ok: false,
+        error: "No tienes permisos para crear RP."
+      });
+    }
+
+    const {
+      nombre,
+      usuario,
+      password
+    } = req.body;
+
+    if (!nombre || !usuario || !password) {
+      return res.status(400).json({
+        ok: false,
+        error: "Nombre, usuario y contraseña son obligatorios."
+      });
+    }
+
+    // La productora sale de la sesión
+    const idProductora = Number(usuarioSesion.id_productora);
+
+    if (!idProductora) {
+      return res.status(400).json({
+        ok: false,
+        error: "No se encontró la productora del usuario."
+      });
+    }
+
+    const usuarioNormalizado = String(usuario)
+      .trim()
+      .toLowerCase();
+
+    // Verificar que el usuario no exista
+    const { data: existente, error: errorExistente } =
+      await supabase
+        .from("cosmic_usuarios")
+        .select("id")
+        .eq("usuario", usuarioNormalizado)
+        .maybeSingle();
+
+    if (errorExistente) {
+      console.error("Error verificando usuario RP:", errorExistente);
+
+      return res.status(500).json({
+        ok: false,
+        error: "No fue posible validar el usuario."
+      });
+    }
+
+    if (existente) {
+      return res.status(409).json({
+        ok: false,
+        error: "Ese usuario ya existe."
+      });
+    }
+
+    // Generar hash usando pgcrypto
+    const { data: hashData, error: hashError } =
+      await supabase.rpc("generar_password_hash", {
+        p_password: String(password)
+      });
+
+    if (hashError) {
+      console.error("Error generando password:", hashError);
+
+      return res.status(500).json({
+        ok: false,
+        error: "No fue posible generar la contraseña."
+      });
+    }
+
+    const passwordHash = hashData;
+
+    // Crear RP
+    const { data: nuevoRP, error: errorRP } =
+      await supabase
+        .from("cosmic_usuarios")
+        .insert({
+          usuario: usuarioNormalizado,
+          nombre: String(nombre).trim(),
+          rol: "rp",
+          activo: true,
+          id_productora: idProductora,
+          password_hash: passwordHash
+        })
+        .select("id, usuario, nombre, rol, activo, id_productora")
+        .single();
+
+    if (errorRP) {
+      console.error("Error creando RP:", errorRP);
+
+      return res.status(500).json({
+        ok: false,
+        error: "No fue posible crear el RP."
+      });
+    }
+
+    return res.status(201).json({
+      ok: true,
+      rp: nuevoRP
+    });
+
+  } catch (error) {
+    console.error("Error POST /admin/rps:", error);
+
+    return res.status(500).json({
+      ok: false,
+      error: "Error interno del servidor."
+    });
+  }
+});
     /* ============================
        RPS
     ============================ */
@@ -4040,12 +4284,8 @@ app.post("/webhook-mp", async (req, res) => {
         accessToken: productora.mp_access_token
       });
 
-    const payment =
-      new Payment(mpClientProductora);
-
-    const pago = await payment.get({
-      id: paymentId
-    });
+    const payment = new Payment(mpClientProductora);
+    const pago    = await payment.get({ id: paymentId});
 
     if (pago.status !== "approved") {
       return res.sendStatus(200);

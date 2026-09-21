@@ -98,9 +98,7 @@ document.querySelectorAll("[data-action]").forEach(button => {
 
     const action = button.dataset.action;
 
-    /* =========================================
-   GENERADOR
-========================================= */
+    /* GENERADOR  */
 
 if (
   action === "generador" ||
@@ -207,9 +205,7 @@ window.open(
 return;
 
       } catch (err) {
-
         console.error(err);
-
         alert("No fue posible abrir el Validador QR.");
 
       }
