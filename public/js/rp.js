@@ -190,6 +190,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 }
 
+
+console.log("Eventos de la productora:", data);
+console.table(data.events || data);
   // =========================
   // RESUMEN
   // =========================
@@ -392,13 +395,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // BUSCADOR
   // =========================
 
-  buscarRP?.addEventListener("input", () => {
-    cargarRPs();
-  });
-
-  eventoFiltro?.addEventListener("change", () => {
-    cargarRPs();
-  });
+  buscarRP?.addEventListener("input", () => { cargarRPs();});
+  eventoFiltro?.addEventListener("change", () => { cargarRPs(); });
 
 
   // UTILIDAD //
