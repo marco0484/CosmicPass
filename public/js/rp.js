@@ -190,8 +190,7 @@ async function cargarEventos() {
   }
 }
 
-console.log("Eventos de la productora:", data);
-console.table(data.events || data);
+
   // =========================
   // RESUMEN
   // =========================
