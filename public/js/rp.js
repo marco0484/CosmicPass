@@ -151,11 +151,11 @@ async function cargarEventos() {
       const option = document.createElement("option");
 
       option.value = evento.id;
-      option.textContent =
-        evento.nombre ||
-        evento.nombre_evento ||
-        evento.title ||
-        `Evento #${evento.id}`;
+     option.textContent =
+                        evento.nombre ||
+                        evento.nombre_evento ||
+                        evento.title ||
+                        `Evento #${evento.id}`;
 
       rpEvento.appendChild(option);
     });
@@ -169,11 +169,11 @@ async function cargarEventos() {
         const option = document.createElement("option");
 
         option.value = evento.id;
-        option.textContent =
-          evento.nombre ||
-          evento.nombre_evento ||
-          evento.title ||
-          `Evento #${evento.id}`;
+       option.textContent =
+  evento.nombre ||
+  evento.nombre_evento ||
+  evento.title ||
+  `Evento #${evento.id}`;
 
         eventoFiltro.appendChild(option);
       });
