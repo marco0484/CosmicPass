@@ -20,7 +20,12 @@ if (!user) {
   cerrarSesion();
 }
 
+const isOwner = String(user?.rol || "").toLowerCase() === "owner";
 const idProductora = Number(user?.id_productora) || null;
+
+if (isOwner) {
+  window.location.href = "admin.html";
+}
 
 if (!idProductora) {
   alert("Este usuario no tiene una productora asignada.");
@@ -30,10 +35,7 @@ if (!idProductora) {
 let incomeChart = null;
 let eventosGlobal = [];
 
-
-
 document.addEventListener("DOMContentLoaded", () => {
-  cargarMenuDinamico();
   configurarUsuario();
   configurarBotones();
   configurarCortesias();
@@ -54,9 +56,15 @@ function configurarUsuario() {
     user.usuario ||
     "Administrador";
 
-  const nombreProductora  = user.productora_nombre || `Productora #${idProductora}`;
-  const inicialProductora = nombreProductora.charAt(0).toUpperCase();
-  const inicialUsuario    = nombreUsuario.charAt(0).toUpperCase();
+  const nombreProductora =
+    user.productora_nombre ||
+    `Productora #${idProductora}`;
+
+  const inicialProductora =
+    nombreProductora.charAt(0).toUpperCase();
+
+  const inicialUsuario =
+    nombreUsuario.charAt(0).toUpperCase();
 
   setText("sidebarProductoraName", nombreProductora);
   setText("productoraName", nombreProductora);
@@ -74,15 +82,25 @@ function configurarBotones() {
     mostrarPendiente("Creación de eventos");
   });
 
-  document.getElementById("viewAllEvents")?.addEventListener("click", () => { mostrarPendiente("Administración de eventos");});
-  document.getElementById("chartPeriod")?.addEventListener("change", () => {cargarDashboard();});
-  document.querySelectorAll("[data-action]").forEach(button => {
+  document.getElementById("viewAllEvents")?.addEventListener("click", () => {
+    mostrarPendiente("Administración de eventos");
+  });
+
+  document.getElementById("chartPeriod")?.addEventListener("change", () => {
+    cargarDashboard();
+  });
+
+document.querySelectorAll("[data-action]").forEach(button => {
 
   button.addEventListener("click", async (event) => {
+
     event.preventDefault();
+
     const action = button.dataset.action;
 
-    /* GENERADOR  */
+    /* =========================================
+   GENERADOR
+========================================= */
 
 if (
   action === "generador" ||
@@ -189,7 +207,9 @@ window.open(
 return;
 
       } catch (err) {
+
         console.error(err);
+
         alert("No fue posible abrir el Validador QR.");
 
       }
@@ -333,100 +353,6 @@ async function cargarDashboard() {
       "ERROR CARGANDO DASHBOARD:",
       error
     );
-  }
-}
-
-async function cargarMenuDinamico() {
-  const menu = document.getElementById("dynamicMenu");
-
-  if (!menu) return;
-
-  try {
-    const response = await fetch(`${API}/admin/menus`, {
-      credentials: "include"
-    });
-
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      throw new Error(
-        data.error || "No fue posible cargar el menú."
-      );
-    }
-
-    console.log("Menú dinámico:", data);
-
-    menu.innerHTML = "";
-
-    const paginaActual =
-      window.location.pathname.split("/").pop() ||
-      "productora-admin.html";
-
-    data.menus.forEach((item) => {
-
-      const enlace = document.createElement("a");
-
-      enlace.className = "nav-link";
-
-      /*
-       * MENÚS QUE SON PÁGINAS
-       */
-      if (
-        item.ruta === "productora-admin.html" ||
-        item.ruta.endsWith(".html")
-      ) {
-
-        enlace.href = item.ruta;
-
-      } else {
-
-        /*
-         * MENÚS QUE SON ACCIONES INTERNAS
-         */
-        enlace.href = "#";
-        enlace.dataset.action = convertirRutaAAccion(item.ruta);
-      }
-
-      enlace.innerHTML = `
-        <span class="nav-icon">${item.icono || ""}</span>
-        <span>${escapeHtml(item.nombre)}</span>
-      `;
-
-      /*
-       * Página actual
-       */
-      if (item.ruta === paginaActual) {
-        enlace.classList.add("active");
-      }
-
-      /*
-       * Acción dinámica
-       */
-      enlace.addEventListener("click", async (event) => {
-
-        const action = enlace.dataset.action;
-
-        if (!action) {
-          return;
-        }
-
-        event.preventDefault();
-
-        await ejecutarAccionMenu(action);
-      });
-
-      menu.appendChild(enlace);
-    });
-
-  } catch (error) {
-
-    console.error("Error cargando menú dinámico:", error);
-
-    menu.innerHTML = `
-      <div style="padding:15px;color:#999;">
-        No fue posible cargar el menú.
-      </div>
-    `;
   }
 }
 
