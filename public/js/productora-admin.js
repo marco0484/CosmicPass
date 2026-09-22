@@ -20,12 +20,7 @@ if (!user) {
   cerrarSesion();
 }
 
-const isOwner = String(user?.rol || "").toLowerCase() === "owner";
 const idProductora = Number(user?.id_productora) || null;
-
-if (isOwner) {
-  window.location.href = "admin.html";
-}
 
 if (!idProductora) {
   alert("Este usuario no tiene una productora asignada.");
@@ -348,9 +343,12 @@ async function cargarMenuDinamico() {
   if (!menu) return;
 
   try {
-    const response = await fetch("/admin/menus", {
-      credentials: "include"
-    });
+    const response = await fetch(
+      `${API}/admin/menus`,
+      {
+        credentials: "include"
+      }
+    );
 
     const data = await response.json();
 
@@ -360,40 +358,43 @@ async function cargarMenuDinamico() {
       );
     }
 
-    console.log("Menú dinámico:", data);
+    console.log("🔥 MENÚ DINÁMICO RECIBIDO:", data);
 
     menu.innerHTML = "";
 
     data.menus.forEach((item) => {
+
       const enlace = document.createElement("a");
 
       enlace.href = item.ruta;
       enlace.className = "nav-link";
 
       enlace.innerHTML = `
-        <span class="nav-icon">${item.icono || ""}</span>
-        <span>${item.nombre}</span>
+        <span class="nav-icon">
+          ${item.icono || ""}
+        </span>
+
+        <span>
+          ${item.nombre}
+        </span>
       `;
-
-      /*
-       * Marcar la página actual
-       */
-      const paginaActual =
-        window.location.pathname.split("/").pop() ||
-        "productora-admin.html";
-
-      if (item.ruta === paginaActual) {
-        enlace.classList.add("active");
-      }
 
       menu.appendChild(enlace);
     });
 
   } catch (error) {
-    console.error("Error cargando menú dinámico:", error);
+
+    console.error(
+      "❌ Error cargando menú dinámico:",
+      error
+    );
 
     menu.innerHTML = `
-      <div style="padding: 15px; color: #999;">
+      <div style="
+        padding:15px;
+        color:#999;
+        font-size:13px;
+      ">
         No fue posible cargar el menú.
       </div>
     `;
