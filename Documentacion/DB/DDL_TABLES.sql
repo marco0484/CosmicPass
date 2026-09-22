@@ -206,3 +206,13 @@ CREATE TABLE   qr_valida_tickets (
 	id_productora int8 NULL,
 	CONSTRAINT qr_valida_tickets_pkey PRIMARY KEY (id)
 );
+
+/* Permisos por rol */
+
+CREATE TABLE public.cat_roles_menus (
+    id bigserial PRIMARY KEY,
+    rol varchar(50) NOT NULL,
+    menu_id bigint NOT NULL REFERENCES public.cat_menus(id) ON DELETE CASCADE,
+    activo boolean NOT NULL DEFAULT true,
+    UNIQUE (rol, menu_id)
+);

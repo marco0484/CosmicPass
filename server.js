@@ -1968,6 +1968,68 @@ if (!esOwner && !esAdminProductora) {
   }
 });
 
+
+app.get("/admin/menus", requerirSesion, async (req, res) => {
+  try {
+    const rol = String(req.usuario?.rol || "").trim().toLowerCase();
+
+    if (!rol) {
+      return res.status(401).json({
+        success: false,
+        error: "Rol de usuario no encontrado."
+      });
+    }
+
+    const { data, error } = await supabase
+      .from("cat_roles_menus")
+      .select(`
+        menu_id,
+        activo,
+        cat_menus (
+          id,
+          nombre,
+          ruta,
+          icono,
+          orden,
+          activo
+        )
+      `)
+      .eq("rol", rol)
+      .eq("activo", true);
+
+    if (error) {
+      console.error("Error cargando menús:", error);
+
+      return res.status(500).json({
+        success: false,
+        error: "No fue posible cargar los menús."
+      });
+    }
+
+    const menus = (data || [])
+      .filter(item =>
+        item.cat_menus &&
+        item.cat_menus.activo === true
+      )
+      .map(item => item.cat_menus)
+      .sort((a, b) => a.orden - b.orden);
+
+    return res.json({
+      success: true,
+      rol,
+      menus
+    });
+
+  } catch (error) {
+    console.error("ERROR /admin/menus:", error);
+
+    return res.status(500).json({
+      success: false,
+      error: "Error interno cargando menús."
+    });
+  }
+});
+
 app.get("/admin/rps/resumen", requerirSesion, async (req, res) => {
   try {
 
