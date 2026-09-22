@@ -466,12 +466,10 @@ option.textContent =
       await cargarRPs();
       await cargarResumen();
 
-      // Dejamos unos segundos para que
-      // el usuario pueda ver las credenciales.
 
       setTimeout(() => {
         cerrarModal();
-      }, 5000);
+      }, 10000);
 
     } catch (error) {
 
