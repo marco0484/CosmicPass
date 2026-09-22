@@ -35,6 +35,8 @@ if (!idProductora) {
 let incomeChart = null;
 let eventosGlobal = [];
 
+
+
 document.addEventListener("DOMContentLoaded", () => {
   cargarMenuDinamico();
   configurarUsuario();
@@ -84,7 +86,7 @@ function configurarBotones() {
   button.addEventListener("click", async (event) => {
     event.preventDefault();
     const action = button.dataset.action;
-    
+
     /* GENERADOR  */
 
 if (
@@ -260,7 +262,44 @@ console.log("Módulo:", modulo);
 
 }
 
+async function cargarMenuDinamico() {
+  try {
+    const response = await fetch("/api/menus", {
+      credentials: "include"
+    });
 
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "No fue posible cargar el menú.");
+    }
+
+    console.log("Menú recibido:", data);
+
+    const menu = document.getElementById("dynamicMenu");
+
+    if (!menu) return;
+
+    menu.innerHTML = "";
+
+    data.menus.forEach((item) => {
+      const enlace = document.createElement("a");
+
+      enlace.href = item.ruta;
+      enlace.className = "nav-link";
+
+      enlace.innerHTML = `
+        <span class="nav-icon">${item.icono || ""}</span>
+        <span>${item.nombre}</span>
+      `;
+
+      menu.appendChild(enlace);
+    });
+
+  } catch (error) {
+    console.error("Error cargando menú:", error);
+  }
+}
 
 async function cargarDashboard() {
   try {
