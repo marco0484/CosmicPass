@@ -2033,18 +2033,13 @@ app.get("/admin/menus", requerirSesion, async (req, res) => {
 app.get("/admin/rps/resumen", requerirSesion, async (req, res) => {
   try {
 
-    const rol =
-      String(req.usuario.rol || "").toLowerCase();
-
-    const idProductoraSesion =
-      Number(req.usuario.id_productora) || null;
-
+    const rol = String(req.usuario.rol || "").toLowerCase();
+    const idProductoraSesion = Number(req.usuario.id_productora) || null;
     const esOwner =
       rol === "owner" ||
       (rol === "admin" && !idProductoraSesion);
 
-    const esAdminProductora =
-      rol === "admin" && Boolean(idProductoraSesion);
+    const esAdminProductora = rol === "admin" && Boolean(idProductoraSesion);
 
     if (!esOwner && !esAdminProductora) {
       return res.status(403).json({
@@ -2057,8 +2052,7 @@ app.get("/admin/rps/resumen", requerirSesion, async (req, res) => {
 
     if (esOwner) {
 
-      idProductora =
-        Number(req.query.id_productora);
+      idProductora = Number(req.query.id_productora);
 
       if (
         !Number.isInteger(idProductora) ||
@@ -2076,9 +2070,7 @@ app.get("/admin/rps/resumen", requerirSesion, async (req, res) => {
         idProductoraSesion;
     }
 
-    /* ============================
-       ASIGNACIONES
-    ============================ */
+    /*  ASIGNACIONES  */
 
     const {
       data: asignaciones,
@@ -2220,9 +2212,7 @@ app.get("/admin/rps/resumen", requerirSesion, async (req, res) => {
     });
   }
 });
-    /* ============================
-       RPS
-    ============================ */
+    /*  RPS  */
 
     const {
       data: rps,
@@ -2242,15 +2232,10 @@ app.get("/admin/rps/resumen", requerirSesion, async (req, res) => {
       throw rpsError;
     }
 
-    /* ============================
-       TICKETS VENDIDOS POR RP
-    ============================ */
+    /* TICKETS VENDIDOS POR RP  */
 
-    const rpIds =
-      (rps || []).map(rp => rp.id);
-
+    const rpIds = (rps || []).map(rp => rp.id);
     let tickets = [];
-
     if (rpIds.length > 0) {
 
       const {
@@ -2273,9 +2258,7 @@ app.get("/admin/rps/resumen", requerirSesion, async (req, res) => {
       tickets = ticketsData || [];
     }
 
-    /* ============================
-       ARMAR RESUMEN
-    ============================ */
+    /* ARMAR RESUMEN  */
 
     const resumen =
       (rps || []).map(rp => {
