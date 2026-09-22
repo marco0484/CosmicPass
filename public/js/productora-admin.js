@@ -36,6 +36,7 @@ let incomeChart = null;
 let eventosGlobal = [];
 
 document.addEventListener("DOMContentLoaded", () => {
+  cargarMenuDinamico();
   configurarUsuario();
   configurarBotones();
   configurarCortesias();
@@ -56,15 +57,9 @@ function configurarUsuario() {
     user.usuario ||
     "Administrador";
 
-  const nombreProductora =
-    user.productora_nombre ||
-    `Productora #${idProductora}`;
-
-  const inicialProductora =
-    nombreProductora.charAt(0).toUpperCase();
-
-  const inicialUsuario =
-    nombreUsuario.charAt(0).toUpperCase();
+  const nombreProductora  = user.productora_nombre || `Productora #${idProductora}`;
+  const inicialProductora = nombreProductora.charAt(0).toUpperCase();
+  const inicialUsuario    = nombreUsuario.charAt(0).toUpperCase();
 
   setText("sidebarProductoraName", nombreProductora);
   setText("productoraName", nombreProductora);
@@ -82,22 +77,14 @@ function configurarBotones() {
     mostrarPendiente("Creación de eventos");
   });
 
-  document.getElementById("viewAllEvents")?.addEventListener("click", () => {
-    mostrarPendiente("Administración de eventos");
-  });
-
-  document.getElementById("chartPeriod")?.addEventListener("change", () => {
-    cargarDashboard();
-  });
-
-document.querySelectorAll("[data-action]").forEach(button => {
+  document.getElementById("viewAllEvents")?.addEventListener("click", () => { mostrarPendiente("Administración de eventos");});
+  document.getElementById("chartPeriod")?.addEventListener("change", () => {cargarDashboard();});
+  document.querySelectorAll("[data-action]").forEach(button => {
 
   button.addEventListener("click", async (event) => {
-
     event.preventDefault();
-
     const action = button.dataset.action;
-
+    
     /* GENERADOR  */
 
 if (
@@ -273,6 +260,8 @@ console.log("Módulo:", modulo);
 
 }
 
+
+
 async function cargarDashboard() {
   try {
     const periodo =
@@ -349,6 +338,65 @@ async function cargarDashboard() {
       "ERROR CARGANDO DASHBOARD:",
       error
     );
+  }
+}
+
+
+async function cargarMenuDinamico() {
+  const menu = document.getElementById("dynamicMenu");
+
+  if (!menu) return;
+
+  try {
+    const response = await fetch("/admin/menus", {
+      credentials: "include"
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(
+        data.error || "No fue posible cargar el menú."
+      );
+    }
+
+    console.log("Menú dinámico:", data);
+
+    menu.innerHTML = "";
+
+    data.menus.forEach((item) => {
+      const enlace = document.createElement("a");
+
+      enlace.href = item.ruta;
+      enlace.className = "nav-link";
+
+      enlace.innerHTML = `
+        <span class="nav-icon">${item.icono || ""}</span>
+        <span>${item.nombre}</span>
+      `;
+
+      /*
+       * Marcar la página actual
+       */
+      const paginaActual =
+        window.location.pathname.split("/").pop() ||
+        "productora-admin.html";
+
+      if (item.ruta === paginaActual) {
+        enlace.classList.add("active");
+      }
+
+      menu.appendChild(enlace);
+    });
+
+  } catch (error) {
+    console.error("Error cargando menú dinámico:", error);
+
+    menu.innerHTML = `
+      <div style="padding: 15px; color: #999;">
+        No fue posible cargar el menú.
+      </div>
+    `;
   }
 }
 
