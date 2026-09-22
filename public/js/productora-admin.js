@@ -30,8 +30,6 @@ if (!idProductora) {
 let incomeChart = null;
 let eventosGlobal = [];
 
-
-
 document.addEventListener("DOMContentLoaded", () => {
   cargarMenuDinamico();
   configurarUsuario();
@@ -338,11 +336,13 @@ async function cargarDashboard() {
 
 
 async function cargarMenuDinamico() {
+
   const menu = document.getElementById("dynamicMenu");
 
   if (!menu) return;
 
   try {
+
     const response = await fetch(
       `${API}/admin/menus`,
       {
@@ -358,7 +358,7 @@ async function cargarMenuDinamico() {
       );
     }
 
-    console.log("🔥 MENÚ DINÁMICO RECIBIDO:", data);
+    console.log("Menú recibido:", data);
 
     menu.innerHTML = "";
 
@@ -366,7 +366,6 @@ async function cargarMenuDinamico() {
 
       const enlace = document.createElement("a");
 
-      enlace.href = item.ruta;
       enlace.className = "nav-link";
 
       enlace.innerHTML = `
@@ -379,26 +378,309 @@ async function cargarMenuDinamico() {
         </span>
       `;
 
+      /*
+      ==========================================
+      PÁGINAS REALES
+      ==========================================
+      */
+
+      if (item.ruta === "productora-admin.html") {
+
+        enlace.href = "productora-admin.html";
+
+      }
+
+      else if (item.ruta === "rp.html") {
+
+        enlace.href = "rp.html";
+
+      }
+
+      else if (item.ruta === "estacionamiento.html") {
+
+        enlace.href = "estacionamiento.html";
+
+      }
+
+      /*
+      ==========================================
+      MÓDULOS INTERNOS
+      ==========================================
+      */
+
+      else if (item.ruta === "eventos.html") {
+
+        enlace.href = "#";
+
+        enlace.dataset.section = "eventos";
+
+      }
+
+      else if (item.ruta === "accesos.html") {
+
+        enlace.href = "#";
+
+        enlace.dataset.action = "tickets";
+
+      }
+
+      else if (item.ruta === "ventas.html") {
+
+        enlace.href = "#";
+
+        enlace.dataset.action = "ventas";
+
+      }
+
+      /*
+      ==========================================
+      ACCIONES
+      ==========================================
+      */
+
+      else if (item.ruta === "activar-cortesias") {
+
+        enlace.href = "#";
+
+        enlace.dataset.action = "cortesia";
+
+      }
+
+      else if (item.ruta === "generador-boletos") {
+
+        enlace.href = "#";
+
+        enlace.dataset.action = "generador";
+
+      }
+
+      else if (item.ruta === "validar-qr") {
+
+        enlace.href = "#";
+
+        enlace.dataset.action = "scanner";
+
+      }
+
       menu.appendChild(enlace);
+
     });
+
+    /*
+    ==========================================
+    ACTIVAR EVENTOS DE LOS MENÚS DINÁMICOS
+    ==========================================
+    */
+
+    menu.querySelectorAll("[data-section]")
+      .forEach(link => {
+
+        link.addEventListener("click", (event) => {
+
+          event.preventDefault();
+
+          const modulo =
+            link.dataset.section;
+
+          mostrarModulo(modulo);
+
+        });
+
+      });
+
+
+    menu.querySelectorAll("[data-action]")
+      .forEach(button => {
+
+        button.addEventListener("click", async (event) => {
+
+          event.preventDefault();
+
+          const action =
+            button.dataset.action;
+
+          /*
+          Generador
+          */
+
+          if (
+            action === "generador"
+          ) {
+
+            const response =
+              await fetch(
+                `${API}/generator/token`,
+                {
+                  method: "POST",
+                  credentials: "include",
+                  headers: {
+                    "Content-Type":
+                      "application/json"
+                  }
+                }
+              );
+
+            const data =
+              await response.json();
+
+            if (
+              !response.ok ||
+              !data.success ||
+              !data.token
+            ) {
+
+              alert(
+                data.error ||
+                "No fue posible abrir el generador."
+              );
+
+              return;
+            }
+
+            window.open(
+              `https://generador-ok.vercel.app/?token=${data.token}`,
+              "_blank"
+            );
+
+            return;
+          }
+
+
+          /*
+          Scanner
+          */
+
+          if (
+            action === "scanner"
+          ) {
+
+            try {
+
+              const response =
+                await fetch(
+                  `${API}/scanner/token`,
+                  {
+                    method: "POST",
+                    headers: {
+                      "Content-Type":
+                        "application/json"
+                    },
+                    body: JSON.stringify({
+                      user_id: user.id
+                    })
+                  }
+                );
+
+              const data =
+                await response.json();
+
+              if (!data.success) {
+
+                alert(
+                  data.error ||
+                  "No fue posible abrir el Validador QR."
+                );
+
+                return;
+              }
+
+              window.open(
+                `https://validador-ok.vercel.app/?token=${data.token}`,
+                "_blank"
+              );
+
+            } catch (error) {
+
+              console.error(error);
+
+              alert(
+                "No fue posible abrir el Validador QR."
+              );
+
+            }
+
+            return;
+          }
+
+
+          /*
+          Cortesías
+          */
+
+          if (
+            action === "cortesia"
+          ) {
+
+            const boton =
+              document.getElementById(
+                "activarCortesiasBtn"
+              );
+
+            if (boton) {
+
+              boton.click();
+
+            } else {
+
+              console.warn(
+                "No existe activarCortesiasBtn"
+              );
+
+              mostrarPendiente(
+                "Generación de cortesías"
+              );
+
+            }
+
+            return;
+          }
+
+
+          /*
+          Tickets / Accesos
+          */
+
+          if (
+            action === "tickets"
+          ) {
+
+            mostrarPendiente(
+              "Administración de accesos"
+            );
+
+            return;
+          }
+
+
+          /*
+          Ventas
+          */
+
+          if (
+            action === "ventas"
+          ) {
+
+            mostrarPendiente(
+              "Ventas"
+            );
+
+            return;
+          }
+
+        });
+
+      });
+
 
   } catch (error) {
 
     console.error(
-      "❌ Error cargando menú dinámico:",
+      "Error cargando menú:",
       error
     );
 
-    menu.innerHTML = `
-      <div style="
-        padding:15px;
-        color:#999;
-        font-size:13px;
-      ">
-        No fue posible cargar el menú.
-      </div>
-    `;
   }
+
 }
 
 async function cargarEventos() {
