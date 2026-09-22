@@ -336,12 +336,13 @@ async function cargarDashboard() {
   }
 }
 
+async function cargarMenuDinamico() {
+  const menu = document.getElementById("dynamicMenu");
 
-async function cargarMenuDinamico() { const menu = document.getElementById("dynamicMenu");
   if (!menu) return;
 
   try {
-    const response = await fetch("/admin/menus", {
+    const response = await fetch(`${API}/admin/menus`, {
       credentials: "include"
     });
 
@@ -357,36 +358,72 @@ async function cargarMenuDinamico() { const menu = document.getElementById("dyna
 
     menu.innerHTML = "";
 
+    const paginaActual =
+      window.location.pathname.split("/").pop() ||
+      "productora-admin.html";
+
     data.menus.forEach((item) => {
+
       const enlace = document.createElement("a");
 
-      enlace.href = item.ruta;
       enlace.className = "nav-link";
+
+      /*
+       * MENÚS QUE SON PÁGINAS
+       */
+      if (
+        item.ruta === "productora-admin.html" ||
+        item.ruta.endsWith(".html")
+      ) {
+
+        enlace.href = item.ruta;
+
+      } else {
+
+        /*
+         * MENÚS QUE SON ACCIONES INTERNAS
+         */
+        enlace.href = "#";
+        enlace.dataset.action = convertirRutaAAccion(item.ruta);
+      }
 
       enlace.innerHTML = `
         <span class="nav-icon">${item.icono || ""}</span>
-        <span>${item.nombre}</span>
+        <span>${escapeHtml(item.nombre)}</span>
       `;
 
       /*
-       * Marcar la página actual
+       * Página actual
        */
-      const paginaActual =
-        window.location.pathname.split("/").pop() ||
-        "productora-admin.html";
-
       if (item.ruta === paginaActual) {
         enlace.classList.add("active");
       }
+
+      /*
+       * Acción dinámica
+       */
+      enlace.addEventListener("click", async (event) => {
+
+        const action = enlace.dataset.action;
+
+        if (!action) {
+          return;
+        }
+
+        event.preventDefault();
+
+        await ejecutarAccionMenu(action);
+      });
 
       menu.appendChild(enlace);
     });
 
   } catch (error) {
+
     console.error("Error cargando menú dinámico:", error);
 
     menu.innerHTML = `
-      <div style="padding: 15px; color: #999;">
+      <div style="padding:15px;color:#999;">
         No fue posible cargar el menú.
       </div>
     `;
