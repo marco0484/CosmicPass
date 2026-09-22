@@ -151,11 +151,9 @@ async function cargarEventos() {
       const option = document.createElement("option");
 
       option.value = evento.id;
-     option.textContent =
-                        evento.nombre ||
-                        evento.nombre_evento ||
-                        evento.title ||
-                        `Evento #${evento.id}`;
+option.textContent =
+  evento.name ||
+  `Evento #${evento.id}`;
 
       rpEvento.appendChild(option);
     });
@@ -169,10 +167,8 @@ async function cargarEventos() {
         const option = document.createElement("option");
 
         option.value = evento.id;
-       option.textContent =
-  evento.nombre ||
-  evento.nombre_evento ||
-  evento.title ||
+option.textContent =
+  evento.name ||
   `Evento #${evento.id}`;
 
         eventoFiltro.appendChild(option);
@@ -349,45 +345,159 @@ async function cargarEventos() {
   rpForm?.addEventListener("submit", async (e) => {
     e.preventDefault();
 
+    if (!rpMessage) return;
+
     rpMessage.textContent = "";
-    rpMessage.className = "";
+    rpMessage.className = "modal-message";
 
     const nombre = rpNombre?.value.trim();
     const telefono = rpTelefono?.value.trim();
     const instagram = rpInstagram?.value.trim();
+    const idEvento = rpEvento?.value;
 
-    /*
-      IMPORTANTE:
-
-      Tu tabla cosmic_usuarios actualmente NO tiene:
-      - telefono
-      - instagram
-
-      Tampoco sabemos todavía cómo quieres generar
-      usuario y contraseña desde este formulario.
-
-      Por ahora detenemos el envío para no crear
-      registros incompletos.
-    */
+    // =========================
+    // VALIDACIONES
+    // =========================
 
     if (!nombre) {
       rpMessage.textContent = "Escribe el nombre del RP.";
-      rpMessage.className = "error";
+      rpMessage.classList.add("error");
       return;
     }
 
-    rpMessage.textContent =
-      "El formulario está conectado, pero todavía falta definir usuario y contraseña del RP.";
-    rpMessage.className = "error";
+    if (!idEvento) {
+      rpMessage.textContent = "Selecciona un evento.";
+      rpMessage.classList.add("error");
+      return;
+    }
 
-    console.log({
-      nombre,
-      telefono,
-      instagram,
-      evento: rpEvento?.value || null,
-      idProductora
-    });
+    // =========================
+    // BOTÓN
+    // =========================
+
+    const submitBtn =
+      rpForm.querySelector(".modal-submit");
+
+    const textoOriginal =
+      submitBtn?.textContent || "Guardar RP";
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Creando RP...";
+    }
+
+    try {
+
+      // =========================
+      // CREAR RP
+      // =========================
+
+      const response = await fetch(
+        `${API}/admin/rps`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json"
+          },
+
+          credentials: "include",
+
+          body: JSON.stringify({
+            nombre,
+            telefono,
+            instagram
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      console.log("Respuesta crear RP:", data);
+
+      if (!response.ok || !data.ok) {
+        throw new Error(
+          data.error ||
+          "No fue posible crear el RP."
+        );
+      }
+
+      // =========================
+      // ÉXITO
+      // =========================
+
+      const usuario =
+        data.credenciales?.usuario ||
+        data.rp?.usuario ||
+        "";
+
+      const password =
+        data.credenciales?.password_temporal ||
+        "";
+
+      rpMessage.className =
+        "modal-message success";
+
+      rpMessage.innerHTML = `
+        <strong>✓ RP creado correctamente</strong>
+
+        <br><br>
+
+        <strong>Usuario:</strong>
+        ${escapeHTML(usuario)}
+
+        <br>
+
+        <strong>Contraseña temporal:</strong>
+        ${escapeHTML(password)}
+
+        <br><br>
+
+        <small>
+          Guarda estas credenciales. La contraseña se genera
+          únicamente al crear el RP.
+        </small>
+      `;
+
+      // =========================
+      // ACTUALIZAR LISTADO
+      // =========================
+
+      await cargarRPs();
+      await cargarResumen();
+
+      // Dejamos unos segundos para que
+      // el usuario pueda ver las credenciales.
+
+      setTimeout(() => {
+        cerrarModal();
+      }, 5000);
+
+    } catch (error) {
+
+      console.error(
+        "Error creando RP:",
+        error
+      );
+
+      rpMessage.className =
+        "modal-message error";
+
+      rpMessage.textContent =
+        error.message ||
+        "No fue posible crear el RP.";
+
+    } finally {
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = textoOriginal;
+      }
+
+    }
   });
+
+
 
   // =========================
   // BUSCADOR

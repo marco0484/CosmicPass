@@ -1621,70 +1621,131 @@ app.post("/admin/rps", requerirSesion, async (req, res) => {
   try {
     const usuarioSesion = req.usuario;
 
-    if (
-      usuarioSesion.rol !== "owner" &&
-      usuarioSesion.rol !== "admin"
-    ) {
+    const rol = String(usuarioSesion.rol || "").toLowerCase();
+    const idProductora = Number(usuarioSesion.id_productora);
+
+    // =========================
+    // PERMISOS
+    // =========================
+
+    if (rol !== "owner" && rol !== "admin") {
       return res.status(403).json({
         ok: false,
         error: "No tienes permisos para crear RP."
       });
     }
 
-    const { nombre, usuario, password } = req.body;
-
-    if (!nombre || !usuario || !password) {
-      return res.status(400).json({
-        ok: false,
-        error: "Nombre, usuario y contraseña son obligatorios."
-      });
-    }
-
-    const idProductora = Number(usuarioSesion.id_productora);
-
-    if (!idProductora) {
+    if (!Number.isInteger(idProductora) || idProductora <= 0) {
       return res.status(400).json({
         ok: false,
         error: "No se encontró la productora."
       });
     }
 
-    const usuarioNormalizado = String(usuario)
-      .trim()
-      .toLowerCase();
+    // =========================
+    // DATOS DEL FORMULARIO
+    // =========================
 
-    // Verificar que no exista
-    const { data: existente, error: errorExistente } =
-      await supabase
-        .from("cosmic_usuarios")
-        .select("id")
-        .eq("usuario", usuarioNormalizado)
-        .maybeSingle();
+    const {
+      nombre,
+      telefono,
+      instagram
+    } = req.body;
 
-    if (errorExistente) {
-      console.error("Error verificando usuario RP:", errorExistente);
-
-      return res.status(500).json({
+    if (!nombre || !String(nombre).trim()) {
+      return res.status(400).json({
         ok: false,
-        error: "No fue posible validar el usuario."
+        error: "El nombre del RP es obligatorio."
       });
     }
 
-    if (existente) {
-      return res.status(409).json({
+    const nombreLimpio = String(nombre).trim();
+
+    // =========================
+    // GENERAR USUARIO
+    // =========================
+
+    const baseUsuario = nombreLimpio
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, ".")
+      .replace(/^\.+|\.+$/g, "");
+
+    if (!baseUsuario) {
+      return res.status(400).json({
         ok: false,
-        error: "Ese usuario ya existe."
+        error: "No fue posible generar el usuario."
       });
     }
 
-    // Generar password hash
-    const { data: passwordHash, error: hashError } =
-      await supabase.rpc("generar_password_hash", {
-        p_password: String(password)
-      });
+    let usuarioNormalizado = baseUsuario;
+    let contador = 1;
+
+    // =========================
+    // EVITAR DUPLICADOS
+    // =========================
+
+    while (true) {
+
+      const { data: existente, error: errorExistente } =
+        await supabase
+          .from("cosmic_usuarios")
+          .select("id")
+          .eq("usuario", usuarioNormalizado)
+          .maybeSingle();
+
+      if (errorExistente) {
+        console.error(
+          "Error verificando usuario RP:",
+          errorExistente
+        );
+
+        return res.status(500).json({
+          ok: false,
+          error: "No fue posible validar el usuario."
+        });
+      }
+
+      if (!existente) {
+        break;
+      }
+
+      contador++;
+
+      usuarioNormalizado =
+        `${baseUsuario}${contador}`;
+    }
+
+    // =========================
+    // GENERAR PASSWORD
+    // =========================
+
+    const passwordTemporal =
+      `CP-${Math.random()
+        .toString(36)
+        .substring(2, 8)
+        .toUpperCase()}`;
+
+    // =========================
+    // HASH
+    // =========================
+
+    const {
+      data: passwordHash,
+      error: hashError
+    } = await supabase.rpc(
+      "generar_password_hash",
+      {
+        p_password: passwordTemporal
+      }
+    );
 
     if (hashError) {
-      console.error("Error generando password hash:", hashError);
+      console.error(
+        "Error generando password hash:",
+        hashError
+      );
 
       return res.status(500).json({
         ok: false,
@@ -1692,44 +1753,138 @@ app.post("/admin/rps", requerirSesion, async (req, res) => {
       });
     }
 
-    // Crear RP
-    const { data: nuevoRP, error: errorRP } =
-      await supabase
-        .from("cosmic_usuarios")
-        .insert({
-          usuario: usuarioNormalizado,
-          nombre: String(nombre).trim(),
-          rol: "rp",
-          activo: true,
-          id_productora: idProductora,
-          password_hash: passwordHash
-        })
-        .select(`
-          id,
-          usuario,
-          nombre,
-          rol,
-          activo,
-          id_productora
-        `)
-        .single();
+    // =========================
+    // CREAR USUARIO
+    // =========================
 
-    if (errorRP) {
-      console.error("Error creando RP:", errorRP);
+    const {
+      data: nuevoUsuario,
+      error: usuarioError
+    } = await supabase
+      .from("cosmic_usuarios")
+      .insert({
+        usuario: usuarioNormalizado,
+        nombre: nombreLimpio,
+        rol: "rp",
+        activo: true,
+        id_productora: idProductora,
+        password_hash: passwordHash
+      })
+      .select(`
+        id,
+        usuario,
+        nombre,
+        rol,
+        activo,
+        id_productora
+      `)
+      .single();
+
+    if (usuarioError) {
+      console.error(
+        "Error creando usuario RP:",
+        usuarioError
+      );
 
       return res.status(500).json({
         ok: false,
-        error: "No fue posible crear el RP."
+        error: "No fue posible crear el usuario del RP."
       });
     }
 
+    // =========================
+    // CREAR CAT_RPS
+    // =========================
+
+    const {
+      data: nuevoRP,
+      error: rpError
+    } = await supabase
+      .from("cat_rps")
+      .insert({
+        id_rp_user: nuevoUsuario.id,
+        nombre: nombreLimpio,
+        telefono: telefono
+          ? String(telefono).trim()
+          : null,
+        instagram: instagram
+          ? String(instagram).trim()
+          : null,
+        id_productora: idProductora,
+        activo: true,
+        created_by: usuarioSesion.id
+      })
+      .select(`
+        id,
+        id_rp_user,
+        nombre,
+        telefono,
+        instagram,
+        id_productora,
+        activo
+      `)
+      .single();
+
+    // =========================
+    // SI FALLA CAT_RPS
+    // =========================
+
+    if (rpError) {
+
+      console.error(
+        "Error creando cat_rps:",
+        rpError
+      );
+
+      // Eliminamos el usuario creado
+      // para no dejar un RP incompleto.
+
+      await supabase
+        .from("cosmic_usuarios")
+        .delete()
+        .eq("id", nuevoUsuario.id);
+
+      return res.status(500).json({
+        ok: false,
+        error: "No fue posible crear el perfil del RP."
+      });
+    }
+
+    // =========================
+    // RESPUESTA
+    // =========================
+
     return res.status(201).json({
+
       ok: true,
-      rp: nuevoRP
+
+      message: "RP creado correctamente.",
+
+      rp: {
+        id: nuevoRP.id,
+        id_rp_user: nuevoUsuario.id,
+        nombre: nuevoRP.nombre,
+        telefono: nuevoRP.telefono,
+        instagram: nuevoRP.instagram,
+        usuario: nuevoUsuario.usuario,
+        rol: nuevoUsuario.rol,
+        activo: nuevoUsuario.activo,
+        id_productora: nuevoUsuario.id_productora
+      },
+
+      credenciales: {
+        usuario: nuevoUsuario.usuario,
+        password_temporal: passwordTemporal
+      }
+
     });
 
   } catch (error) {
-    console.error("Error POST /admin/rps:", error);
+
+    console.error(
+      "ERROR POST /admin/rps:",
+      error
+    );
 
     return res.status(500).json({
       ok: false,
