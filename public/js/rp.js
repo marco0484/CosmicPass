@@ -371,15 +371,10 @@ option.textContent =
       return;
     }
 
-    // =========================
     // BOTÓN
-    // =========================
 
-    const submitBtn =
-      rpForm.querySelector(".modal-submit");
-
-    const textoOriginal =
-      submitBtn?.textContent || "Guardar RP";
+    const submitBtn     = rpForm.querySelector(".modal-submit");
+    const textoOriginal = submitBtn?.textContent || "Guardar RP";
 
     if (submitBtn) {
       submitBtn.disabled = true;
@@ -440,28 +435,21 @@ option.textContent =
 
       rpMessage.innerHTML = `
         <strong>✓ RP creado correctamente</strong>
-
-        <br><br>
-
+        <br>
+        <br>
         <strong>Usuario:</strong>
         ${escapeHTML(usuario)}
-
         <br>
-
         <strong>Contraseña temporal:</strong>
         ${escapeHTML(password)}
-
-        <br><br>
-
-        <small>
-          Guarda estas credenciales. La contraseña se genera
-          únicamente al crear el RP.
-        </small>
+        <br>
+        <br>
+        <small> Guarda estas credenciales. </small>
       `;
 
-      // =========================
+      
       // ACTUALIZAR LISTADO
-      // =========================
+
 
       await cargarRPs();
       await cargarResumen();
@@ -478,12 +466,8 @@ option.textContent =
         error
       );
 
-      rpMessage.className =
-        "modal-message error";
-
-      rpMessage.textContent =
-        error.message ||
-        "No fue posible crear el RP.";
+      rpMessage.className   = "modal-message error";
+      rpMessage.textContent = error.message || "No fue posible crear el RP.";
 
     } finally {
 
@@ -495,11 +479,7 @@ option.textContent =
     }
   });
 
-
-
-  // =========================
   // BUSCADOR
-  // =========================
 
   buscarRP?.addEventListener("input", () => { cargarRPs();});
   eventoFiltro?.addEventListener("change", () => { cargarRPs(); });
