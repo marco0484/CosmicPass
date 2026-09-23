@@ -23,6 +23,59 @@ if (!user) {
 const isOwner = String(user?.rol || "").toLowerCase() === "owner";
 const idProductora = Number(user?.id_productora) || null;
 
+async function cargarMenus() {
+  const menu = document.getElementById("dynamicMenu");
+
+  if (!menu) return;
+
+  try {
+    const res = await fetch(`${API}/admin/menus`, {
+      credentials: "include"
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      throw new Error(data.error || "No fue posible cargar los menús.");
+    }
+
+    const menus = Array.isArray(data.menus)
+      ? data.menus
+          .filter(item => item.activo)
+          .sort((a, b) => Number(a.orden || 0) - Number(b.orden || 0))
+      : [];
+
+    menu.innerHTML = "";
+
+    menus.forEach(item => {
+      const link = document.createElement("a");
+
+      link.href = item.ruta || "#";
+      link.className = "nav-link";
+
+      if (item.ruta === "productora-admin.html") {
+        link.classList.add("active");
+        link.dataset.section = "dashboard";
+      }
+
+      link.innerHTML = `
+        <span class="nav-icon">${item.icono || "•"}</span>
+        <span>${item.nombre}</span>
+      `;
+
+      menu.appendChild(link);
+    });
+
+  } catch (error) {
+    console.error("ERROR CARGANDO MENÚS:", error);
+    menu.innerHTML = `
+      <div class="menu-error">
+        No fue posible cargar el menú.
+      </div>
+    `;
+  }
+}
+
 if (!isOwner && !idProductora) {
   alert("Este usuario no tiene una productora asignada.");
   cerrarSesion();
@@ -38,6 +91,7 @@ document.addEventListener("DOMContentLoaded", () => {
   crearGrafica();
   cargarDashboard();
   cargarEventos();
+  cargarMenus();
 });
 
 function cerrarSesion() {
@@ -45,6 +99,119 @@ function cerrarSesion() {
   localStorage.removeItem("cosmic_user");
   window.location.href = "login.html";
 }
+
+async function cargarMenus() {
+  const menu = document.getElementById("dynamicMenu");
+
+  if (!menu) return;
+
+  try {
+    const res = await fetch(`${API}/admin/menus`, {
+      credentials: "include"
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(data.error || "No fue posible cargar los menús.");
+    }
+
+    const menus = Array.isArray(data)
+      ? data
+      : Array.isArray(data.menus)
+        ? data.menus
+        : [];
+
+    menu.innerHTML = "";
+
+    menus.forEach(item => {
+      const a = document.createElement("a");
+
+      a.href = item.href || "#";
+      a.className = "nav-link";
+
+      if (item.active) {
+        a.classList.add("active");
+      }
+
+      if (item.id) {
+        a.dataset.menuId = item.id;
+      }
+
+      if (item.section) {
+        a.dataset.section = item.section;
+      }
+
+      if (item.action) {
+        a.dataset.action = item.action;
+      }
+
+      if (item.href && !item.href.startsWith("#")) {
+        a.href = item.href;
+      }
+
+      a.innerHTML = `
+        <span class="nav-icon">${item.icon || "•"}</span>
+        <span>${item.nombre || item.label || item.name || "Módulo"}</span>
+      `;
+
+      menu.appendChild(a);
+    });
+
+    configurarMenu();
+
+  } catch (error) {
+    console.error("ERROR CARGANDO MENÚS:", error);
+    menu.innerHTML = `
+      <div class="menu-error">
+        No fue posible cargar el menú.
+      </div>
+    `;
+  }
+}
+
+function configurarMenu() {
+  document.querySelectorAll("#dynamicMenu a").forEach(link => {
+
+    link.addEventListener("click", event => {
+
+      const modulo = link.dataset.section;
+      const accion = link.dataset.action;
+
+      /*
+       * Si es un enlace real, dejamos que navegue.
+       */
+      if (
+        link.getAttribute("href") &&
+        link.getAttribute("href") !== "#"
+      ) {
+        return;
+      }
+
+      event.preventDefault();
+
+      document
+        .querySelectorAll("#dynamicMenu a")
+        .forEach(item => item.classList.remove("active"));
+
+      link.classList.add("active");
+
+      if (modulo) {
+        mostrarModulo(modulo);
+      }
+
+      if (accion === "generador") {
+        abrirGenerador();
+      }
+
+      if (accion === "scanner") {
+        abrirScanner();
+      }
+    });
+
+  });
+}
+
 
 function configurarUsuario() {
   const nombreUsuario =
