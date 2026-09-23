@@ -23,11 +23,7 @@ if (!user) {
 const isOwner = String(user?.rol || "").toLowerCase() === "owner";
 const idProductora = Number(user?.id_productora) || null;
 
-if (isOwner) {
-  window.location.href = "admin.html";
-}
-
-if (!idProductora) {
+if (!isOwner && !idProductora) {
   alert("Este usuario no tiene una productora asignada.");
   cerrarSesion();
 }
