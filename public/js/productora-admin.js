@@ -295,42 +295,6 @@ async function cargarMenus() {
 }
 
 
-function configurarNavegacionMenu() {
-  const menu = document.getElementById("dynamicMenu");
-
-  if (!menu) return;
-
-  const enlaces = menu.querySelectorAll("a");
-
-  enlaces.forEach(link => {
-
-    link.addEventListener("click", event => {
-
-      const section = link.dataset.section;
-
-      /*
-       * Solo interceptamos enlaces internos
-       * del propio dashboard.
-       */
-      if (!section) {
-        return;
-      }
-
-      event.preventDefault();
-
-      enlaces.forEach(item => {
-        item.classList.remove("active");
-      });
-
-      link.classList.add("active");
-
-      mostrarModulo(section);
-    });
-
-  });
-}
-
-
 function configurarUsuario() {
   const nombreUsuario =
     user.nombre ||
@@ -358,6 +322,7 @@ function configurarUsuario() {
   document.title = `${nombreProductora} | Cosmic Pass`;
 }
 function configurarBotones() {
+
   document.getElementById("logoutBtn")?.addEventListener("click", cerrarSesion);
   document.getElementById("createEventBtn")?.addEventListener("click", () => {
     mostrarPendiente("Creación de eventos");
@@ -371,147 +336,6 @@ function configurarBotones() {
     cargarDashboard();
   });
 
-document.querySelectorAll("[data-action]").forEach(button => {
-
-  button.addEventListener("click", async (event) => {
-
-    event.preventDefault();
-
-    const action = button.dataset.action;
-
-    /* =========================================
-   GENERADOR
-========================================= */
-
-if (
-  action === "generador" ||
-  action === "generator"
-) {
-
-  try {
-
-    const response =
-      await fetch(
-        `${API}/generator/token`,
-        {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json"
-          }
-        }
-      );
-
-
-    const data =
-      await response.json();
-
-
-    if (
-      !response.ok ||
-      !data.success ||
-      !data.token
-    ) {
-
-      console.error(
-        "ERROR TOKEN GENERADOR:",
-        data
-      );
-
-      alert(
-        data.error ||
-        "No fue posible obtener acceso al generador."
-      );
-
-      return;
-
-    }
-
-
-    console.log(
-      "✅ TOKEN GENERADOR:",
-      data.token
-    );
-
-
-    window.open(
-      `https://generador-tawny.vercel.app/?token=${encodeURIComponent(data.token)}`,
-      "_blank"
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      "ERROR ABRIENDO GENERADOR:",
-      error
-    );
-
-    alert(
-      "No fue posible abrir el generador."
-    );
-
-  }
-
-
-  return;
-}
-    if (action === "scanner") {
-
-      try {
-
-        const response = await fetch(
-          `${API}/scanner/token`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              user_id: user.id
-            })
-          }
-        );
-
-       const data = await response.json();
-
-if (!data.success) {
-    alert(data.error);
-    return;
-}
-
-window.open(
-    `https://validador-ok.vercel.app/?token=${data.token}`,
-    "_blank"
-);
-
-return;
-
-      } catch (err) {
-
-        console.error(err);
-
-        alert("No fue posible abrir el Validador QR.");
-
-      }
-
-      return;
-
-    }
-
-    const nombres = {
-      cortesia: "Generación de cortesías",
-      tickets: "Administración de tickets",
-      evento: "Creación de eventos"
-    };
-
-    mostrarPendiente(
-      nombres[action] || "Esta sección"
-    );
-
-  });
-
-});
 
   document.querySelectorAll("[data-section]").forEach(link => {
   link.addEventListener("click", event => {
