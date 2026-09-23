@@ -1991,7 +1991,8 @@ app.get("/admin/menus", requerirSesion, async (req, res) => {
           ruta,
           icono,
           orden,
-          activo
+          activo,
+          tipo
         )
       `)
       .eq("rol", rol)
