@@ -23,59 +23,6 @@ if (!user) {
 const isOwner = String(user?.rol || "").toLowerCase() === "owner";
 const idProductora = Number(user?.id_productora) || null;
 
-async function cargarMenus() {
-  const menu = document.getElementById("dynamicMenu");
-
-  if (!menu) return;
-
-  try {
-    const res = await fetch(`${API}/admin/menus`, {
-      credentials: "include"
-    });
-
-    const data = await res.json();
-
-    if (!res.ok || !data.success) {
-      throw new Error(data.error || "No fue posible cargar los menús.");
-    }
-
-    const menus = Array.isArray(data.menus)
-      ? data.menus
-          .filter(item => item.activo)
-          .sort((a, b) => Number(a.orden || 0) - Number(b.orden || 0))
-      : [];
-
-    menu.innerHTML = "";
-
-    menus.forEach(item => {
-      const link = document.createElement("a");
-
-      link.href = item.ruta || "#";
-      link.className = "nav-link";
-
-      if (item.ruta === "productora-admin.html") {
-        link.classList.add("active");
-        link.dataset.section = "dashboard";
-      }
-
-      link.innerHTML = `
-        <span class="nav-icon">${item.icono || "•"}</span>
-        <span>${item.nombre}</span>
-      `;
-
-      menu.appendChild(link);
-    });
-
-  } catch (error) {
-    console.error("ERROR CARGANDO MENÚS:", error);
-    menu.innerHTML = `
-      <div class="menu-error">
-        No fue posible cargar el menú.
-      </div>
-    `;
-  }
-}
-
 if (!isOwner && !idProductora) {
   alert("Este usuario no tiene una productora asignada.");
   cerrarSesion();
@@ -99,7 +46,6 @@ function cerrarSesion() {
   localStorage.removeItem("cosmic_user");
   window.location.href = "login.html";
 }
-
 async function cargarMenus() {
   const menu = document.getElementById("dynamicMenu");
 
@@ -113,59 +59,232 @@ async function cargarMenus() {
     const data = await res.json();
 
     if (!res.ok || !data.success) {
-      throw new Error(data.error || "No fue posible cargar los menús.");
+      throw new Error(
+        data.error || "No fue posible cargar los menús."
+      );
     }
 
     const menus = Array.isArray(data.menus)
       ? data.menus
-          .filter(menu => menu.activo)
+          .filter(item => item.activo)
           .sort(
             (a, b) =>
-              Number(a.orden || 0) - Number(b.orden || 0)
+              Number(a.orden || 0) -
+              Number(b.orden || 0)
           )
       : [];
 
     menu.innerHTML = "";
 
     menus.forEach(item => {
+
       const link = document.createElement("a");
 
       const ruta = String(item.ruta || "").trim();
+      const tipo = String(item.tipo || "ruta")
+        .toLowerCase()
+        .trim();
 
       link.className = "nav-link";
 
       /*
-       * DASHBOARD
+       * =====================================
+       * MENÚ TIPO RUTA
+       * =====================================
        */
-      if (ruta === "productora-admin.html") {
-        link.href = "#";
-        link.dataset.section = "dashboard";
+      if (tipo === "ruta") {
+
+        link.href = ruta || "#";
+
+        if (ruta === "productora-admin.html") {
+          link.classList.add("active");
+        }
+
       }
 
       /*
-       * Cualquier otra opción:
-       * la ruta viene directamente de la BD.
+       * =====================================
+       * MENÚ TIPO ACCIÓN
+       * =====================================
        */
-      else {
-        link.href = ruta;
+      else if (tipo === "accion") {
+
+        link.href = "#";
+        link.dataset.action = ruta;
+
       }
+
+      /*
+       * =====================================
+       * HTML DEL MENÚ
+       * =====================================
+       */
 
       link.innerHTML = `
         <span class="nav-icon">
           ${item.icono || "•"}
         </span>
+
         <span>
           ${item.nombre || "Módulo"}
         </span>
       `;
 
       menu.appendChild(link);
+
+
+      /*
+       * =====================================
+       * ACCIONES ESPECIALES
+       * =====================================
+       */
+
+      if (tipo === "accion") {
+
+        link.addEventListener("click", async event => {
+
+          event.preventDefault();
+
+
+          /*
+           * ================================
+           * GENERADOR DE BOLETOS
+           * ================================
+           */
+
+          if (ruta === "generador-boletos") {
+
+            try {
+
+              const response = await fetch(
+                `${API}/generator/token`,
+                {
+                  method: "POST",
+                  credentials: "include",
+                  headers: {
+                    "Content-Type": "application/json"
+                  }
+                }
+              );
+
+              const result = await response.json();
+
+              if (
+                !response.ok ||
+                !result.success ||
+                !result.token
+              ) {
+
+                console.error(
+                  "ERROR GENERADOR:",
+                  result
+                );
+
+                alert(
+                  result.error ||
+                  "No fue posible abrir el generador."
+                );
+
+                return;
+              }
+
+              window.open(
+                `https://generador-tawny.vercel.app/?token=${encodeURIComponent(result.token)}`,
+                "_blank"
+              );
+
+            } catch (error) {
+
+              console.error(
+                "ERROR ABRIENDO GENERADOR:",
+                error
+              );
+
+              alert(
+                "No fue posible abrir el generador de boletos."
+              );
+            }
+
+            return;
+          }
+
+
+          /*
+           * ================================
+           * VALIDAR QR
+           * ================================
+           */
+
+          if (ruta === "validar-qr") {
+
+            try {
+
+              const response = await fetch(
+                `${API}/scanner/token`,
+                {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify({
+                    user_id: user.id
+                  })
+                }
+              );
+
+              const result = await response.json();
+
+              if (
+                !response.ok ||
+                !result.success ||
+                !result.token
+              ) {
+
+                console.error(
+                  "ERROR VALIDADOR:",
+                  result
+                );
+
+                alert(
+                  result.error ||
+                  "No fue posible abrir el validador."
+                );
+
+                return;
+              }
+
+              window.open(
+                `https://validador-ok.vercel.app/?token=${encodeURIComponent(result.token)}`,
+                "_blank"
+              );
+
+            } catch (error) {
+
+              console.error(
+                "ERROR ABRIENDO VALIDADOR:",
+                error
+              );
+
+              alert(
+                "No fue posible abrir el validador QR."
+              );
+            }
+
+            return;
+          }
+
+        });
+
+      }
+
     });
 
-    configurarNavegacionMenu();
-
   } catch (error) {
-    console.error("ERROR CARGANDO MENÚS:", error);
+
+    console.error(
+      "ERROR CARGANDO MENÚS:",
+      error
+    );
 
     menu.innerHTML = `
       <div class="menu-error">
