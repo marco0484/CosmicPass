@@ -1803,19 +1803,14 @@ app.post("/admin/rps", requerirSesion, async (req, res) => {
       .from("cat_rps")
       .insert({
         id_rp_user: nuevoUsuario.id,
-        nombre: nombreLimpio,
-        telefono: telefono
-          ? String(telefono).trim()
-          : null,
-        instagram: instagram
-          ? String(instagram).trim()
-          : null,
-        id_productora: idProductora,
-        activo: true,
+            nombre: nombreLimpio,
+          telefono: telefono ? String(telefono).trim() : null,
+         instagram: instagram ? String(instagram).trim(): null,
+     id_productora: idProductora,
+            activo: true,
         created_by: usuarioSesion.id
       })
       .select(`
-        id,
         id_rp_user,
         nombre,
         telefono,
@@ -1825,9 +1820,7 @@ app.post("/admin/rps", requerirSesion, async (req, res) => {
       `)
       .single();
 
-    // =========================
-    // SI FALLA CAT_RPS
-    // =========================
+    // SI FALLA CAT_RPS //
 
     if (rpError) {
 
@@ -1850,9 +1843,7 @@ app.post("/admin/rps", requerirSesion, async (req, res) => {
       });
     }
 
-    // =========================
     // RESPUESTA
-    // =========================
 
     return res.status(201).json({
 
