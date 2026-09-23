@@ -112,56 +112,61 @@ async function cargarMenus() {
 
     const data = await res.json();
 
-    if (!res.ok) {
+    if (!res.ok || !data.success) {
       throw new Error(data.error || "No fue posible cargar los menús.");
     }
 
-    const menus = Array.isArray(data)
-      ? data
-      : Array.isArray(data.menus)
-        ? data.menus
-        : [];
+    const menus = Array.isArray(data.menus)
+      ? data.menus
+          .filter(menu => menu.activo)
+          .sort(
+            (a, b) =>
+              Number(a.orden || 0) - Number(b.orden || 0)
+          )
+      : [];
 
     menu.innerHTML = "";
 
     menus.forEach(item => {
-      const a = document.createElement("a");
+      const link = document.createElement("a");
 
-      a.href = item.href || "#";
-      a.className = "nav-link";
+      const ruta = String(item.ruta || "").trim();
 
-      if (item.active) {
-        a.classList.add("active");
+      link.className = "nav-link";
+
+      /*
+       * DASHBOARD
+       */
+      if (ruta === "productora-admin.html") {
+        link.href = "#";
+        link.dataset.section = "dashboard";
       }
 
-      if (item.id) {
-        a.dataset.menuId = item.id;
+      /*
+       * Cualquier otra opción:
+       * la ruta viene directamente de la BD.
+       */
+      else {
+        link.href = ruta;
       }
 
-      if (item.section) {
-        a.dataset.section = item.section;
-      }
-
-      if (item.action) {
-        a.dataset.action = item.action;
-      }
-
-      if (item.href && !item.href.startsWith("#")) {
-        a.href = item.href;
-      }
-
-      a.innerHTML = `
-        <span class="nav-icon">${item.icon || "•"}</span>
-        <span>${item.nombre || item.label || item.name || "Módulo"}</span>
+      link.innerHTML = `
+        <span class="nav-icon">
+          ${item.icono || "•"}
+        </span>
+        <span>
+          ${item.nombre || "Módulo"}
+        </span>
       `;
 
-      menu.appendChild(a);
+      menu.appendChild(link);
     });
 
-    configurarMenu();
+    configurarNavegacionMenu();
 
   } catch (error) {
     console.error("ERROR CARGANDO MENÚS:", error);
+
     menu.innerHTML = `
       <div class="menu-error">
         No fue posible cargar el menú.
@@ -170,43 +175,37 @@ async function cargarMenus() {
   }
 }
 
-function configurarMenu() {
-  document.querySelectorAll("#dynamicMenu a").forEach(link => {
+
+function configurarNavegacionMenu() {
+  const menu = document.getElementById("dynamicMenu");
+
+  if (!menu) return;
+
+  const enlaces = menu.querySelectorAll("a");
+
+  enlaces.forEach(link => {
 
     link.addEventListener("click", event => {
 
-      const modulo = link.dataset.section;
-      const accion = link.dataset.action;
+      const section = link.dataset.section;
 
       /*
-       * Si es un enlace real, dejamos que navegue.
+       * Solo interceptamos enlaces internos
+       * del propio dashboard.
        */
-      if (
-        link.getAttribute("href") &&
-        link.getAttribute("href") !== "#"
-      ) {
+      if (!section) {
         return;
       }
 
       event.preventDefault();
 
-      document
-        .querySelectorAll("#dynamicMenu a")
-        .forEach(item => item.classList.remove("active"));
+      enlaces.forEach(item => {
+        item.classList.remove("active");
+      });
 
       link.classList.add("active");
 
-      if (modulo) {
-        mostrarModulo(modulo);
-      }
-
-      if (accion === "generador") {
-        abrirGenerador();
-      }
-
-      if (accion === "scanner") {
-        abrirScanner();
-      }
+      mostrarModulo(section);
     });
 
   });
