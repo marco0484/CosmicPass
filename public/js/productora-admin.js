@@ -127,11 +127,14 @@ if (tipo === "accion" || esAccionCortesia) {
 
 if (ruta === "activar-cortesias") {
 
-  const modal = document.getElementById("cortesiasModal");
+  const modal =
+    document.getElementById("cortesiasModal");
 
   if (modal) {
     modal.classList.add("active");
   }
+
+  await cargarEventosCortesia();
 
   return;
 }
