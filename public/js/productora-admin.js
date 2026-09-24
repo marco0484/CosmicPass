@@ -672,9 +672,10 @@ function configurarCortesias() {
   const modal = document.getElementById("cortesiasModal");
   const form = document.getElementById("activarCortesiasForm");
 
-  abrirBtn?.addEventListener("click", async () => {
-    modal?.classList.add("active");
-  });
+abrirBtn?.addEventListener("click", async () => {
+  modal?.classList.add("active");
+  await cargarEventosCortesia();
+});
 
   cerrarBtn?.addEventListener("click", cerrarModalCortesias);
 
@@ -688,6 +689,79 @@ function configurarCortesias() {
     event.preventDefault();
     await activarCortesias();
   });
+}
+
+async function cargarEventosCortesia() {
+
+  const select =
+    document.getElementById("cortesiaEventoSelect");
+
+  if (!select) return;
+
+  select.innerHTML =
+    `<option value="">Cargando eventos...</option>`;
+
+  try {
+
+    const res = await fetch(
+      `${API}/events?id_productora=${idProductora}`,
+      {
+        credentials: "include"
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      throw new Error(
+        data.error ||
+        "No fue posible consultar los eventos"
+      );
+    }
+
+    const eventos =
+      Array.isArray(data)
+        ? data
+        : data.events || data.data || [];
+
+    select.innerHTML =
+      `<option value="">Selecciona un evento</option>`;
+
+    if (!eventos.length) {
+
+      select.innerHTML =
+        `<option value="">No hay eventos disponibles</option>`;
+
+      return;
+    }
+
+    eventos.forEach(evento => {
+
+      const option =
+        document.createElement("option");
+
+      option.value = evento.id;
+
+      option.textContent =
+        evento.name ||
+        evento.nombre ||
+        `Evento #${evento.id}`;
+
+      select.appendChild(option);
+
+    });
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando eventos de cortesías:",
+      error
+    );
+
+    select.innerHTML =
+      `<option value="">Error cargando eventos</option>`;
+
+  }
 }
 
 function cerrarModalCortesias() {
