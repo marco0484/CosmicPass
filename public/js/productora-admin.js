@@ -120,8 +120,7 @@ async function cargarMenus() {
 
       /* ACCIONES ESPECIALES */
 
-      if (tipo === "accion") {
-
+if (tipo === "accion" || esAccionCortesia) {
         link.addEventListener("click", async event => {
 
           event.preventDefault();
