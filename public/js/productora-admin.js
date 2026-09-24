@@ -52,10 +52,7 @@ async function cargarMenus() {
   if (!menu) return;
 
   try {
-    const res = await fetch(`${API}/admin/menus`, {
-      credentials: "include"
-    });
-
+    const res = await fetch(`${API}/admin/menus`, {credentials: "include"});
     const data = await res.json();
 
     if (!res.ok || !data.success) {
@@ -79,21 +76,18 @@ async function cargarMenus() {
     menus.forEach(item => {
 
       const link = document.createElement("a");
-
       const ruta = String(item.ruta || "").trim();
       const tipo = String(item.tipo || "ruta")
         .toLowerCase()
         .trim();
 
+      const esAccionCortesia = ruta === "activar-cortesias";
+
       link.className = "nav-link";
 
-      /*
-       * =====================================
-       * MENÚ TIPO RUTA
-       * =====================================
-       */
-      if (tipo === "ruta") {
+      /* MENÚ TIPO RUTA */
 
+    if (tipo === "ruta" && !esAccionCortesia) {
         link.href = ruta || "#";
 
         if (ruta === "productora-admin.html") {
@@ -102,23 +96,15 @@ async function cargarMenus() {
 
       }
 
-      /*
-       * =====================================
-       * MENÚ TIPO ACCIÓN
-       * =====================================
-       */
-      else if (tipo === "accion") {
+      /*MENÚ TIPO ACCIÓN*/
+     else if (tipo === "accion" || esAccionCortesia) {
 
         link.href = "#";
         link.dataset.action = ruta;
 
       }
 
-      /*
-       * =====================================
-       * HTML DEL MENÚ
-       * =====================================
-       */
+      /*HTML DEL MENÚ*/
 
       link.innerHTML = `
         <span class="nav-icon">
@@ -132,18 +118,25 @@ async function cargarMenus() {
 
       menu.appendChild(link);
 
-
-      /*
-       * =====================================
-       * ACCIONES ESPECIALES
-       * =====================================
-       */
+      /* ACCIONES ESPECIALES */
 
       if (tipo === "accion") {
 
         link.addEventListener("click", async event => {
 
           event.preventDefault();
+
+          if (ruta === "activar-cortesias") {
+
+          const modal =
+            document.getElementById("cortesiasModal");
+
+          if (modal) {
+            modal.classList.add("active");
+          }
+
+          return;
+        }
 
 
           /*
@@ -245,10 +238,7 @@ async function cargarMenus() {
                   result
                 );
 
-                alert(
-                  result.error ||
-                  "No fue posible abrir el validador."
-                );
+                alert(result.error || "No fue posible abrir el validador.");
 
                 return;
               }
@@ -259,26 +249,14 @@ async function cargarMenus() {
               );
 
             } catch (error) {
-
-              console.error(
-                "ERROR ABRIENDO VALIDADOR:",
-                error
-              );
-
-              alert(
-                "No fue posible abrir el validador QR."
-              );
+              console.error( "ERROR ABRIENDO VALIDADOR:", error);
+              alert("No fue posible abrir el validador QR.");
             }
-
             return;
           }
-
         });
-
       }
-
     });
-
   } catch (error) {
 
     console.error(
@@ -294,7 +272,6 @@ async function cargarMenus() {
   }
 }
 
-
 function configurarUsuario() {
   const nombreUsuario =
     user.nombre ||
@@ -305,11 +282,8 @@ function configurarUsuario() {
     user.productora_nombre ||
     `Productora #${idProductora}`;
 
-  const inicialProductora =
-    nombreProductora.charAt(0).toUpperCase();
-
-  const inicialUsuario =
-    nombreUsuario.charAt(0).toUpperCase();
+  const inicialProductora = nombreProductora.charAt(0).toUpperCase();
+  const inicialUsuario    = nombreUsuario.charAt(0).toUpperCase();
 
   setText("sidebarProductoraName", nombreProductora);
   setText("productoraName", nombreProductora);
@@ -355,11 +329,8 @@ console.log("Módulo:", modulo);
       '[data-module="dashboard"]'
     );
 
-  const mostrarDashboard =
-    modulo === "dashboard";
-
-    const eventosSection =
-  document.getElementById("eventosSection");
+  const mostrarDashboard = modulo === "dashboard";
+  const eventosSection   = document.getElementById("eventosSection");
 
   dashboardElements.forEach(element => {
     element.hidden = !mostrarDashboard;
@@ -400,10 +371,7 @@ async function cargarDashboard() {
     }
 
     const metricas = data.metricas || {};
-
-    const accesosEmitidos =
-    Number(metricas.emitidos || 0);
-
+    const accesosEmitidos = Number(metricas.emitidos || 0);
   const accesosDescargados =
     Number(
       metricas.asignados ??
@@ -411,9 +379,7 @@ async function cargarDashboard() {
       0
     );
 
-  const cortesiasGeneradas =
-    Number(metricas.cortesias || 0);
-
+  const cortesiasGeneradas = Number(metricas.cortesias || 0);
   const accesosDisponibles =
     Number(metricas.disponibles || 0);
 
@@ -423,41 +389,14 @@ async function cargarDashboard() {
         0
       );
 
-    setText(
-      "accesosEmitidos",
-      formatoNumero(accesosEmitidos)
-    );
-
-    setText(
-      "accesosDescargados",
-      formatoNumero(accesosDescargados)
-    );
-
-    setText(
-      "cortesiasTotal",
-      formatoNumero(cortesiasGeneradas)
-    );
-
-    setText(
-      "ventasTotal",
-      formatoMoneda(metricas.ingresos || 0)
-    );
-
-    setText(
-      "eventosActivos",
-      formatoNumero(metricas.eventos || 0)
-    );
-
-    actualizarGrafica(
-      accesosDescargados,
-      cortesiasGeneradas
-    );
-
+    setText("accesosEmitidos",formatoNumero(accesosEmitidos));
+    setText("accesosDescargados",formatoNumero(accesosDescargados));
+    setText("cortesiasTotal",formatoNumero(cortesiasGeneradas))
+    setText("ventasTotal",formatoMoneda(metricas.ingresos || 0));
+    setText("eventosActivos", formatoNumero(metricas.eventos || 0));
+    actualizarGrafica(accesosDescargados, cortesiasGeneradas);
   } catch (error) {
-    console.error(
-      "ERROR CARGANDO DASHBOARD:",
-      error
-    );
+    console.error("ERROR CARGANDO DASHBOARD:",error);
   }
 }
 
@@ -467,10 +406,7 @@ const tabla = document.getElementById("tablaTodosEventos");
 if (!tabla) return;
 
   try {
-    const res = await fetch(
-      `${API}/events?id_productora=${idProductora}`
-    );
-
+    const res = await fetch(`${API}/events?id_productora=${idProductora}`);
     const data = await res.json();
 
     if (!res.ok) {
@@ -481,13 +417,8 @@ if (!tabla) return;
 
     const eventosOrdenados = [...eventosGlobal]
       .sort((a, b) => {
-        const fechaA = new Date(
-          a.event_date || a.date || a.fecha || 0
-        );
-
-        const fechaB = new Date(
-          b.event_date || b.date || b.fecha || 0
-        );
+        const fechaA = new Date(a.event_date || a.date || a.fecha || 0);
+        const fechaB = new Date(b.event_date || b.date || b.fecha || 0);
 
         return fechaB - fechaA;
       })
@@ -690,16 +621,11 @@ function crearGrafica() {
 function actualizarGrafica(
   accesosGenerados,
   cortesiasGeneradas
-) {
-  const empty =
-    document.getElementById("chartEmpty");
-
-  const totalAccesos =
-    Number(accesosGenerados || 0);
-
-  const cortesias =
-    Number(cortesiasGeneradas || 0);
-
+                          )
+      {
+  const empty = document.getElementById("chartEmpty");
+  const totalAccesos =Number(accesosGenerados || 0);
+  const cortesias = Number(cortesiasGeneradas || 0);
   const ticketsPagados =
     Math.max(
       totalAccesos - cortesias,
