@@ -693,16 +693,10 @@ abrirBtn?.addEventListener("click", async () => {
 
 async function cargarEventosCortesia() {
 
-  const select =
-    document.getElementById("cortesiaEventoSelect");
-
+  const select = document.getElementById("cortesiaEventoSelect");
   if (!select) return;
-
-  select.innerHTML =
-    `<option value="">Cargando eventos...</option>`;
-
+  select.innerHTML = `<option value="">Cargando eventos...</option>`;
   try {
-
     const res = await fetch(
       `${API}/events?id_productora=${idProductora}`,
       {
@@ -710,57 +704,39 @@ async function cargarEventosCortesia() {
       }
     );
 
-    const data = await res.json();
+    const eventos = await res.json();
+
+    console.log(
+      "EVENTOS CORTESÍAS:",
+      eventos
+    );
 
     if (!res.ok) {
       throw new Error(
-        data.error ||
         "No fue posible consultar los eventos"
       );
     }
 
-    const eventos =
-      Array.isArray(data)
-        ? data
-        : data.events || data.data || [];
-
-    select.innerHTML =
-      `<option value="">Selecciona un evento</option>`;
-
-    if (!eventos.length) {
-
-      select.innerHTML =
-        `<option value="">No hay eventos disponibles</option>`;
-
+    select.innerHTML = `<option value="">Selecciona un evento</option>`;
+    if (!Array.isArray(eventos) || eventos.length === 0) {
+      select.innerHTML = `<option value="">No hay eventos disponibles</option>`;
       return;
     }
 
     eventos.forEach(evento => {
 
-      const option =
-        document.createElement("option");
-
+      const option = document.createElement("option");
       option.value = evento.id;
-
-      option.textContent =
-        evento.name ||
-        evento.nombre ||
-        `Evento #${evento.id}`;
-
+      option.textContent = evento.name || `Evento #${evento.id}`;
       select.appendChild(option);
-
     });
 
   } catch (error) {
 
-    console.error(
-      "Error cargando eventos de cortesías:",
-      error
-    );
+    console.error( "Error cargando eventos de cortesías:",error);
 
     select.innerHTML =
       `<option value="">Error cargando eventos</option>`;
-
   }
 }
 
@@ -787,11 +763,7 @@ async function activarCortesias() {
     cantidad <= 0
   ) {
 
-    mostrarMensajeCortesia(
-      "Ingresa una cantidad válida.",
-      "error"
-    );
-
+    mostrarMensajeCortesia("Ingresa una cantidad válida.","error");
     return;
   }
 
@@ -810,9 +782,7 @@ async function activarCortesias() {
         headers: {
           "Content-Type": "application/json"
         },
-
         credentials: "include",
-
        body: JSON.stringify({
                   cantidad
                 })
