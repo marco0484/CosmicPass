@@ -2807,53 +2807,21 @@ app.post("/admin/activar-cortesias",requerirSesion,
         rol === "owner" ||
         (rol === "admin" && !idProductoraSesion);
 
-      let idProductora;
+/* DETERMINAR CANTIDAD */
 
-      /*
-      ==========================================
-      DETERMINAR PRODUCTORA
-      ==========================================
-      */
+let idProductora = Number(
+  req.usuario.id_productora
+);
 
-      if (esOwner) {
-
-        idProductora =
-          Number(id_productora);
-
-        if (
-          !Number.isInteger(idProductora) ||
-          idProductora <= 0
-        ) {
-
-          return res.status(400).json({
-            success: false,
-            error: "Productora inválida"
-          });
-
-        }
-
-      } else {
-
-        if (!idProductoraSesion) {
-
-          return res.status(403).json({
-            success: false,
-            error:
-              "Usuario sin productora asignada"
-          });
-
-        }
-
-        idProductora =
-          idProductoraSesion;
-
-      }
-
-      /*
-      ==========================================
-      VALIDAR CANTIDAD
-      ==========================================
-      */
+if (
+  !Number.isInteger(idProductora) ||
+  idProductora <= 0
+) {
+  return res.status(403).json({
+    success: false,
+    error: "Usuario sin productora asignada"
+  });
+}
 
       const cantidadAgregar =
         Number(cantidad);
@@ -2870,45 +2838,23 @@ app.post("/admin/activar-cortesias",requerirSesion,
 
       }
 
-      /*
-      ==========================================
-      BUSCAR EVENTO DE LA PRODUCTORA
-      ==========================================
-      */
+      /* BUSCAR EVENTO DE LA PRODUCTORA */
+        const {
+          data: evento,
+          error: eventoError
+        } = await supabase
+          .from("cat_events")
+          .select(`
+            id,
+            name,
+            id_productora,
+            ind_activo
+          `)
+          .eq("id_productora", idProductora)
+          .eq("ind_activo", 1)
+          .maybeSingle();
 
-      const {
-        data: evento,
-        error: eventoError
-      } = await supabase
-        .from("cat_events")
-        .select(`
-          id,
-          name,
-          id_productora
-        `)
-        .eq("id_productora", idProductora)
-        .eq("id", 1000)
-        .maybeSingle();
-
-      if (eventoError) {
-        throw eventoError;
-      }
-
-      if (!evento) {
-
-        return res.status(404).json({
-          success: false,
-          error:
-            "No se encontró el evento activo de la productora"
-        });
-
-      }
-
-      /*
-      ==========================================
-      BUSCAR TICKET GRATUITO
-      ==========================================
-      */
+      /*BUSCAR TICKET GRATUITO */
 
       const {
         data: ticket,
