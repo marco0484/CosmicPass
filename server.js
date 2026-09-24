@@ -2786,12 +2786,13 @@ app.get( "/generator/validate",async (req, res) => {
   }
 );
 
-app.post("/admin/activar-cortesias",requerirSesion,async (req, res) => {
+app.post("/admin/activar-cortesias",requerirSesion,
+  async (req, res) => {
+
     try {
 
       const {
         id_productora,
-        evento_id,
         cantidad
       } = req.body;
 
@@ -2808,6 +2809,12 @@ app.post("/admin/activar-cortesias",requerirSesion,async (req, res) => {
 
       let idProductora;
 
+      /*
+      ==========================================
+      DETERMINAR PRODUCTORA
+      ==========================================
+      */
+
       if (esOwner) {
 
         idProductora =
@@ -2817,42 +2824,91 @@ app.post("/admin/activar-cortesias",requerirSesion,async (req, res) => {
           !Number.isInteger(idProductora) ||
           idProductora <= 0
         ) {
+
           return res.status(400).json({
             success: false,
             error: "Productora inválida"
           });
+
         }
 
       } else {
 
         if (!idProductoraSesion) {
+
           return res.status(403).json({
             success: false,
-            error: "Usuario sin productora asignada"
+            error:
+              "Usuario sin productora asignada"
           });
+
         }
 
         idProductora =
           idProductoraSesion;
+
       }
 
-      const eventoId =
-        Number(evento_id);
+      /*
+      ==========================================
+      VALIDAR CANTIDAD
+      ==========================================
+      */
 
       const cantidadAgregar =
         Number(cantidad);
 
       if (
-        !Number.isInteger(eventoId) ||
-        eventoId <= 0 ||
         !Number.isInteger(cantidadAgregar) ||
         cantidadAgregar <= 0
       ) {
+
         return res.status(400).json({
           success: false,
-          error: "Datos inválidos"
+          error: "Cantidad inválida"
         });
+
       }
+
+      /*
+      ==========================================
+      BUSCAR EVENTO DE LA PRODUCTORA
+      ==========================================
+      */
+
+      const {
+        data: evento,
+        error: eventoError
+      } = await supabase
+        .from("cat_events")
+        .select(`
+          id,
+          name,
+          id_productora
+        `)
+        .eq("id_productora", idProductora)
+        .eq("id", 1000)
+        .maybeSingle();
+
+      if (eventoError) {
+        throw eventoError;
+      }
+
+      if (!evento) {
+
+        return res.status(404).json({
+          success: false,
+          error:
+            "No se encontró el evento activo de la productora"
+        });
+
+      }
+
+      /*
+      ==========================================
+      BUSCAR TICKET GRATUITO
+      ==========================================
+      */
 
       const {
         data: ticket,
@@ -2866,7 +2922,7 @@ app.post("/admin/activar-cortesias",requerirSesion,async (req, res) => {
           precio,
           stock_disponible
         `)
-        .eq("id_evento", eventoId)
+        .eq("id_evento", evento.id)
         .eq("id_productora", idProductora)
         .eq("precio", 0)
         .eq("ind_activo", 1)
@@ -2877,33 +2933,60 @@ app.post("/admin/activar-cortesias",requerirSesion,async (req, res) => {
       }
 
       if (!ticket) {
+
         return res.status(404).json({
           success: false,
           error:
             "Este evento no tiene un acceso gratuito configurado"
         });
+
       }
+
+      /*
+      ==========================================
+      SUMAR CORTESÍAS
+      ==========================================
+      */
 
       const nuevoStock =
         Number(ticket.stock_disponible || 0) +
         cantidadAgregar;
 
-      const { error: updateError } =
-        await supabase
-          .from("ticket_types")
-          .update({
-            stock_disponible: nuevoStock
-          })
-          .eq("id", ticket.id);
+      const {
+        error: updateError
+      } = await supabase
+        .from("ticket_types")
+        .update({
+          stock_disponible: nuevoStock
+        })
+        .eq("id", ticket.id);
 
       if (updateError) {
         throw updateError;
       }
 
+      /*
+      ==========================================
+      RESPUESTA
+      ==========================================
+      */
+
       return res.json({
+
         success: true,
+
         message:
-          `${cantidadAgregar} cortesías activadas correctamente`
+          `${cantidadAgregar} cortesías activadas correctamente`,
+
+        evento: {
+          id: evento.id,
+          nombre: evento.name
+        },
+
+        productora: idProductora,
+
+        stock_nuevo: nuevoStock
+
       });
 
     } catch (error) {
