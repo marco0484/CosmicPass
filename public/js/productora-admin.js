@@ -125,17 +125,16 @@ if (tipo === "accion" || esAccionCortesia) {
 
           event.preventDefault();
 
-          if (ruta === "activar-cortesias") {
+if (ruta === "activar-cortesias") {
 
-          const modal =
-            document.getElementById("cortesiasModal");
+  const modal = document.getElementById("cortesiasModal");
 
-          if (modal) {
-            modal.classList.add("active");
-          }
+  if (modal) {
+    modal.classList.add("active");
+  }
 
-          return;
-        }
+  return;
+}
 
 
           /*
@@ -673,8 +672,11 @@ function configurarCortesias() {
   const form = document.getElementById("activarCortesiasForm");
 
 abrirBtn?.addEventListener("click", async () => {
+
   modal?.classList.add("active");
+
   await cargarEventosCortesia();
+
 });
 
   cerrarBtn?.addEventListener("click", cerrarModalCortesias);
