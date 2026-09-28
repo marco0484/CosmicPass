@@ -139,7 +139,6 @@ if (ruta === "activar-cortesias") {
   return;
 }
 
-
           /*
            * ================================
            * GENERADOR DE BOLETOS

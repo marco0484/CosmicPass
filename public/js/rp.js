@@ -88,8 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
         </div>
       `;
 
-      const response = await fetch(
-        `${API}/admin/rps`,
+      const response = await fetch(`${API}/admin/rps?id_productora=${idProductora}`,
         {
           credentials: "include"
         }
@@ -186,19 +185,13 @@ option.textContent =
   }
 }
 
-
-  // =========================
   // RESUMEN
-  // =========================
 
-  async function cargarResumen() {
-    try {
-      const response = await fetch(
-        `${API}/admin/rps/resumen`,
-        {
-          credentials: "include"
-        }
-      );
+  const response = await fetch(`${API}/admin/rps/resumen?id_productora=${idProductora}`,
+    {
+      credentials: "include"
+    }
+  );
 
       const data = await response.json();
 
@@ -449,7 +442,6 @@ option.textContent =
 
       
       // ACTUALIZAR LISTADO
-
 
       await cargarRPs();
       await cargarResumen();
