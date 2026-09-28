@@ -17,34 +17,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const idProductora = Number(user.id_productora);
 
-  // =========================
-  // ELEMENTOS
-  // =========================
+  /* ELEMENTOS */
 
-  const nuevoRPBtn = document.getElementById("nuevoRPBtn");
+  const nuevoRPBtn      = document.getElementById("nuevoRPBtn");
   const nuevoRPEmptyBtn = document.getElementById("nuevoRPEmptyBtn");
 
-  const rpModal = document.getElementById("rpModal");
-  const rpForm = document.getElementById("rpForm");
-  const rpMessage = document.getElementById("rpMessage");
+  const rpModal         = document.getElementById("rpModal");
+  const rpForm          = document.getElementById("rpForm");
+  const rpMessage       = document.getElementById("rpMessage");
 
-  const rpNombre = document.getElementById("rpNombre");
-  const rpTelefono = document.getElementById("rpTelefono");
-  const rpInstagram = document.getElementById("rpInstagram");
-  const rpEvento = document.getElementById("rpEvento");
+  const rpNombre        = document.getElementById("rpNombre");
+  const rpTelefono      = document.getElementById("rpTelefono");
+  const rpInstagram     = document.getElementById("rpInstagram");
+  const rpEvento        = document.getElementById("rpEvento");
 
-  const buscarRP = document.getElementById("buscarRP");
+  const buscarRP     = document.getElementById("buscarRP");
   const eventoFiltro = document.getElementById("eventoFiltro");
 
   const rpGrid = document.getElementById("rpGrid");
 
-  const totalRPs = document.getElementById("totalRPs");
-  const boletosAsignados = document.getElementById("boletosAsignados");
+  const totalRPs          = document.getElementById("totalRPs");
+  const boletosAsignados  = document.getElementById("boletosAsignados");
   const accesosUtilizados = document.getElementById("accesosUtilizados");
 
-  // =========================
-  // MODAL
-  // =========================
+
+  /* MODAL */
 
   function abrirModal() {
     if (!rpModal) return;
@@ -76,47 +73,44 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // =========================
-  // CARGAR RP
-  // =========================
+  /* CARGAR RP */
 
-  async function cargarRPs() {
-    try {
-      rpGrid.innerHTML = `
-        <div class="loading">
-          Cargando RP...
-        </div>
-      `;
+async function cargarRPs() { try {
+    rpGrid.innerHTML = `
+      <div class="loading">
+        Cargando RP...
+      </div>
+    `;
 
-      const response = await fetch(`${API}/admin/rps?id_productora=${idProductora}`,
-        {
-          credentials: "include"
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          data.error || "No fue posible cargar los RP."
-        );
+    const response = await fetch( `${API}/admin/rps?id_productora=${idProductora}`,
+      {
+        credentials: "include"
       }
+    );
 
-      console.log("RP recibidos:", data);
+    const data = await response.json();
 
-      renderizarRPs(data.rps || data);
-
-    } catch (error) {
-      console.error("Error cargando RP:", error);
-
-      rpGrid.innerHTML = `
-        <div class="empty-state">
-          <h3>No fue posible cargar los RP</h3>
-          <p>${escapeHTML(error.message)}</p>
-        </div>
-      `;
+    if (!response.ok) {
+      throw new Error(
+        data.error || "No fue posible cargar los RP."
+      );
     }
+
+    console.log("RP recibidos:", data);
+
+    renderizarRPs(data.rps || data);
+
+  } catch (error) {
+    console.error("Error cargando RP:", error);
+
+    rpGrid.innerHTML = `
+      <div class="empty-state">
+        <h3>No fue posible cargar los RP</h3>
+        <p>${escapeHTML(error.message)}</p>
+      </div>
+    `;
   }
+}
 
 async function cargarEventos() {
   try {
@@ -150,9 +144,7 @@ async function cargarEventos() {
       const option = document.createElement("option");
 
       option.value = evento.id;
-option.textContent =
-  evento.name ||
-  `Evento #${evento.id}`;
+      option.textContent = evento.name || `Evento #${evento.id}`;
 
       rpEvento.appendChild(option);
     });
@@ -185,53 +177,60 @@ option.textContent =
   }
 }
 
-  // RESUMEN
+/* RESUMEN */
 
-  const response = await fetch(`${API}/admin/rps/resumen?id_productora=${idProductora}`,
-    {
-      credentials: "include"
+async function cargarResumen() {
+  try {
+
+    const response = await fetch(
+      `${API}/admin/rps/resumen?id_productora=${idProductora}`,
+      {
+        credentials: "include"
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.error || "No fue posible cargar el resumen."
+      );
     }
-  );
 
-      const data = await response.json();
+    console.log("Resumen RP:", data);
 
-      if (!response.ok) {
-        throw new Error(
-          data.error || "No fue posible cargar el resumen."
-        );
-      }
-
-      console.log("Resumen RP:", data);
-
-      if (totalRPs) {
-        totalRPs.textContent =
-          data.totalRPs ??
-          data.total_rps ??
-          0;
-      }
-
-      if (boletosAsignados) {
-        boletosAsignados.textContent =
-          data.boletosAsignados ??
-          data.boletos_asignados ??
-          0;
-      }
-
-      if (accesosUtilizados) {
-        accesosUtilizados.textContent =
-          data.accesosUtilizados ??
-          data.accesos_utilizados ??
-          0;
-      }
-
-    } catch (error) {
-      console.error("Error cargando resumen RP:", error);
+    if (totalRPs) {
+      totalRPs.textContent =
+        data.totalRPs ??
+        data.total_rps ??
+        0;
     }
+
+    if (boletosAsignados) {
+      boletosAsignados.textContent =
+        data.boletosAsignados ??
+        data.boletos_asignados ??
+        0;
+    }
+
+    if (accesosUtilizados) {
+      accesosUtilizados.textContent =
+        data.accesosUtilizados ??
+        data.accesos_utilizados ??
+        0;
+    }
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando resumen RP:",
+      error
+    );
+
   }
+}
 
-  // =========================
-  // RENDER RP
-  // =========================
+  /* RENDER RP */ 
 
   function renderizarRPs(rps) {
     if (!rpGrid) return;
@@ -348,9 +347,8 @@ option.textContent =
     const instagram = rpInstagram?.value.trim();
     const idEvento = rpEvento?.value;
 
-    // =========================
+  
     // VALIDACIONES
-    // =========================
 
     if (!nombre) {
       rpMessage.textContent = "Escribe el nombre del RP.";
@@ -376,21 +374,14 @@ option.textContent =
 
     try {
 
-      // =========================
       // CREAR RP
-      // =========================
 
       const response = await fetch(
         `${API}/admin/rps`,
         {
           method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
+          headers: { "Content-Type": "application/json"},
           credentials: "include",
-
           body: JSON.stringify({
             nombre,
             telefono,
@@ -410,21 +401,12 @@ option.textContent =
         );
       }
 
-      // =========================
       // ÉXITO
-      // =========================
 
-      const usuario =
-        data.credenciales?.usuario ||
-        data.rp?.usuario ||
-        "";
+      const usuario = data.credenciales?.usuario || data.rp?.usuario || "";
+      const password = data.credenciales?.password_temporal || "";
 
-      const password =
-        data.credenciales?.password_temporal ||
-        "";
-
-      rpMessage.className =
-        "modal-message success";
+      rpMessage.className = "modal-message success";
 
       rpMessage.innerHTML = `
         <strong>✓ RP creado correctamente</strong>
