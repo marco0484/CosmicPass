@@ -2083,127 +2083,6 @@ app.get("/admin/rps/resumen", requerirSesion, async (req, res) => {
       throw asignacionesError;
     }
 
-    app.post("/admin/rps", requerirSesion, async (req, res) => {
-  try {
-    const usuarioSesion = req.usuario;
-
-    // Solo owner o admin de productora
-    if (
-      usuarioSesion.rol !== "owner" &&
-      usuarioSesion.rol !== "admin"
-    ) {
-      return res.status(403).json({
-        ok: false,
-        error: "No tienes permisos para crear RP."
-      });
-    }
-
-    const {
-      nombre,
-      usuario,
-      password
-    } = req.body;
-
-    if (!nombre || !usuario || !password) {
-      return res.status(400).json({
-        ok: false,
-        error: "Nombre, usuario y contraseña son obligatorios."
-      });
-    }
-
-    // La productora sale de la sesión
-    const idProductora = Number(usuarioSesion.id_productora);
-
-    if (!idProductora) {
-      return res.status(400).json({
-        ok: false,
-        error: "No se encontró la productora del usuario."
-      });
-    }
-
-    const usuarioNormalizado = String(usuario)
-      .trim()
-      .toLowerCase();
-
-    // Verificar que el usuario no exista
-    const { data: existente, error: errorExistente } =
-      await supabase
-        .from("cosmic_usuarios")
-        .select("id")
-        .eq("usuario", usuarioNormalizado)
-        .maybeSingle();
-
-    if (errorExistente) {
-      console.error("Error verificando usuario RP:", errorExistente);
-
-      return res.status(500).json({
-        ok: false,
-        error: "No fue posible validar el usuario."
-      });
-    }
-
-    if (existente) {
-      return res.status(409).json({
-        ok: false,
-        error: "Ese usuario ya existe."
-      });
-    }
-
-    // Generar hash usando pgcrypto
-    const { data: hashData, error: hashError } =
-      await supabase.rpc("generar_password_hash", {
-        p_password: String(password)
-      });
-
-    if (hashError) {
-      console.error("Error generando password:", hashError);
-
-      return res.status(500).json({
-        ok: false,
-        error: "No fue posible generar la contraseña."
-      });
-    }
-
-    const passwordHash = hashData;
-
-    // Crear RP
-    const { data: nuevoRP, error: errorRP } =
-      await supabase
-        .from("cosmic_usuarios")
-        .insert({
-          usuario: usuarioNormalizado,
-          nombre: String(nombre).trim(),
-          rol: "rp",
-          activo: true,
-          id_productora: idProductora,
-          password_hash: passwordHash
-        })
-        .select("id, usuario, nombre, rol, activo, id_productora")
-        .single();
-
-    if (errorRP) {
-      console.error("Error creando RP:", errorRP);
-
-      return res.status(500).json({
-        ok: false,
-        error: "No fue posible crear el RP."
-      });
-    }
-
-    return res.status(201).json({
-      ok: true,
-      rp: nuevoRP
-    });
-
-  } catch (error) {
-    console.error("Error POST /admin/rps:", error);
-
-    return res.status(500).json({
-      ok: false,
-      error: "Error interno del servidor."
-    });
-  }
-});
     /*  RPS  */
 
     const {
@@ -2309,6 +2188,104 @@ app.get("/admin/rps/resumen", requerirSesion, async (req, res) => {
     return res.status(500).json({
       success: false,
       error: "Error cargando resumen de RPs"
+    });
+  }
+});
+
+
+// ============================================================
+// OBTENER TIPOS DE BOLETO PARA ASIGNAR A UN RP
+// ============================================================
+app.get("/admin/rps/tipos-ticket", requerirSesion, async (req, res) => {
+  try {
+    const rol = String(req.usuario.rol || "").toLowerCase();
+    const idProductoraSesion = Number(req.usuario.id_productora) || null;
+    const idEvento = Number(req.query.id_evento);
+
+    // Owner / admin global
+    const esOwner =
+      rol === "owner" ||
+      (rol === "admin" && !idProductoraSesion);
+
+    // Admin de una productora
+    const esAdminProductora =
+      rol === "admin" && Boolean(idProductoraSesion);
+
+    if (!esOwner && !esAdminProductora) {
+      return res.status(403).json({
+        success: false,
+        error: "No tienes permisos para consultar los tipos de boleto."
+      });
+    }
+
+    if (!Number.isInteger(idEvento) || idEvento <= 0) {
+      return res.status(400).json({
+        success: false,
+        error: "Evento inválido."
+      });
+    }
+
+    // Buscar evento
+    const { data: evento, error: eventoError } = await supabase
+      .from("cat_events")
+      .select("id, name, id_productora, ind_activo")
+      .eq("id", idEvento)
+      .maybeSingle();
+
+    if (eventoError) throw eventoError;
+
+    if (!evento || Number(evento.ind_activo) !== 1) {
+      return res.status(404).json({
+        success: false,
+        error: "Evento no encontrado o inactivo."
+      });
+    }
+
+    const idProductoraEvento = Number(evento.id_productora);
+
+    // Un admin de productora solo puede consultar sus propios eventos
+    if (
+      esAdminProductora &&
+      idProductoraEvento !== idProductoraSesion
+    ) {
+      return res.status(403).json({
+        success: false,
+        error: "El evento no pertenece a tu productora."
+      });
+    }
+
+    // Obtener tipos de boleto
+    const { data: tickets, error: ticketsError } = await supabase
+      .from("ticket_types")
+      .select(`
+        id,
+        id_evento,
+        id_productora,
+        tipo_ticket,
+        precio,
+        stock_disponible,
+        ind_activo
+      `)
+      .eq("id_evento", idEvento)
+      .eq("id_productora", idProductoraEvento)
+      .eq("ind_activo", 1)
+      .order("precio", { ascending: true });
+
+    if (ticketsError) throw ticketsError;
+
+    return res.json({
+      success: true,
+      id_productora: idProductoraEvento,
+      evento,
+      tickets: tickets || []
+    });
+
+  } catch (error) {
+    console.error("ERROR /admin/rps/tipos-ticket:", error);
+
+    return res.status(500).json({
+      success: false,
+      error: "Error cargando tipos de boleto."
     });
   }
 });
