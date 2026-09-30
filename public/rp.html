@@ -165,33 +165,16 @@
       <input
         type="tel"
         id="rpTelefono"
-        placeholder="55 0000 0000"
-      >
+        placeholder="55 0000 0000">
 
-
-      <label for="rpInstagram">
-        Instagram
-      </label>
+      <label for="rpInstagram"> Instagram </label>
 
       <input
         type="text"
         id="rpInstagram"
-        placeholder="@usuario"
-      >
-
-
-      <label for="rpEvento">
-        Evento
-      </label>
-
-      <select id="rpEvento" required>
-
-        <option value="">
-          Selecciona un evento
-        </option>
+        placeholder="@usuario">
 
       </select>
-
 
       <button
         type="submit"
@@ -202,6 +185,96 @@
     </form>
   </div>
 </div>
+
+<!-- MODAL ASIGNAR BOLETOS -->
+
+<div class="modal-overlay" id="asignarModal">
+
+  <div class="modal-card">
+
+    <button
+      class="modal-close"
+      id="cerrarAsignarModal"
+      type="button">
+      ×
+    </button>
+
+    <div class="modal-header">
+      <span>ASIGNACIÓN DE BOLETOS</span>
+      <h2>Asignar boletos</h2>
+      <p>
+        Selecciona el evento, tipo de boleto y cantidad para este RP.
+      </p>
+    </div>
+
+    <form id="asignarForm">
+
+      <input
+        type="hidden"
+        id="asignarRpId"
+      >
+
+      <label for="asignarEvento">
+        Evento
+      </label>
+
+      <select
+        id="asignarEvento"
+        required>
+
+        <option value="">
+          Selecciona un evento
+        </option>
+
+      </select>
+
+
+      <label for="asignarTicket">
+        Tipo de boleto
+      </label>
+
+      <select
+        id="asignarTicket"
+        required
+        disabled>
+
+        <option value="">
+          Selecciona primero un evento
+        </option>
+
+      </select>
+
+
+      <label for="asignarCantidad">
+        Cantidad de boletos
+      </label>
+
+      <input
+        type="number"
+        id="asignarCantidad"
+        min="1"
+        step="1"
+        placeholder="Ej. 50"
+        required
+      >
+
+
+      <button
+        type="submit"
+        class="modal-submit">
+        Asignar boletos
+      </button>
+
+      <p
+        id="asignarMessage"
+        class="modal-message">
+      </p>
+
+    </form>
+
+  </div>
+</div>
+
 
 <script src="js/rp.js"></script>
 </body>

@@ -29,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const rpNombre        = document.getElementById("rpNombre");
   const rpTelefono      = document.getElementById("rpTelefono");
   const rpInstagram     = document.getElementById("rpInstagram");
-  const rpEvento        = document.getElementById("rpEvento");
 
   const buscarRP     = document.getElementById("buscarRP");
   const eventoFiltro = document.getElementById("eventoFiltro");
@@ -40,6 +39,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const boletosAsignados  = document.getElementById("boletosAsignados");
   const accesosUtilizados = document.getElementById("accesosUtilizados");
 
+
+  // MODAL ASIGNAR BOLETOS
+  const asignarModal       = document.getElementById("asignarModal");
+  const asignarForm        = document.getElementById("asignarForm");
+  const asignarRpId        = document.getElementById("asignarRpId");
+  const asignarEvento      = document.getElementById("asignarEvento");
+  const asignarTicket      = document.getElementById("asignarTicket");
+  const asignarCantidad    = document.getElementById("asignarCantidad");
+  const asignarMessage     = document.getElementById("asignarMessage");
+  const cerrarAsignarModal = document.getElementById("cerrarAsignarModal");
 
   /* MODAL */
 
@@ -114,6 +123,7 @@ async function cargarRPs() { try {
 
 async function cargarEventos() {
   try {
+
     const response = await fetch(
       `${API}/events?id_productora=${idProductora}`,
       {
@@ -130,50 +140,74 @@ async function cargarEventos() {
     }
 
     console.log("Eventos de la productora:", data);
-    console.table(data.events || data);
 
     const eventos = data.events || data;
 
-    if (!rpEvento) return;
+    // EVENTOS PARA ASIGNAR BOLETOS
+    if (asignarEvento) {
 
-    rpEvento.innerHTML = `
-      <option value="">Selecciona un evento</option>
-    `;
-
-    eventos.forEach((evento) => {
-      const option = document.createElement("option");
-
-      option.value = evento.id;
-      option.textContent = evento.name || `Evento #${evento.id}`;
-
-      rpEvento.appendChild(option);
-    });
-
-    if (eventoFiltro) {
-      eventoFiltro.innerHTML = `
-        <option value="">Todos los eventos</option>
+      asignarEvento.innerHTML = `
+        <option value="">
+          Selecciona un evento
+        </option>
       `;
 
       eventos.forEach((evento) => {
+
         const option = document.createElement("option");
 
         option.value = evento.id;
-option.textContent =
-  evento.name ||
-  `Evento #${evento.id}`;
+
+        option.textContent =
+          evento.name ||
+          `Evento #${evento.id}`;
+
+        asignarEvento.appendChild(option);
+
+      });
+    }
+
+    // FILTRO DE EVENTOS
+    if (eventoFiltro) {
+
+      eventoFiltro.innerHTML = `
+        <option value="">
+          Todos los eventos
+        </option>
+      `;
+
+      eventos.forEach((evento) => {
+
+        const option = document.createElement("option");
+
+        option.value = evento.id;
+
+        option.textContent =
+          evento.name ||
+          `Evento #${evento.id}`;
 
         eventoFiltro.appendChild(option);
+
       });
     }
 
   } catch (error) {
-    console.error("Error cargando eventos:", error);
 
-    if (rpEvento) {
-      rpEvento.innerHTML = `
-        <option value="">No fue posible cargar eventos</option>
+    console.error(
+      "Error cargando eventos:",
+      error
+    );
+
+    if (asignarEvento) {
+
+      asignarEvento.innerHTML = `
+        <option value="">
+          No fue posible cargar eventos
+        </option>
       `;
+
     }
+
   }
 }
 
@@ -250,8 +284,7 @@ async function cargarResumen() {
         ?.trim()
         .toLowerCase() || "";
 
-    const eventoSeleccionado =
-      eventoFiltro?.value || "";
+    const eventoSeleccionado = eventoFiltro?.value || "";
 
     const filtrados = rps.filter((rp) => {
       const coincideBusqueda =
@@ -299,36 +332,234 @@ async function cargarResumen() {
               </span>
             </div>
 
-            <div class="rp-card-body">
+        <div class="rp-card-body">
 
-              <div class="rp-info">
-                <span>Boletos asignados</span>
-                <strong>
-                  ${rp.boletos_asignados ?? 0}
-                </strong>
-              </div>
+          <div class="rp-info">
+            <span>Boletos asignados</span>
+            <strong>
+              ${rp.boletos_asignados ?? 0}
+            </strong>
+          </div>
 
-              <div class="rp-info">
-                <span>Boletos utilizados</span>
-                <strong>
-                  ${rp.boletos_utilizados ?? 0}
-                </strong>
-              </div>
+          <div class="rp-info">
+            <span>Boletos utilizados</span>
+            <strong>
+              ${rp.boletos_utilizados ?? 0}
+            </strong>
+          </div>
 
-              <div class="rp-info">
-                <span>Disponibles</span>
-                <strong>
-                  ${rp.boletos_disponibles ?? 0}
-                </strong>
-              </div>
+          <div class="rp-info">
+            <span>Disponibles</span>
+            <strong>
+              ${rp.boletos_disponibles ?? 0}
+            </strong>
+          </div>
 
-            </div>
+        </div>
+
+        <div class="rp-actions">
+
+          <button
+            type="button"
+            class="btn-asignar-boletos"
+            data-rp-id="${rp.id || rp.rp_user_id}">
+            🎟️ Asignar boletos
+          </button>
+
+        </div>
 
           </div>
         `;
       })
       .join("");
+  
+
+  // BOTONES ASIGNAR BOLETOS
+
+    document
+      .querySelectorAll(".btn-asignar-boletos")
+      .forEach((button) => {
+
+        button.addEventListener("click", () => {
+
+          const rpId = button.dataset.rpId;
+
+          abrirAsignarModal(rpId);
+
+        });
+
+      });
+}
+
+// =========================
+// ASIGNAR BOLETOS
+// =========================
+
+function abrirAsignarModal(rpId) {
+
+  if (!asignarModal) return;
+
+  if (asignarRpId) {
+    asignarRpId.value = rpId;
   }
+
+  if (asignarForm) {
+    asignarForm.reset();
+  }
+
+  if (asignarRpId) {
+    asignarRpId.value = rpId;
+  }
+
+  if (asignarTicket) {
+
+    asignarTicket.innerHTML = `
+      <option value="">
+        Selecciona primero un evento
+      </option>
+    `;
+
+    asignarTicket.disabled = true;
+  }
+
+  if (asignarMessage) {
+
+    asignarMessage.textContent = "";
+    asignarMessage.className = "modal-message";
+
+  }
+
+  asignarModal.classList.add("active");
+  asignarModal.style.display = "flex";
+}
+
+
+function cerrarAsignarModalFn() {
+
+  if (!asignarModal) return;
+
+  asignarModal.classList.remove("active");
+  asignarModal.style.display = "none";
+}
+
+cerrarAsignarModal?.addEventListener(
+  "click",
+  cerrarAsignarModalFn
+);
+
+asignarModal?.addEventListener("click", (e) => {
+
+  if (e.target === asignarModal) {
+    cerrarAsignarModalFn();
+  }
+
+});
+
+// CARGAR TIPOS DE BOLETO SEGÚN EL EVENTO
+
+asignarEvento?.addEventListener("change", async () => {
+
+  const idEvento = asignarEvento.value;
+
+  if (!asignarTicket) return;
+
+  asignarTicket.innerHTML = `
+    <option value="">
+      Selecciona un tipo de boleto
+    </option>
+  `;
+
+  asignarTicket.disabled = true;
+
+  if (!idEvento) {
+    return;
+  }
+
+  try {
+
+    asignarTicket.innerHTML = `
+      <option value="">
+        Cargando boletos...
+      </option>
+    `;
+
+    const response = await fetch(
+      `${API}/admin/rps/tipos-ticket?id_evento=${idEvento}`,
+      {
+        credentials: "include"
+      }
+    );
+
+    const data = await response.json();
+
+    console.log("Tipos de boleto:", data);
+
+    if (!response.ok) {
+      throw new Error(
+        data.error ||
+        "No fue posible cargar los tipos de boleto."
+      );
+    }
+
+const tipos = data.tickets || data.ticket_types || data.tipos || [];
+
+    if (!Array.isArray(tipos) || tipos.length === 0) {
+
+      asignarTicket.innerHTML = `
+        <option value="">
+          No hay boletos disponibles para este evento
+        </option>
+      `;
+
+      return;
+    }
+
+    asignarTicket.innerHTML = `
+      <option value="">
+        Selecciona un tipo de boleto
+      </option>
+    `;
+
+    tipos.forEach((tipo) => {
+
+      const option = document.createElement("option");
+
+      option.value = tipo.id || tipo.ticket_type_id;
+
+     option.textContent = tipo.tipo_ticket ||
+                          tipo.name ||
+                          tipo.nombre ||
+                          tipo.description ||
+                          `Boleto #${option.value}`;
+
+      asignarTicket.appendChild(option);
+
+    });
+
+    asignarTicket.disabled = false;
+
+  } catch (error) {
+
+    console.error(
+      "Error cargando tipos de boleto:",
+      error
+    );
+
+    asignarTicket.innerHTML = `
+      <option value="">
+        Error al cargar boletos
+      </option>
+    `;
+
+    if (asignarMessage) {
+      asignarMessage.textContent = error.message;
+      asignarMessage.className = "modal-message error";
+    }
+
+  }
+
+});
+
 
   // =========================
   // CREAR RP
@@ -345,19 +576,12 @@ async function cargarResumen() {
     const nombre = rpNombre?.value.trim();
     const telefono = rpTelefono?.value.trim();
     const instagram = rpInstagram?.value.trim();
-    const idEvento = rpEvento?.value;
 
   
     // VALIDACIONES
 
     if (!nombre) {
       rpMessage.textContent = "Escribe el nombre del RP.";
-      rpMessage.classList.add("error");
-      return;
-    }
-
-    if (!idEvento) {
-      rpMessage.textContent = "Selecciona un evento.";
       rpMessage.classList.add("error");
       return;
     }
