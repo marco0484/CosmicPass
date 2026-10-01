@@ -684,6 +684,21 @@ const tipos = data.tickets || data.ticket_types || data.tipos || [];
     }
 
   });
+
+    // =========================
+  // CREAR RP
+  // =========================
+
+  rpForm?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nombre = rpNombre?.value?.trim() || "";
+    const telefono = rpTelefono?.value?.trim() || "";
+    const instagram = rpInstagram?.value?.trim() || "";
+
+    rpMessage.textContent = "";
+    rpMessage.className = "modal-message";
+    
   
     // VALIDACIONES
 
