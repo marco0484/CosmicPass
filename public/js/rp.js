@@ -562,21 +562,128 @@ const tipos = data.tickets || data.ticket_types || data.tipos || [];
 
 
   // =========================
-  // CREAR RP
+  // ASIGNAR BOLETOS A RP
   // =========================
 
-  rpForm?.addEventListener("submit", async (e) => {
+  asignarForm?.addEventListener("submit", async (e) => {
+
     e.preventDefault();
 
-    if (!rpMessage) return;
+    if (!asignarMessage) return;
 
-    rpMessage.textContent = "";
-    rpMessage.className = "modal-message";
+    asignarMessage.textContent = "";
+    asignarMessage.className = "modal-message";
 
-    const nombre = rpNombre?.value.trim();
-    const telefono = rpTelefono?.value.trim();
-    const instagram = rpInstagram?.value.trim();
+    const rpId = Number(asignarRpId?.value);
+    const eventoId = Number(asignarEvento?.value);
+    const ticketTypeId = Number(asignarTicket?.value);
+    const cantidad = Number(asignarCantidad?.value);
 
+    // VALIDACIONES
+
+    if (!rpId) {
+      asignarMessage.textContent = "RP inválido.";
+      asignarMessage.classList.add("error");
+      return;
+    }
+
+    if (!eventoId) {
+      asignarMessage.textContent = "Selecciona un evento.";
+      asignarMessage.classList.add("error");
+      return;
+    }
+
+    if (!ticketTypeId) {
+      asignarMessage.textContent = "Selecciona un tipo de boleto.";
+      asignarMessage.classList.add("error");
+      return;
+    }
+
+    if (!Number.isInteger(cantidad) || cantidad <= 0) {
+      asignarMessage.textContent = "La cantidad debe ser mayor a 0.";
+      asignarMessage.classList.add("error");
+      return;
+    }
+
+    const submitBtn =
+      asignarForm.querySelector(".modal-submit");
+
+    const textoOriginal =
+      submitBtn?.textContent || "Asignar boletos";
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Asignando...";
+    }
+
+    try {
+
+      const response = await fetch(
+        `${API}/admin/rps/asignar`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            rp_user_id: rpId,
+            id_evento: eventoId,
+            ticket_type_id: ticketTypeId,
+            cantidad: cantidad
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      console.log("Respuesta asignar boletos:", data);
+
+      if (!response.ok || !data.success) {
+        throw new Error(
+          data.error ||
+          "No se pudieron asignar los boletos."
+        );
+      }
+
+      // ÉXITO
+
+      asignarMessage.className = "modal-message success";
+
+      asignarMessage.textContent =
+        `✓ Se asignaron ${cantidad} boleto${cantidad === 1 ? "" : "s"} correctamente.`;
+
+      await cargarRPs();
+      await cargarResumen();
+
+      setTimeout(() => {
+        cerrarAsignarModalFn();
+      }, 1500);
+
+    } catch (error) {
+
+      console.error(
+        "Error asignando boletos:",
+        error
+      );
+
+      asignarMessage.className =
+        "modal-message error";
+
+      asignarMessage.textContent =
+        error.message ||
+        "No se pudieron asignar los boletos.";
+
+    } finally {
+
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = textoOriginal;
+      }
+
+    }
+
+  });
   
     // VALIDACIONES
 

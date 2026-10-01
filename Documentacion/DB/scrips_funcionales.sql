@@ -1,6 +1,7 @@
-select  cp.id as id_prodcutora
-	   ,cp.name as nombre_productora
-	   ,ce.name as nombre_evento
+select  cp.id 		 as id_prodcutora
+	   ,cp.name 	 as nombre_productora
+	   ,ce.id		 as id_evento 
+	   ,ce.name 	 as nombre_evento
 	   ,ce.ind_activo 
 	   ,tt.tipo_ticket
 	   ,tt.desc_ticket 
