@@ -333,28 +333,26 @@ async function cargarResumen() {
             </div>
 
         <div class="rp-card-body">
+<div class="rp-info">
+  <span>Boletos asignados</span>
+  <strong>
+    ${rp.asignados ?? rp.boletos_asignados ?? 0}
+  </strong>
+</div>
 
-          <div class="rp-info">
-            <span>Boletos asignados</span>
-            <strong>
-              ${rp.boletos_asignados ?? 0}
-            </strong>
-          </div>
+<div class="rp-info">
+  <span>Boletos utilizados</span>
+  <strong>
+    ${rp.vendidos ?? rp.boletos_utilizados ?? 0}
+  </strong>
+</div>
 
-          <div class="rp-info">
-            <span>Boletos utilizados</span>
-            <strong>
-              ${rp.boletos_utilizados ?? 0}
-            </strong>
-          </div>
-
-          <div class="rp-info">
-            <span>Disponibles</span>
-            <strong>
-              ${rp.boletos_disponibles ?? 0}
-            </strong>
-          </div>
-
+<div class="rp-info">
+  <span>Disponibles</span>
+  <strong>
+    ${rp.disponibles ?? rp.boletos_disponibles ?? 0}
+  </strong>
+            </div>
         </div>
 
         <div class="rp-actions">
@@ -698,7 +696,7 @@ const tipos = data.tickets || data.ticket_types || data.tipos || [];
 
     rpMessage.textContent = "";
     rpMessage.className = "modal-message";
-    
+
   
     // VALIDACIONES
 
@@ -768,16 +766,11 @@ const tipos = data.tickets || data.ticket_types || data.tipos || [];
         <small> Guarda estas credenciales. </small>
       `;
 
-      
-      // ACTUALIZAR LISTADO
-
+  
       await cargarRPs();
       await cargarResumen();
 
-
-      setTimeout(() => {
-        cerrarModal();
-      }, 10000);
+      setTimeout(() => { cerrarModal();}, 10000);
 
     } catch (error) {
 
