@@ -4590,4 +4590,282 @@ if (eventoError || !evento) {
   }
 });
 
+
+/* =========================================
+   ESTACIONAMIENTO COSMIC PASS
+========================================= */
+
+// Eventos disponibles para la productora de la sesión.
+app.get("/admin/parking/eventos", requerirSesion, async (req, res) => {
+  try {
+    const idProductora = Number(req.usuario.id_productora);
+
+    if (!idProductora) {
+      return res.status(403).json({
+        error: "El usuario no tiene una productora asignada."
+      });
+    }
+
+    const { data, error } = await supabase.rpc("get_events", {
+      p_id_productora: idProductora
+    });
+
+    if (error) throw error;
+
+    return res.json(Array.isArray(data) ? data : []);
+  } catch (error) {
+    console.error("Error cargando eventos de estacionamiento:", error);
+    return res.status(500).json({
+      error: "No fue posible cargar los eventos."
+    });
+  }
+});
+
+
+// Configuración de capacidad del evento.
+app.get("/admin/parking/config", requerirSesion, async (req, res) => {
+  try {
+    const idProductora = Number(req.usuario.id_productora);
+    const idEvento = Number(req.query.id_evento);
+
+    if (!idProductora || !idEvento) {
+      return res.status(400).json({
+        error: "Productora o evento inválido."
+      });
+    }
+
+    const { data, error } = await supabase
+      .from("parking_config")
+      .select("id, id_productora, id_evento, capacidad_total, activo")
+      .eq("id_productora", idProductora)
+      .eq("id_evento", idEvento)
+      .eq("activo", true)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data) {
+      return res.status(404).json({
+        error: "Este evento no tiene una configuración activa de estacionamiento."
+      });
+    }
+
+    return res.json(data);
+  } catch (error) {
+    console.error("Error consultando configuración de estacionamiento:", error);
+    return res.status(500).json({
+      error: "No fue posible consultar la capacidad."
+    });
+  }
+});
+
+
+// Listado de vehículos e historial del evento.
+app.get("/admin/parking/registros", requerirSesion, async (req, res) => {
+  try {
+    const idProductora = Number(req.usuario.id_productora);
+    const idEvento = Number(req.query.id_evento);
+
+    if (!idProductora || !idEvento) {
+      return res.status(400).json({
+        error: "Productora o evento inválido."
+      });
+    }
+
+    const { data: config, error: errorConfig } = await supabase
+      .from("parking_config")
+      .select("id")
+      .eq("id_productora", idProductora)
+      .eq("id_evento", idEvento)
+      .eq("activo", true)
+      .maybeSingle();
+
+    if (errorConfig) throw errorConfig;
+
+    if (!config) {
+      return res.status(404).json({
+        error: "El evento no tiene estacionamiento activo."
+      });
+    }
+
+    const { data, error } = await supabase
+      .from("parking_registros")
+      .select("*")
+      .eq("id_productora", idProductora)
+      .eq("id_evento", idEvento)
+      .order("fecha_entrada", { ascending: false });
+
+    if (error) throw error;
+
+    return res.json(data || []);
+  } catch (error) {
+    console.error("Error cargando registros de estacionamiento:", error);
+    return res.status(500).json({
+      error: "No fue posible cargar los vehículos."
+    });
+  }
+});
+
+
+// Registrar entrada.
+app.post("/admin/parking/entrada", requerirSesion, async (req, res) => {
+  try {
+    const idProductora = Number(req.usuario.id_productora);
+    const idEvento = Number(req.body.id_evento);
+    const placa = String(req.body.placa || "").trim().toUpperCase();
+    const vehiculo = String(req.body.vehiculo || "").trim();
+    const color = String(req.body.color || "").trim();
+    const espacio = String(req.body.espacio || "").trim();
+
+    if (!idProductora || !idEvento || !placa) {
+      return res.status(400).json({
+        error: "Evento y placa son obligatorios."
+      });
+    }
+
+    const { data: config, error: errorConfig } = await supabase
+      .from("parking_config")
+      .select("capacidad_total")
+      .eq("id_productora", idProductora)
+      .eq("id_evento", idEvento)
+      .eq("activo", true)
+      .maybeSingle();
+
+    if (errorConfig) throw errorConfig;
+
+    if (!config) {
+      return res.status(404).json({
+        error: "El estacionamiento no está activo para este evento."
+      });
+    }
+
+    // Evitar registrar dos veces una placa que sigue dentro.
+    const { data: duplicado, error: errorDuplicado } = await supabase
+      .from("parking_registros")
+      .select("id")
+      .eq("id_productora", idProductora)
+      .eq("id_evento", idEvento)
+      .ilike("placa", placa)
+      .eq("estado", "dentro")
+      .limit(1);
+
+    if (errorDuplicado) throw errorDuplicado;
+
+    if (duplicado && duplicado.length) {
+      return res.status(409).json({
+        error: "Esta placa ya tiene una entrada activa."
+      });
+    }
+
+    // Contar vehículos que siguen dentro.
+    const { data: dentro, error: errorDentro } = await supabase
+      .from("parking_registros")
+      .select("id")
+      .eq("id_productora", idProductora)
+      .eq("id_evento", idEvento)
+      .eq("estado", "dentro");
+
+    if (errorDentro) throw errorDentro;
+
+    if ((dentro || []).length >= Number(config.capacidad_total)) {
+      return res.status(409).json({
+        error: "El estacionamiento está lleno."
+      });
+    }
+
+    const { data, error } = await supabase
+      .from("parking_registros")
+      .insert({
+        id_productora: idProductora,
+        id_evento: idEvento,
+        placa,
+        vehiculo: vehiculo || null,
+        color: color || null,
+        espacio: espacio || null,
+        fecha_entrada: new Date().toISOString(),
+        fecha_salida: null,
+        estado: "dentro",
+        registrado_por: req.usuario.id
+      })
+      .select("*")
+      .single();
+
+    if (error) throw error;
+
+    return res.status(201).json({
+      success: true,
+      registro: data
+    });
+  } catch (error) {
+    console.error("Error registrando entrada:", error);
+    return res.status(500).json({
+      error: "No fue posible registrar la entrada."
+    });
+  }
+});
+
+
+// Registrar salida.
+app.post("/admin/parking/salida", requerirSesion, async (req, res) => {
+  try {
+    const idProductora = Number(req.usuario.id_productora);
+    const idEvento = Number(req.body.id_evento);
+    const idRegistro = Number(req.body.id);
+
+    if (!idProductora || !idEvento || !idRegistro) {
+      return res.status(400).json({
+        error: "Los datos de salida son inválidos."
+      });
+    }
+
+    const { data: config, error: errorConfig } = await supabase
+      .from("parking_config")
+      .select("id")
+      .eq("id_productora", idProductora)
+      .eq("id_evento", idEvento)
+      .eq("activo", true)
+      .maybeSingle();
+
+    if (errorConfig) throw errorConfig;
+
+    if (!config) {
+      return res.status(404).json({
+        error: "El estacionamiento no está activo."
+      });
+    }
+
+    const { data, error } = await supabase
+      .from("parking_registros")
+      .update({
+        fecha_salida: new Date().toISOString(),
+        estado: "salio"
+      })
+      .eq("id", idRegistro)
+      .eq("id_productora", idProductora)
+      .eq("id_evento", idEvento)
+      .eq("estado", "dentro")
+      .select("*")
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (!data) {
+      return res.status(404).json({
+        error: "El vehículo no existe o ya registró su salida."
+      });
+    }
+
+    return res.json({
+      success: true,
+      registro: data
+    });
+  } catch (error) {
+    console.error("Error registrando salida:", error);
+    return res.status(500).json({
+      error: "No fue posible registrar la salida."
+    });
+  }
+});
+
+
 module.exports = app;
