@@ -296,10 +296,7 @@ async function cargarResumen() {
           .toLowerCase()
           .includes(textoBusqueda);
 
-      const coincideEvento =
-        !eventoSeleccionado ||
-        String(rp.id_evento || "") ===
-          String(eventoSeleccionado);
+    const coincideEvento = true;
 
       return coincideBusqueda && coincideEvento;
     });
