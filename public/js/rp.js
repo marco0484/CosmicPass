@@ -215,52 +215,45 @@ async function cargarEventos() {
 
 async function cargarResumen() {
   try {
-
     const response = await fetch(
       `${API}/admin/rps/resumen?id_productora=${idProductora}`,
-      {
-        credentials: "include"
-      }
+      { credentials: "include" }
     );
 
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(
-        data.error || "No fue posible cargar el resumen."
-      );
+      throw new Error(data.error || "No fue posible cargar el resumen.");
     }
 
     console.log("Resumen RP:", data);
 
+    const rps = data.rps || [];
+
+    // Actualizar tarjetas con los datos que sí incluyen las asignaciones
+    renderizarRPs(rps);
+
+    // Calcular indicadores superiores
     if (totalRPs) {
-      totalRPs.textContent =
-        data.totalRPs ??
-        data.total_rps ??
-        0;
+      totalRPs.textContent = rps.filter(rp => rp.activo !== false).length;
     }
 
     if (boletosAsignados) {
-      boletosAsignados.textContent =
-        data.boletosAsignados ??
-        data.boletos_asignados ??
-        0;
+      boletosAsignados.textContent = rps.reduce(
+        (total, rp) => total + Number(rp.asignados || 0),
+        0
+      );
     }
 
     if (accesosUtilizados) {
-      accesosUtilizados.textContent =
-        data.accesosUtilizados ??
-        data.accesos_utilizados ??
-        0;
+      accesosUtilizados.textContent = rps.reduce(
+        (total, rp) => total + Number(rp.vendidos || 0),
+        0
+      );
     }
 
   } catch (error) {
-
-    console.error(
-      "Error cargando resumen RP:",
-      error
-    );
-
+    console.error("Error cargando resumen RP:", error);
   }
 }
 
@@ -360,9 +353,7 @@ async function cargarResumen() {
             data-rp-id="${rp.id || rp.rp_user_id}">
             🎟️ Asignar boletos
           </button>
-
         </div>
-
           </div>
         `;
       })
