@@ -1,3 +1,10 @@
+UPDATE public.cosmic_usuarios
+SET password_hash = extensions.crypt(
+    'marco0484**..',
+    extensions.gen_salt('bf')
+)
+WHERE id = 2;
+
 select  cp.id 		 as id_prodcutora
 	   ,cp.name 	 as nombre_productora
 	   ,ce.id		 as id_evento 

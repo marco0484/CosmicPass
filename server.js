@@ -2290,9 +2290,9 @@ app.get("/admin/rps/tipos-ticket", requerirSesion, async (req, res) => {
   }
 });
 
+
 app.post("/admin/rps/asignar", requerirSesion, async (req, res) => {
   try {
-
     const {
       rp_user_id,
       id_evento,
@@ -2300,19 +2300,26 @@ app.post("/admin/rps/asignar", requerirSesion, async (req, res) => {
       cantidad
     } = req.body;
 
-    const rol =
-      String(req.usuario.rol || "").toLowerCase();
+    const rol = String(req.usuario.rol || "").toLowerCase();
+    const idProductora = Number(req.usuario.id_productora) || null;
 
-    const idProductora =
-      Number(req.usuario.id_productora) || null;
+    // VALIDAR PERMISOS
+    const tienePermiso = ["admin", "owner"].includes(rol);
 
-    if (rol !== "admin" || !idProductora) {
+    if (!tienePermiso || !idProductora) {
+      console.log("PERMISOS ASIGNAR:", {
+        id: req.usuario.id,
+        rol: req.usuario.rol,
+        id_productora: req.usuario.id_productora
+      });
+
       return res.status(403).json({
         success: false,
         error: "No tienes permisos para asignar accesos"
       });
     }
 
+    // VALIDAR DATOS
     const rpId = Number(rp_user_id);
     const eventoId = Number(id_evento);
     const ticketTypeId = Number(ticket_type_id);
@@ -2331,8 +2338,7 @@ app.post("/admin/rps/asignar", requerirSesion, async (req, res) => {
       });
     }
 
-    /* VALIDAR RP */
-
+    // VALIDAR RP DE LA PRODUCTORA
     const {
       data: rp,
       error: rpError
@@ -2353,8 +2359,7 @@ app.post("/admin/rps/asignar", requerirSesion, async (req, res) => {
       });
     }
 
-    /* VALIDAR TIPO DE ACCESO */
-
+    // VALIDAR TIPO DE ACCESO DEL EVENTO
     const {
       data: ticketType,
       error: ticketError
@@ -2376,8 +2381,7 @@ app.post("/admin/rps/asignar", requerirSesion, async (req, res) => {
       });
     }
 
-    /* BUSCAR ASIGNACIÓN EXISTENTE */
-
+    // BUSCAR ASIGNACIÓN EXISTENTE
     const {
       data: asignacion,
       error: asignacionError
@@ -2395,10 +2399,9 @@ app.post("/admin/rps/asignar", requerirSesion, async (req, res) => {
     let resultado;
 
     if (asignacion) {
-
+      // SUMAR A LA ASIGNACIÓN EXISTENTE
       const nuevaCantidad =
-        Number(asignacion.cantidad_asignada) +
-        cantidadAsignar;
+        Number(asignacion.cantidad_asignada) + cantidadAsignar;
 
       const {
         data,
@@ -2416,9 +2419,8 @@ app.post("/admin/rps/asignar", requerirSesion, async (req, res) => {
       if (error) throw error;
 
       resultado = data;
-
     } else {
-
+      // CREAR NUEVA ASIGNACIÓN
       const {
         data,
         error
@@ -2447,11 +2449,7 @@ app.post("/admin/rps/asignar", requerirSesion, async (req, res) => {
     });
 
   } catch (error) {
-
-    console.error(
-      "ERROR /admin/rps/asignar:",
-      error
-    );
+    console.error("ERROR /admin/rps/asignar:", error);
 
     return res.status(500).json({
       success: false,
