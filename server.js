@@ -2304,20 +2304,20 @@ app.post("/admin/rps/asignar", requerirSesion, async (req, res) => {
     const idProductora = Number(req.usuario.id_productora) || null;
 
     // VALIDAR PERMISOS
-    const tienePermiso = ["admin", "owner"].includes(rol);
+      const rolesPermitidos = ["admin", "owner", "usuario"];
 
-    if (!tienePermiso || !idProductora) {
-      console.log("PERMISOS ASIGNAR:", {
-        id: req.usuario.id,
-        rol: req.usuario.rol,
-        id_productora: req.usuario.id_productora
-      });
+      if (!rolesPermitidos.includes(rol) || !idProductora) {
+        console.log("PERMISOS ASIGNAR:", {
+          id: req.usuario.id,
+          rol: req.usuario.rol,
+          id_productora: req.usuario.id_productora
+        });
 
-      return res.status(403).json({
-        success: false,
-        error: "No tienes permisos para asignar accesos"
-      });
-    }
+        return res.status(403).json({
+          success: false,
+          error: "No tienes permisos para asignar accesos"
+        });
+      }
 
     // VALIDAR DATOS
     const rpId = Number(rp_user_id);
