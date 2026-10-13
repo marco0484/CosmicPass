@@ -1467,21 +1467,13 @@ footer{
 .producer-story h2,
 .trust h2,
 .producer-socials h2{
-
   font-size: clamp(34px,4vw,56px);
-
   font-weight:800;
-
   letter-spacing:-2px;
-
   line-height:1.15;
-
   margin:0 auto 40px;
-
   text-align:center;
-
   color:#fff;
-
   text-shadow:
     0 0 10px rgba(0,229,255,.12),
     0 0 20px rgba(0,229,255,.06);
@@ -2621,19 +2613,8 @@ footer{
   font-weight:800;
 }
 
-.access-row p{
-  margin:0;
-  color:rgba(255,255,255,.68);
-  font-size:13px;
-  line-height:1.55;
-}
-
 .access-row.ok strong{
   color:#7dffb3;
-}
-
-.access-row.danger strong{
-  color:#ff7676;
 }
 
 .access-mini-card{
@@ -2656,13 +2637,6 @@ footer{
 
 .dashboard-top strong{
   font-size:16px;
-}
-
-.dashboard-main{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:18px;
-  margin:22px 0;
 }
 
 .dashboard-main div{
@@ -2694,22 +2668,6 @@ footer{
   font-weight:700;
 }
 
-.dashboard-list{
-  display:grid;
-  gap:12px;
-}
-
-.dashboard-list div{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:18px;
-  padding:16px 18px;
-  border-radius:18px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-}
-
 .dashboard-list strong{
   color:#fff;
   font-size:18px;
@@ -2723,13 +2681,6 @@ footer{
   color:#fff;
   font-size:15px;
   font-weight:700;
-}
-
-.access-row p{
-  margin:0;
-  color:rgba(255,255,255,.68);
-  font-size:13px;
-  line-height:1.55;
 }
 
 .access-row.ok strong{
@@ -2862,10 +2813,6 @@ section{
   text-transform:uppercase;
 }
 
-.dashboard-top strong{
-  font-size:20px;
-}
-
 .dashboard-main{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -2916,13 +2863,6 @@ section{
   background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.08);
 }
-
-.dashboard-list strong{
-  color:#fff;
-  font-size:18px;
-  white-space:nowrap;
-}
-
 
 .demo-disclaimer{
   width:calc(100% - 48px);
@@ -3655,6 +3595,7 @@ section{
     min-height:220px;
     padding:34px 20px;
     border-radius:0 0 34px 34px;
+    padding-top: 40px;
   }
 
   .producer-logo{
@@ -3975,9 +3916,7 @@ section{
     transform: none;
   }
 
-  .hero-inner {
-    padding-top: 40px;
-  }
+
 
   .producer-logo {
     margin: 0 auto 24px;
