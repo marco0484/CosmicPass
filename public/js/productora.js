@@ -81,8 +81,7 @@ const pastEvents = eventos.filter(e => {
 
 activeEvents.forEach(evento => {
 
-  const card =
-    document.createElement("div");
+  const card = document.createElement("div");
 
   card.classList.add("event-card");
 
@@ -95,13 +94,8 @@ card.innerHTML = `
     >
 
     <div class="info">
-
       <h3>${evento.name}</h3>
-
-      <p>
-        📍 ${evento.city || "México"}
-      </p>
-
+      <p> 📍 ${evento.city || "México"} </p>
       <p>
         📅 ${formatDate(
           evento.event_date ||
@@ -136,8 +130,7 @@ card.innerHTML = `
 
 });
 
-const pastContainer =
-  document.querySelector(".past-cards");
+const pastContainer = document.querySelector(".past-cards");
 
 if(pastContainer){
   pastContainer.innerHTML = "";
@@ -156,13 +149,8 @@ if(pastContainer){
 >
 
       <div class="info">
-
         <h3>${evento.name}</h3>
-
-        <p>
-          📍 ${evento.city || "México"}
-        </p>
-
+        <p> 📍 ${evento.city || "México"} </p>
         <p>
           📅 ${formatDate(
             evento.event_date ||
@@ -170,13 +158,8 @@ if(pastContainer){
             evento.fecha
           )}
         </p>
-
-        <span class="past-label">
-          Evento finalizado
-        </span>
-
+        <span class="past-label"> Evento finalizado </span>
       </div>
-
     `;
 
     pastContainer.appendChild(card);
@@ -195,17 +178,31 @@ function renderFeatures(features) {
 const headers = features.filter(f => Number(f.level) === 1);
 
 
-    headers.forEach(header => {
-      const div = document.createElement("div");
-      div.classList.add("feature-header-card");
+headers.forEach(header => {
 
-      div.innerHTML = `
-        <span class="icon">${header.icon || ""}</span>
-        <span class="text">${header.name}</span>
-      `;
+  const div = document.createElement("div");
+  div.classList.add("feature-header-card");
 
-      tag.appendChild(div);
+  div.innerHTML = `
+    <span class="icon">${header.icon || ""}</span>
+    <span class="text">${header.name}</span>
+  `;
+
+  if (
+    Number(header.id_features) === 10 ||
+    String(header.name || "").trim().toLowerCase() === "rps autorizados"
+  ) {
+    div.style.cursor = "pointer";
+
+    div.addEventListener("click", () => {
+      window.location.href =
+        `/rps_publicos.html?productora=${encodeURIComponent(slug)}`;
     });
+  }
+
+  tag.appendChild(div);
+});
+
   }
 
   const badgesContainer = document.querySelector(".badges");
@@ -245,11 +242,8 @@ const trust = features.filter(f => Number(f.level) === 3);
 
 function renderProducer(data, eventos) {
 
-  document.getElementById("producer-name").textContent =
-    data.name;
-
-    const productoraLogo =
-  document.getElementById("productoraLogo");
+  document.getElementById("producer-name").textContent = data.name;
+    const productoraLogo = document.getElementById("productoraLogo");
 
 if (productoraLogo) {
   productoraLogo.textContent = data.name;
@@ -260,11 +254,8 @@ if (productoraLogo) {
     data.description ||
     "";
 
-  document.title =
-    `${data.name} | Cosmic Pass`;
-
-  const cover =
-    document.getElementById("producer-cover");
+  document.title = `${data.name} | Cosmic Pass`;
+  const cover    = document.getElementById("producer-cover");
 
   if (cover) {
 
@@ -336,11 +327,7 @@ const res = await fetch(
 );
 
     if (!res.ok) {
-
-      throw new Error(
-        "Error cargando productora"
-      );
-
+      throw new Error( "Error cargando productora");
     }
 
 const data = await res.json();
@@ -352,13 +339,8 @@ renderProducer(
   data.eventos || []
 );
 
-    renderEvents(
-      data.eventos || []
-    );
-
-    renderFeatures(
-      data.features || []
-    );
+    renderEvents( data.eventos || [] );
+    renderFeatures( data.features || []);
 
   } catch (err) {
 
@@ -368,13 +350,8 @@ renderProducer(
 
 loadData();
 
-function irEvento(id) {
-  window.location.href = `evento.html?id=${id}`;
-}
-
-function irHome() {
-  window.location.href = "index.html";
-}
+function irEvento(id) { window.location.href = `evento.html?id=${id}`;}
+function irHome() { window.location.href = "index.html";}
 
 async function openTicketModal(eventName, eventId) {
   const modal = document.getElementById("ticket-modal");
@@ -462,34 +439,16 @@ if (agotado) {
 
   div.innerHTML = `
  <div>
-
-  <h3>
-    ${ticket.tipo_ticket}
-  </h3>
-
-  <p>
-    ${ticket.desc_ticket || ""}
-  </p>
+  <h3> ${ticket.tipo_ticket}</h3>
+  <p> ${ticket.desc_ticket || ""} </p>
 
   ${
     Number(ticket.stock_disponible) <= 0
-      ? `
-        <span class="ticket-mini-info ticket-sold-out">
-          AGOTADO
-        </span>
-      `
-      : `
-        <span class="ticket-mini-info">
-          ${ticket.stock_disponible} disponibles
-        </span>
-
+      ? ` <span class="ticket-mini-info ticket-sold-out"> AGOTADO </span> `
+      : ` <span class="ticket-mini-info"> ${ticket.stock_disponible} disponibles </span>
         ${
           ticket.fecha_fin
-            ? `
-              <span class="ticket-mini-info">
-                Hasta ${formatDate(ticket.fecha_fin)}
-              </span>
-            `
+            ? ` <span class="ticket-mini-info"> Hasta ${formatDate(ticket.fecha_fin)} </span> `
             : ""
         }
       `
@@ -521,12 +480,8 @@ div.addEventListener("click", () => {
   selectedTicket = ticket;
   selectedEventId = eventId;
 
-  const globalQty =
-    document.getElementById("global-ticket-qty");
-
-  const globalTotal =
-    document.getElementById("global-ticket-total");
-
+  const globalQty   = document.getElementById("global-ticket-qty");
+  const globalTotal = document.getElementById("global-ticket-total");
 const updateGlobalTotal = () => {
 
   if (Number(ticket.precio) === 0) {

@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>RPs autorizados | Cosmic Pass</title>
+
+  <link rel="icon" type="image/png" href="/images/cp.webp">
+
+  <style>
+    :root {
+      --azul: #168cff;
+      --azul-oscuro: #071426;
+      --fondo: #050b15;
+      --tarjeta: #101c2d;
+      --texto: #f4f7fb;
+      --texto-secundario: #a9b8ca;
+      --borde: rgba(255, 255, 255, 0.09);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(
+          circle at top,
+          rgba(22, 140, 255, 0.14),
+          transparent 38%
+        ),
+        var(--fondo);
+      color: var(--texto);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .pagina {
+      width: min(1100px, 92%);
+      margin: 0 auto;
+      padding: 25px 0 55px;
+    }
+
+    .barra-superior {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid var(--borde);
+    }
+
+    .marca {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+    }
+
+    .marca img {
+      width: 39px;
+      height: 39px;
+      object-fit: contain;
+    }
+
+    .marca span {
+      color: var(--azul);
+    }
+
+    .volver {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 10px 15px;
+      border: 1px solid var(--borde);
+      border-radius: 10px;
+      color: var(--texto-secundario);
+      font-size: 13px;
+      transition: 0.2s;
+    }
+
+    .volver:hover {
+      color: white;
+      border-color: var(--azul);
+    }
+
+    .encabezado {
+      padding: 48px 0 35px;
+      text-align: center;
+    }
+
+    .etiqueta {
+      display: inline-block;
+      margin-bottom: 15px;
+      padding: 7px 12px;
+      border: 1px solid rgba(22, 140, 255, 0.3);
+      border-radius: 50px;
+      background: rgba(22, 140, 255, 0.08);
+      color: #73baff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin-bottom: 12px;
+      font-size: clamp(29px, 5vw, 43px);
+      line-height: 1.15;
+    }
+
+    h1 span {
+      color: var(--azul);
+    }
+
+    .descripcion {
+      max-width: 550px;
+      margin: 0 auto;
+      color: var(--texto-secundario);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .resumen {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 15px;
+      margin: 10px 0 22px;
+    }
+
+    .resumen h2 {
+      font-size: 18px;
+    }
+
+    .contador {
+      color: var(--texto-secundario);
+      font-size: 13px;
+    }
+
+    .grid-rps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .tarjeta {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      padding: 23px;
+      border: 1px solid var(--borde);
+      border-radius: 17px;
+      background: linear-gradient(
+        145deg,
+        rgba(20, 37, 58, 0.98),
+        rgba(11, 21, 35, 0.98)
+      );
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .tarjeta:hover {
+      transform: translateY(-4px);
+      border-color: rgba(22, 140, 255, 0.55);
+    }
+
+    .avatar {
+      display: grid;
+      place-items: center;
+      width: 61px;
+      height: 61px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(22, 140, 255, 0.3);
+      border-radius: 16px;
+      background: rgba(22, 140, 255, 0.12);
+      color: #79bdff;
+      font-size: 24px;
+      font-weight: 800;
+    }
+
+    .estado {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin-bottom: 11px;
+      color: #8ce7b0;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .punto {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #48d98b;
+    }
+
+    .nombre-rp {
+      overflow-wrap: anywhere;
+      margin-bottom: 8px;
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    .subtitulo {
+      min-height: 36px;
+      margin-bottom: 20px;
+      color: var(--texto-secundario);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .contactos {
+      display: grid;
+      gap: 10px;
+      margin-top: auto;
+    }
+
+    .boton-contacto {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      min-height: 43px;
+      padding: 11px;
+      border: 1px solid var(--borde);
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      text-align: center;
+      transition: 0.2s;
+    }
+
+    .whatsapp {
+      border-color: rgba(37, 211, 102, 0.3);
+      background: rgba(37, 211, 102, 0.1);
+      color: #83edaa;
+    }
+
+    .whatsapp:hover {
+      background: rgba(37, 211, 102, 0.2);
+    }
+
+    .instagram {
+      background: rgba(255, 255, 255, 0.035);
+      color: #e4eaf2;
+    }
+
+    .instagram:hover {
+      border-color: #c46bdb;
+      color: #e7a7f5;
+    }
+
+    .sin-contacto {
+      padding: 13px;
+      border: 1px solid var(--borde);
+      border-radius: 10px;
+      color: var(--texto-secundario);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .estado-pagina {
+      grid-column: 1 / -1;
+      padding: 35px 20px;
+      border: 1px solid var(--borde);
+      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.025);
+      color: var(--texto-secundario);
+      text-align: center;
+      line-height: 1.7;
+    }
+
+    .estado-pagina strong {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--texto);
+      font-size: 17px;
+    }
+
+    footer {
+      margin-top: 50px;
+      padding-top: 20px;
+      border-top: 1px solid var(--borde);
+      color: var(--texto-secundario);
+      font-size: 12px;
+      line-height: 1.8;
+      text-align: center;
+    }
+
+    footer span {
+      color: var(--azul);
+      font-weight: 800;
+    }
+
+    @media (max-width: 850px) {
+      .grid-rps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .pagina {
+        width: 91%;
+        padding-top: 18px;
+      }
+
+      .marca {
+        font-size: 16px;
+      }
+
+      .marca img {
+        width: 33px;
+        height: 33px;
+      }
+
+      .volver {
+        padding: 9px 11px;
+        font-size: 12px;
+      }
+
+      .encabezado {
+        padding: 38px 0 27px;
+      }
+
+      .descripcion {
+        font-size: 14px;
+      }
+
+      .grid-rps {
+        grid-template-columns: 1fr;
+        gap: 13px;
+      }
+
+      .tarjeta {
+        padding: 20px;
+      }
+
+      .avatar {
+        width: 54px;
+        height: 54px;
+      }
+
+      .subtitulo {
+        min-height: auto;
+      }
+
+      footer {
+        margin-top: 35px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main class="pagina">
+
+    <nav class="barra-superior">
+      <a class="marca" href="/" aria-label="Cosmic Pass, inicio">
+        <img src="/images/cp.webp" alt="Cosmic Pass">
+        <div>COSMIC <span>PASS</span></div>
+      </a>
+
+      <a class="volver" id="volver-productora" href="/">
+        ← Volver
+      </a>
+    </nav>
+
+    <header class="encabezado">
+      <div class="etiqueta">Contactos oficiales</div>
+
+      <h1>RPs <span>autorizados</span></h1>
+
+      <p class="descripcion">
+        Contacta directamente a los representantes autorizados
+        de <strong id="nombre-productora">esta productora</strong>
+        para recibir información y atención sobre sus eventos.
+      </p>
+    </header>
+
+    <section aria-labelledby="titulo-listado">
+      <div class="resumen">
+        <h2 id="titulo-listado">Nuestros representantes</h2>
+        <span class="contador" id="contador-rps">Cargando...</span>
+      </div>
+
+      <div class="grid-rps" id="lista-rps" aria-live="polite">
+        <div class="estado-pagina">
+          Cargando representantes...
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Contactos correspondientes a la productora seleccionada.</p>
+      <p>Powered by <span>Cosmic Pass</span></p>
+    </footer>
+
+  </main>
+
+  <script>
+    (() => {
+      const API = window.location.hostname === "localhost"
+        ? "http://localhost:3000"
+        : "https://www.cosmicpass.space";
+
+      const parametros = new URLSearchParams(window.location.search);
+      const slug = (parametros.get("productora") || "").trim();
+
+      const lista = document.getElementById("lista-rps");
+      const contador = document.getElementById("contador-rps");
+      const nombreProductora = document.getElementById("nombre-productora");
+      const volver = document.getElementById("volver-productora");
+
+      // Escapar texto antes de insertarlo en el HTML
+      function escaparHTML(valor) {
+        return String(valor ?? "").replace(/[&<>"']/g, caracter => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        })[caracter]);
+      }
+
+      function mostrarMensaje(titulo, mensaje) {
+        lista.innerHTML = `
+          <div class="estado-pagina">
+            <strong>${escaparHTML(titulo)}</strong>
+            ${escaparHTML(mensaje)}
+          </div>
+        `;
+      }
+
+      function normalizarInstagram(valor) {
+        const texto = String(valor || "").trim();
+
+        if (!texto) return "";
+
+        // Aceptar un usuario o una URL de Instagram
+        if (/^https?:\/\//i.test(texto)) {
+          try {
+            const url = new URL(texto);
+
+            if (
+              !["instagram.com", "www.instagram.com"].includes(
+                url.hostname.toLowerCase()
+              )
+            ) {
+              return "";
+            }
+
+            return url.href;
+          } catch {
+            return "";
+          }
+        }
+
+        const usuario = texto
+          .replace(/^@/, "")
+          .replace(/^instagram\.com\//i, "")
+          .replace(/\/+$/, "");
+
+        if (!/^[a-zA-Z0-9._]{1,30}$/.test(usuario)) {
+          return "";
+        }
+
+        return `https://www.instagram.com/${usuario}/`;
+      }
+
+      function normalizarTelefono(valor) {
+        const texto = String(valor || "").trim();
+        const digitos = texto.replace(/\D/g, "");
+
+        // Requerir un número con longitud razonable para WhatsApp
+        if (digitos.length < 10 || digitos.length > 15) {
+          return "";
+        }
+
+        return digitos;
+      }
+
+      function crearTarjeta(rp) {
+        const nombre = String(rp.nombre || "").trim() || "Representante";
+        const inicial = nombre.charAt(0).toUpperCase();
+        const telefono = normalizarTelefono(rp.telefono);
+        const instagram = normalizarInstagram(rp.instagram);
+
+        const tarjeta = document.createElement("article");
+        tarjeta.className = "tarjeta";
+
+        const botones = [];
+
+        if (telefono) {
+          const mensaje = encodeURIComponent(
+            "Hola, te contacto desde Cosmic Pass. Me gustaría recibir información sobre sus eventos."
+          );
+
+          botones.push(`
+            <a
+              class="boton-contacto whatsapp"
+              href="https://wa.me/${telefono}?text=${mensaje}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WhatsApp ↗
+            </a>
+          `);
+        }
+
+        if (instagram) {
+          botones.push(`
+            <a
+              class="boton-contacto instagram"
+              href="${escaparHTML(instagram)}"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Instagram ↗
+            </a>
+          `);
+        }
+
+        tarjeta.innerHTML = `
+          <div class="avatar" aria-hidden="true">
+            ${escaparHTML(inicial)}
+          </div>
+
+          <div class="estado">
+            <span class="punto"></span>
+            RP autorizado
+          </div>
+
+          <h3 class="nombre-rp">${escaparHTML(nombre)}</h3>
+
+          <p class="subtitulo">
+            Representante de la productora
+          </p>
+
+          <div class="contactos">
+            ${
+              botones.length
+                ? botones.join("")
+                : '<div class="sin-contacto">Sin datos de contacto disponibles</div>'
+            }
+          </div>
+        `;
+
+        return tarjeta;
+      }
+
+      async function cargarRPs() {
+        if (!slug) {
+          contador.textContent = "";
+          mostrarMensaje(
+            "Productora no especificada",
+            "Regresa a la página de la productora y selecciona RPs autorizados."
+          );
+          return;
+        }
+
+        // El slug se codifica para evitar problemas con espacios o caracteres especiales.
+        volver.href = `/productora/${encodeURIComponent(slug)}`;
+
+        try {
+          const respuesta = await fetch(
+            `${API}/api/productora/${encodeURIComponent(slug)}/rps`
+          );
+
+          const datos = await respuesta.json().catch(() => ({}));
+
+          if (!respuesta.ok || !datos.success) {
+            throw new Error(
+              datos.error || "No fue posible consultar los representantes."
+            );
+          }
+
+          nombreProductora.textContent =
+            datos.productora || slug.replace(/-/g, " ");
+
+          const rps = Array.isArray(datos.rps) ? datos.rps : [];
+
+          lista.replaceChildren();
+          contador.textContent =
+            `${rps.length} ${rps.length === 1 ? "representante" : "representantes"}`;
+
+          if (rps.length === 0) {
+            mostrarMensaje(
+              "Aún no hay representantes disponibles",
+              "Esta productora todavía no tiene RPs activos para mostrar."
+            );
+            return;
+          }
+
+          rps.forEach(rp => {
+            lista.appendChild(crearTarjeta(rp));
+          });
+
+        } catch (error) {
+          console.error("Error cargando RPs públicos:", error);
+
+          contador.textContent = "";
+          mostrarMensaje(
+            "No pudimos cargar los representantes",
+            error.message || "Intenta nuevamente más tarde."
+          );
+        }
+      }
+
+      cargarRPs();
+    })();
+  </script>
+</body>
+</html>

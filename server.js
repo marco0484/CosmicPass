@@ -3246,6 +3246,96 @@ app.get("/api/productora/:slug", async (req, res) => {
 });
 
 
+// RPs PÚBLICOS DE UNA PRODUCTORA
+app.get("/api/productora/:slug/rps", async (req, res) => {
+  try {
+    const slug = String(req.params.slug || "").trim();
+
+    if (!slug) {
+      return res.status(400).json({
+        success: false,
+        error: "Slug requerido"
+      });
+    }
+
+    // 1. Buscar la productora por su slug
+    const { data: productora, error: errorProductora } =
+      await supabase
+        .from("cat_productoras")
+        .select("id, name, desc_slug")
+        .ilike("desc_slug", slug)
+        .maybeSingle();
+
+    if (errorProductora) throw errorProductora;
+
+    if (!productora) {
+      return res.status(404).json({
+        success: false,
+        error: "Productora no encontrada"
+      });
+    }
+
+    // 2. Consultar perfiles públicos de sus RPs activos
+    const { data: perfiles, error: errorPerfiles } =
+      await supabase
+        .from("cat_rps")
+        .select("id_rp_user, nombre, telefono, instagram")
+        .eq("id_productora", productora.id)
+        .eq("activo", true);
+
+    if (errorPerfiles) throw errorPerfiles;
+
+    const perfilesRP = perfiles || [];
+    const idsRP = perfilesRP.map(rp => rp.id_rp_user);
+
+    // Si no hay RPs, devolver lista vacía
+    if (idsRP.length === 0) {
+      return res.json({
+        success: true,
+        productora: productora.name,
+        rps: []
+      });
+    }
+
+    // 3. Verificar que las cuentas de los RPs sigan activas
+    const { data: usuarios, error: errorUsuarios } =
+      await supabase
+        .from("cosmic_usuarios")
+        .select("id")
+        .in("id", idsRP)
+        .eq("rol", "rp")
+        .eq("activo", true);
+
+    if (errorUsuarios) throw errorUsuarios;
+
+    const idsActivos = new Set(
+      (usuarios || []).map(usuario => Number(usuario.id))
+    );
+
+    const rpsPublicos = perfilesRP
+      .filter(rp => idsActivos.has(Number(rp.id_rp_user)))
+      .map(rp => ({
+        nombre: rp.nombre,
+        telefono: rp.telefono,
+        instagram: rp.instagram
+      }));
+
+    return res.json({
+      success: true,
+      productora: productora.name,
+      rps: rpsPublicos
+    });
+
+  } catch (error) {
+    console.error("ERROR RPs PÚBLICOS:", error);
+
+    return res.status(500).json({
+      success: false,
+      error: "No fue posible cargar los RPs"
+    });
+  }
+});
+
 app.post("/crear-pago-stripe", async (req, res) => {
 
   try {
