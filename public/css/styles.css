@@ -161,10 +161,6 @@ nav ul{
   transition: 0.3s;
 }
 
-.btn-primary:hover {
-  transform: translateY(-2px);
-}
-
 .btn-secondary {
   padding: 10px 18px;
   border: 1px solid rgba(255,255,255,0.2);
@@ -271,6 +267,8 @@ nav li a:hover::after{
 .access-live-card{
   padding:28px;
   border-radius:32px;
+  position:relative;
+  overflow:hidden;
 }
 
 .access-live-top{
@@ -386,6 +384,7 @@ nav li a:hover::after{
   padding:20px;
   border-radius:22px;
   min-height:auto;
+  transition:.25s ease;
 }
 
 .mini-top{
@@ -1889,10 +1888,6 @@ footer{
   color:var(--primary);
 }
 
-.badges span{
-  transition: all .3s ease;
-}
-
 .trust-item {
   background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
   padding: 28px;
@@ -1931,6 +1926,8 @@ footer{
   inset: 0;
   z-index: 9999;
   display: none;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .ticket-modal.active {
@@ -2100,7 +2097,8 @@ footer{
 
 .ticket-option h3 {
   margin: 0;
-  font-size: 1rem;
+  font-size:22px;
+  line-height: 1.3;
 }
 
 .ticket-option p{
@@ -2133,15 +2131,6 @@ footer{
 .qty-box label {
   font-size: 14px;
   color: #ccc;
-}
-
-.ticket-qty {
-  background: #111;
-  border: 1px solid #333;
-  color: white;
-  padding: 6px 10px;
-  border-radius: 8px;
-  font-size: 14px;
 }
 
 .ticket-total{
@@ -2296,11 +2285,6 @@ footer{
 .ticket-total{
   word-break: break-word;
   overflow-wrap: break-word;
-}
-
-.ticket-option h3{
-  font-size:22px;
-  line-height: 1.3;
 }
 
 .ticket-option:hover::before{
@@ -2577,11 +2561,6 @@ footer{
   color:var(--primary);
 }
 
-.access-live-card{
-  position:relative;
-  overflow:hidden;
-}
-
 .access-live-card::before{
   content:"";
   position:absolute;
@@ -2617,10 +2596,6 @@ footer{
   color:#7dffb3;
 }
 
-.access-mini-card{
-  transition:.25s ease;
-}
-
 .access-mini-card:hover{
   transform:translateY(-5px);
   border-color:rgba(0,229,255,.28);
@@ -2629,10 +2604,6 @@ footer{
 
 .access-mini-card h3{
   color:#fff;
-}
-
-.access-mini-card p{
-  margin:0;
 }
 
 .dashboard-top strong{
@@ -2672,23 +2643,6 @@ footer{
   color:#fff;
   font-size:18px;
   white-space:nowrap;
-}
-
-
-.access-row strong{
-  display:block;
-  margin-bottom:4px;
-  color:#fff;
-  font-size:15px;
-  font-weight:700;
-}
-
-.access-row.ok strong{
-  color:#79ffb8;
-}
-
-.access-row.danger strong{
-  color:#ff7676;
 }
 
 .ticket-badge{
@@ -2733,12 +2687,6 @@ body{
 
 section{
   width:100%;
-}
-
-
-.ticket-modal{
-  overflow-x: hidden;
-  overflow-y: auto;
 }
 
 .metrics-section{
@@ -3108,14 +3056,6 @@ section{
     box-shadow var(--transition);
 }
 
-.btn-primary {
-  border: 1px solid var(--primary);
-  color: #ffffff;
-  background: var(--primary);
-
-  box-shadow: 0 12px 28px rgba(114, 92, 255, 0.23);
-}
-
 .btn-primary:hover {
   color: #ffffff;
   background: var(--primary-hover);
@@ -3123,12 +3063,6 @@ section{
   transform: translateY(-2px);
 
   box-shadow: 0 16px 34px rgba(114, 92, 255, 0.3);
-}
-
-.btn-secondary {
-  border: 1px solid var(--border-strong);
-  color: var(--text-soft);
-  background: rgba(255, 255, 255, 0.035);
 }
 
 .btn-secondary:hover {
