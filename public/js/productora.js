@@ -130,7 +130,7 @@ card.innerHTML = `
 
 });
 
-const pastContainer = document.querySelector(".past-cards");
+const pastContainer = document.querySelector( ".producer-past-events .past-cards" );
 
 if(pastContainer){
   pastContainer.innerHTML = "";
