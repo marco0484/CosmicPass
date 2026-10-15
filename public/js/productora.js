@@ -210,17 +210,9 @@ headers.forEach(header => {
     div.style.cursor = "pointer";
 
     div.addEventListener("click", () => {
-      const seccionEventosPasados = document.querySelector(
-        ".producer-past-events"
-      );
-
-      if (seccionEventosPasados) {
-        seccionEventosPasados.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-      }
-    });
+  window.location.href =
+    `/eventos-pasados.html?productora=${encodeURIComponent(slug)}`;
+});
   }
 
   tag.appendChild(div);

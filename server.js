@@ -3246,6 +3246,126 @@ app.get("/api/productora/:slug", async (req, res) => {
 });
 
 
+/* ==========================================
+   HISTORIAL PÚBLICO DE EVENTOS
+========================================== */
+
+app.get("/api/productora/:slug/eventos-pasados", async (req, res) => {
+  try {
+    const slug = String(req.params.slug || "").trim();
+
+    if (!slug) {
+      return res.status(400).json({
+        success: false,
+        error: "Slug de productora requerido"
+      });
+    }
+
+    // 1. Buscar la productora
+    const {
+      data: productora,
+      error: errorProductora
+    } = await supabase
+      .from("cat_productoras")
+      .select("id, name, desc_slug")
+      .ilike("desc_slug", slug)
+      .maybeSingle();
+
+    if (errorProductora) throw errorProductora;
+
+    if (!productora) {
+      return res.status(404).json({
+        success: false,
+        error: "Productora no encontrada"
+      });
+    }
+
+    // 2. Obtener los eventos de esta productora
+    const {
+      data: eventosData,
+      error: errorEventos
+    } = await supabase.rpc("get_events_by_productora", {
+      p_id: productora.id
+    });
+
+    if (errorEventos) throw errorEventos;
+
+    // 3. Filtrar únicamente eventos con fecha anterior a hoy
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    const eventosPasados = (eventosData || []).filter(evento => {
+      const fecha = evento.event_date || evento.date || evento.fecha;
+
+      if (!fecha) return false;
+
+      const fechaEvento = new Date(String(fecha).replace(" ", "T"));
+
+      if (Number.isNaN(fechaEvento.getTime())) return false;
+
+      fechaEvento.setHours(0, 0, 0, 0);
+
+      return fechaEvento < hoy;
+    });
+
+    // Si todavía no tiene eventos pasados, devolver lista vacía
+    if (eventosPasados.length === 0) {
+      return res.json({
+        success: true,
+        productora: {
+          id: productora.id,
+          nombre: productora.name,
+          slug: productora.desc_slug
+        },
+        eventos: []
+      });
+    }
+
+    // 4. Consultar las imágenes y videos asociados
+    const idsEventos = eventosPasados.map(evento => evento.id);
+
+    const {
+      data: multimedia,
+      error: errorMultimedia
+    } = await supabase
+      .from("cat_images")
+      .select("id, id_productora, id_evento, tipo, url, descripcion, orden")
+      .eq("id_productora", productora.id)
+      .in("id_evento", idsEventos)
+      .eq("activo", true)
+      .order("orden", { ascending: true });
+
+    if (errorMultimedia) throw errorMultimedia;
+
+    // 5. Adjuntar a cada evento únicamente su multimedia
+    const eventosConMultimedia = eventosPasados.map(evento => ({
+      ...evento,
+      multimedia: (multimedia || []).filter(
+        archivo => Number(archivo.id_evento) === Number(evento.id)
+      )
+    }));
+
+    return res.json({
+      success: true,
+      productora: {
+        id: productora.id,
+        nombre: productora.name,
+        slug: productora.desc_slug
+      },
+      eventos: eventosConMultimedia
+    });
+
+  } catch (error) {
+    console.error("ERROR HISTORIAL DE EVENTOS:", error);
+
+    return res.status(500).json({
+      success: false,
+      error: "No fue posible cargar el historial de eventos"
+    });
+  }
+});
+
+
 // RPs PÚBLICOS DE UNA PRODUCTORA
 app.get("/api/productora/:slug/rps", async (req, res) => {
   try {
