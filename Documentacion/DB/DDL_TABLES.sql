@@ -71,10 +71,10 @@ CREATE TABLE IF NOT EXISTS cat_images (
 );
 
 CREATE INDEX IF NOT EXISTS idx_cat_images_evento
-    ON public.cat_images (id_evento, activo, orden);
+    ON cat_images (id_evento, activo, orden);
 
 CREATE INDEX IF NOT EXISTS idx_cat_images_productora
-    ON public.cat_images (id_productora);
+    ON cat_images (id_productora);
 
 
 
