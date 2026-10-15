@@ -188,15 +188,38 @@ headers.forEach(header => {
     <span class="text">${header.name}</span>
   `;
 
+  const nombreFeature = String(header.name || "")
+    .trim()
+    .toLowerCase();
+
+  // RPs autorizados: conserva la navegación actual
   if (
     Number(header.id_features) === 10 ||
-    String(header.name || "").trim().toLowerCase() === "rps autorizados"
+    nombreFeature === "rps autorizados"
   ) {
     div.style.cursor = "pointer";
 
     div.addEventListener("click", () => {
       window.location.href =
         `/rps_publicos.html?productora=${encodeURIComponent(slug)}`;
+    });
+  }
+
+  // Eventos Pasados: desplaza hasta la sección correspondiente
+  if (nombreFeature.includes("eventos pasados")) {
+    div.style.cursor = "pointer";
+
+    div.addEventListener("click", () => {
+      const seccionEventosPasados = document.querySelector(
+        ".producer-past-events"
+      );
+
+      if (seccionEventosPasados) {
+        seccionEventosPasados.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
     });
   }
 
