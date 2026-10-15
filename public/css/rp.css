@@ -404,26 +404,20 @@ body {
 
 .empty-state p {
   margin: 0 0 20px;
-
   color: #888;
   font-size: 14px;
 }
-
 
 /* MODAL */
 
 .modal-overlay {
   position: fixed;
   inset: 0;
-
   background: rgba(0,0,0,.55);
-
   display: none;
   align-items: center;
   justify-content: center;
-
   padding: 20px;
-
   z-index: 100;
 }
 
@@ -433,12 +427,9 @@ body {
 
 .modal-card {
   width: min(480px, 100%);
-
   background: white;
   border-radius: 18px;
-
   padding: 28px;
-
   position: relative;
 }
 
@@ -477,7 +468,6 @@ body {
 .modal-card label {
   display: block;
   margin: 14px 0 6px;
-
   font-size: 12px;
   font-weight: 600;
 }
@@ -485,30 +475,21 @@ body {
 .modal-card input,
 .modal-card select {
   width: 100%;
-
   padding: 12px;
-
   border: 1px solid #dddfe5;
   border-radius: 9px;
-
   outline: none;
 }
 
 .modal-submit {
   width: 100%;
-
   margin-top: 20px;
-
   padding: 13px;
-
   border: 0;
   border-radius: 9px;
-
   background: #111216;
   color: white;
-
   font-weight: 600;
-
   cursor: pointer;
 }
 
