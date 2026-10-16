@@ -215,6 +215,30 @@ headers.forEach(header => {
 });
   }
 
+  
+  // Mercancía: abre la tienda de la productora
+  if (nombreFeature.includes("mercancía") ||
+      nombreFeature.includes("mercancia")) {
+    div.style.cursor = "pointer";
+
+    div.addEventListener("click", () => {
+      window.location.href =
+        `/mercancia.html?productora=${encodeURIComponent(slug)}`;
+    });
+  }
+
+  // Talleres: abre los talleres de la productora
+  if (nombreFeature.includes("talleres")) {
+    div.style.cursor = "pointer";
+
+    div.addEventListener("click", () => {
+      window.location.href =
+        `/talleres.html?productora=${encodeURIComponent(slug)}`;
+    });
+  }
+
+  
+
   tag.appendChild(div);
 });
 

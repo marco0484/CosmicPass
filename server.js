@@ -3295,6 +3295,64 @@ app.get("/api/productora/:slug/mercancia", async (req, res) => {
 });
 
 
+
+app.get("/api/productora/:slug/talleres", async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    const { data: productora, error: errorProductora } = await supabase
+      .from("cat_productoras")
+      .select("id")
+      .eq("desc_slug", slug)
+      .maybeSingle();
+
+    if (errorProductora) {
+      console.error("Error buscando productora:", errorProductora);
+      return res.status(500).json({
+        success: false,
+        error: "Error al consultar la productora"
+      });
+    }
+
+    if (!productora) {
+      return res.status(404).json({
+        success: false,
+        error: "Productora no encontrada"
+      });
+    }
+
+    const { data: talleres, error } = await supabase
+      .from("cat_talleres")
+      .select(
+        "id, nombre, descripcion, imagen, fecha_inicio, fecha_fin, ubicacion, precio, cupo_maximo"
+      )
+      .eq("id_productora", productora.id)
+      .eq("activo", true)
+      .order("id", { ascending: false });
+
+    if (error) {
+      console.error("Error consultando talleres:", error);
+      return res.status(500).json({
+        success: false,
+        error: "Error al consultar los talleres"
+      });
+    }
+
+    return res.json({
+      success: true,
+      talleres: talleres || []
+    });
+
+  } catch (error) {
+    console.error("Error en endpoint de talleres:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Error interno del servidor"
+    });
+  }
+});
+
+
 /* HISTORIAL PÚBLICO DE EVENTOS  */
 
 app.get("/api/productora/:slug/eventos-pasados", async (req, res) => {
