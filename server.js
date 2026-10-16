@@ -3043,11 +3043,7 @@ app.get("/api/productora/:slug", async (req, res) => {
       });
     }
 
-    /*
-    ==========================================
-    NORMALIZAR SLUG
-    ==========================================
-    */
+    /*NORMALIZAR SLUG */
 
     const slugNormalizado =
       slugOriginal
@@ -3057,14 +3053,9 @@ app.get("/api/productora/:slug", async (req, res) => {
         .trim();
 
 
-    /*
-    ==========================================
-    BUSCAR PRODUCTORA
-    ==========================================
-    */
+    /* BUSCAR PRODUCTORA */
 
     let productoraSlug = null;
-
 
     // Primero buscamos por desc_slug
     const {
@@ -3246,9 +3237,65 @@ app.get("/api/productora/:slug", async (req, res) => {
 });
 
 
-/* ==========================================
-   HISTORIAL PÚBLICO DE EVENTOS
-========================================== */
+
+app.get("/api/productora/:slug/mercancia", async (req, res) => {
+  try {
+    const { slug } = req.params;
+
+    // Buscar la productora por su slug
+    const { data: productora, error: errorProductora } = await supabase
+      .from("cat_productoras")
+      .select("id")
+      .eq("desc_slug", slug)
+      .maybeSingle();
+
+    if (errorProductora) {
+      console.error("Error buscando productora:", errorProductora);
+      return res.status(500).json({
+        success: false,
+        error: "Error al consultar la productora"
+      });
+    }
+
+    if (!productora) {
+      return res.status(404).json({
+        success: false,
+        error: "Productora no encontrada"
+      });
+    }
+
+    // Consultar mercancía activa de esa productora
+    const { data: mercancia, error } = await supabase
+      .from("cat_mercancia")
+      .select("id, nombre, descripcion, precio, imagen, categoria")
+      .eq("id_productora", productora.id)
+      .eq("activo", true)
+      .order("id", { ascending: false });
+
+    if (error) {
+      console.error("Error consultando mercancía:", error);
+      return res.status(500).json({
+        success: false,
+        error: "Error al consultar la mercancía"
+      });
+    }
+
+    return res.json({
+      success: true,
+      mercancia: mercancia || []
+    });
+
+  } catch (error) {
+    console.error("Error en endpoint de mercancía:", error);
+    return res.status(500).json({
+      success: false,
+      error: "Error interno del servidor"
+    });
+  }
+});
+
+
+/* HISTORIAL PÚBLICO DE EVENTOS  */
 
 app.get("/api/productora/:slug/eventos-pasados", async (req, res) => {
   try {
