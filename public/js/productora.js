@@ -259,44 +259,44 @@ const badges = features.filter(f => Number(f.level) === 2);
   }
 
 
-const trustContainer = document.querySelector(".trust-grid");
+  const trustContainer = document.querySelector(".trust-grid");
 
-if (trustContainer) {
-  trustContainer.innerHTML = "";
+  if (trustContainer) {
+    trustContainer.innerHTML = "";
 
-  const trust = features.filter(f => Number(f.level) === 3);
+    const trust = features.filter(f => Number(f.level) === 3);
 
-  trust.forEach(f => {
-    const div = document.createElement("div");
-    div.classList.add("trust-item");
+    trust.forEach(f => {
+      const div = document.createElement("div");
+      div.classList.add("trust-item");
 
-    // Fotografía del DJ desde cat_features.icon
-    const imagen = document.createElement("img");
-    imagen.classList.add("trust-item-image");
-    imagen.alt = f.name || "DJ";
+      const rutaImagen = String(f.icon || "").trim();
 
-    const rutaImagen = String(f.icon || "").trim();
+      if (rutaImagen) {
+        const imagen = document.createElement("img");
+        imagen.classList.add("trust-item-image");
+        imagen.alt = f.name || "DJ";
 
-    if (rutaImagen) {
-      imagen.src = rutaImagen.startsWith("http")
-        ? rutaImagen
-        : `/${rutaImagen.replace(/^\/+/, "")}`;
+        imagen.src = rutaImagen.startsWith("http")
+          ? rutaImagen
+          : `/${rutaImagen.replace(/^\/+/, "")}`;
 
-      imagen.onerror = () => {
-        imagen.style.display = "none";
-      };
+        imagen.onerror = () => {
+          imagen.style.display = "none";
+        };
 
-      div.appendChild(imagen);
-    }
+        div.appendChild(imagen);
+      }
 
-    // Nombre del DJ
-    const titulo = document.createElement("h3");
-    titulo.textContent = f.name || "";
-    div.appendChild(titulo);
+      const titulo = document.createElement("h3");
+      titulo.textContent = f.name || "";
+      div.appendChild(titulo);
 
-    trustContainer.appendChild(div);
-  });
+      trustContainer.appendChild(div);
+    });
+  }
 }
+
 
 function renderProducer(data, eventos) {
 
