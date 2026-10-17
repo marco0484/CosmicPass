@@ -264,8 +264,12 @@ const badges = features.filter(f => Number(f.level) === 2);
   if (trustContainer) {
     trustContainer.innerHTML = "";
 
-    const trust = features.filter(f => Number(f.level) === 3);
-
+const trust = features
+  .filter(f => Number(f.level) === 3)
+  .sort((a, b) =>
+    Number(a.subnivel ?? 3) - Number(b.subnivel ?? 3) ||
+    Number(a.id_features ?? 0) - Number(b.id_features ?? 0)
+  );
     trust.forEach(f => {
       const div = document.createElement("div");
       div.classList.add("trust-item");
