@@ -25,6 +25,10 @@ a {
   text-decoration: none;
 }
 
+/* ==============================
+   ENCABEZADO
+============================== */
+
 .history-header {
   display: flex;
   align-items: center;
@@ -44,13 +48,21 @@ a {
   font-size: 14px;
 }
 
+/* ==============================
+   CONTENIDO PRINCIPAL
+============================== */
+
 .history-main {
-  width: min(1120px, 90%);
+  width: min(1120px, 94%);
   margin: 0 auto;
 }
 
+/* ==============================
+   TÍTULO E INTRODUCCIÓN
+============================== */
+
 .history-hero {
-  padding: 65px 0 35px;
+  padding: 55px 0 30px;
 }
 
 .eyebrow {
@@ -62,7 +74,8 @@ a {
 
 .history-hero h1 {
   margin: 14px 0;
-  font-size: clamp(30px, 6vw, 54px);
+  font-size: clamp(30px, 5vw, 48px);
+  line-height: 1.15;
 }
 
 .history-hero p {
@@ -71,69 +84,120 @@ a {
   line-height: 1.7;
 }
 
+/* ==============================
+   CUADRÍCULA DE EVENTOS
+   PC: 3 tarjetas por fila
+============================== */
+
 .history-events {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 28px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
   padding-bottom: 65px;
+  align-items: start;
 }
 
+/* ==============================
+   TARJETAS
+============================== */
+
 .history-card {
+  min-width: 0;
   overflow: hidden;
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 14px;
   background: var(--surface);
+  transition:
+    border-color 0.25s ease,
+    transform 0.25s ease;
 }
+
+.history-card:hover {
+  border-color: rgba(67, 217, 255, 0.45);
+  transform: translateY(-3px);
+}
+
+/* ==============================
+   IMAGEN PRINCIPAL
+============================== */
 
 .history-cover {
   display: block;
   width: 100%;
-  max-height: 460px;
-  aspect-ratio: 16 / 9;
+  height: 190px;
+  aspect-ratio: 4 / 3;
   object-fit: cover;
+  object-position: center;
   background: #0b1725;
 }
 
+/* ==============================
+   INFORMACIÓN DE LA TARJETA
+============================== */
+
 .history-info {
-  padding: 24px;
+  padding: 16px;
+  min-width: 0;
 }
 
 .history-info h2 {
-  margin: 0 0 12px;
-  font-size: clamp(22px, 4vw, 32px);
+  margin: 0 0 10px;
+  font-size: 20px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
 .history-meta {
+  margin: 0 0 10px;
   color: var(--accent);
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .history-description {
   color: var(--muted);
-  line-height: 1.8;
+  font-size: 14px;
+  line-height: 1.65;
   white-space: pre-line;
+  overflow-wrap: anywhere;
 }
+
+/* ==============================
+   GALERÍA DE EVENTOS REALES
+============================== */
 
 .gallery {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 12px;
-  margin-top: 22px;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 .gallery img,
 .gallery video {
+  display: block;
   width: 100%;
-  aspect-ratio: 1;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 8px;
   background: #07111f;
 }
 
+/* ==============================
+   MENSAJES DE ESTADO
+============================== */
+
 .status-message {
+  grid-column: 1 / -1;
   color: var(--muted);
   line-height: 1.7;
+  text-align: center;
+  padding: 25px 10px;
 }
+
+/* ==============================
+   PIE DE PÁGINA
+============================== */
 
 .history-footer {
   padding: 25px;
@@ -143,24 +207,166 @@ a {
   font-size: 13px;
 }
 
-@media (max-width: 600px) {
-  .history-header {
-    padding: 17px 5%;
+/* ==============================
+   TABLETS
+   2 tarjetas por fila
+============================== */
+
+@media (max-width: 900px) {
+  .history-main {
+    width: 94%;
   }
 
-  .back-link {
-    font-size: 12px;
+  .history-events {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
   }
 
-  .history-hero {
-    padding-top: 42px;
+  .history-cover {
+    height: 170px;
   }
 
   .history-info {
-    padding: 18px;
+    padding: 14px;
+  }
+
+  .history-info h2 {
+    font-size: 18px;
   }
 
   .gallery {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ==============================
+   CELULARES
+   2 tarjetas pequeñas por fila
+============================== */
+
+@media (max-width: 600px) {
+  .history-header {
+    padding: 15px 5%;
+    gap: 10px;
+  }
+
+  .brand {
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .back-link {
+    font-size: 11px;
+    text-align: right;
+  }
+
+  .history-main {
+    width: 94%;
+  }
+
+  .history-hero {
+    padding: 35px 0 22px;
+  }
+
+  .eyebrow {
+    font-size: 10px;
+    letter-spacing: 2px;
+  }
+
+  .history-hero h1 {
+    font-size: 29px;
+    margin: 12px 0;
+  }
+
+  .history-hero p {
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .history-events {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding-bottom: 40px;
+  }
+
+  .history-card {
+    border-radius: 11px;
+  }
+
+  .history-card:hover {
+    transform: none;
+  }
+
+  .history-cover {
+    height: 125px;
+    aspect-ratio: 4 / 3;
+  }
+
+  .history-info {
+    padding: 10px;
+  }
+
+  .history-info h2 {
+    font-size: 14px;
+    line-height: 1.35;
+    margin-bottom: 7px;
+  }
+
+  .history-meta {
+    font-size: 10px;
+    line-height: 1.45;
+    margin-bottom: 7px;
+  }
+
+  .history-description {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .gallery img,
+  .gallery video {
+    border-radius: 6px;
+  }
+
+  .history-footer {
+    padding: 20px 12px;
+    font-size: 11px;
+  }
+}
+
+/* ==============================
+   CELULARES MUY ESTRECHOS
+============================== */
+
+@media (max-width: 360px) {
+  .history-events {
+    gap: 8px;
+  }
+
+  .history-cover {
+    height: 105px;
+  }
+
+  .history-info {
+    padding: 8px;
+  }
+
+  .history-info h2 {
+    font-size: 13px;
+  }
+
+  .history-meta {
+    font-size: 9px;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 5px;
   }
 }
