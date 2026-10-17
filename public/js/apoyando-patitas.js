@@ -6,12 +6,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const galeria = document.getElementById("patitas-gallery");
   const botonRegreso = document.getElementById("back-producer");
 
-  // Regresar a la página de la productora.
-  if (botonRegreso) {
-    botonRegreso.href = slug
-      ? `/productora.html?slug=${encodeURIComponent(slug)}`
-      : "index.html";
-  }
+// Regresar a la página de la productora.
+if (botonRegreso) {
+  botonRegreso.href = slug
+    ? `/productora/${encodeURIComponent(slug)}`
+    : "/index.html";
+}
 
 const fotos = [
   "donacion.webp",
