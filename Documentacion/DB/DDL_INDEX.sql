@@ -22,4 +22,9 @@ CREATE UNIQUE INDEX ind_03 ON   cat_features USING btree (id_features);
 CREATE UNIQUE INDEX ind_05 ON  ticket_types USING btree (id, id_evento);
 
 CREATE INDEX idx_tickets_correo ON   tickets USING btree (correo);
+
 CREATE INDEX idx_tickets_evento ON   tickets USING btree (evento_id);
+
+CREATE INDEX IF NOT EXISTS idx_galeria_historica_productora
+ON cat_galeria_historica
+    (id_productora, activo, orden);

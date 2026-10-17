@@ -3355,6 +3355,9 @@ app.get("/api/productora/:slug/talleres", async (req, res) => {
 
 /* HISTORIAL PÚBLICO DE EVENTOS  */
 
+
+/* HISTORIAL PÚBLICO DE EVENTOS */
+
 app.get("/api/productora/:slug/eventos-pasados", async (req, res) => {
   try {
     const slug = String(req.params.slug || "").trim();
@@ -3385,7 +3388,7 @@ app.get("/api/productora/:slug/eventos-pasados", async (req, res) => {
       });
     }
 
-    // 2. Obtener los eventos de esta productora
+    // 2. Consultar los eventos registrados en Cosmic Pass
     const {
       data: eventosData,
       error: errorEventos
@@ -3395,7 +3398,7 @@ app.get("/api/productora/:slug/eventos-pasados", async (req, res) => {
 
     if (errorEventos) throw errorEventos;
 
-    // 3. Filtrar únicamente eventos con fecha anterior a hoy
+    // 3. Filtrar los eventos que ya ocurrieron
     const hoy = new Date();
     hoy.setHours(0, 0, 0, 0);
 
@@ -3413,42 +3416,82 @@ app.get("/api/productora/:slug/eventos-pasados", async (req, res) => {
       return fechaEvento < hoy;
     });
 
-    // Si todavía no tiene eventos pasados, devolver lista vacía
-    if (eventosPasados.length === 0) {
-      return res.json({
-        success: true,
-        productora: {
-          id: productora.id,
-          nombre: productora.name,
-          slug: productora.desc_slug
-        },
-        eventos: []
-      });
+    // 4. Consultar las imágenes y videos de los eventos registrados
+    let eventosConMultimedia = [];
+
+    if (eventosPasados.length > 0) {
+      const idsEventos = eventosPasados.map(evento => evento.id);
+
+      const {
+        data: multimedia,
+        error: errorMultimedia
+      } = await supabase
+        .from("cat_images")
+        .select("id, id_productora, id_evento, tipo, url, descripcion, orden")
+        .eq("id_productora", productora.id)
+        .in("id_evento", idsEventos)
+        .eq("activo", true)
+        .order("orden", { ascending: true });
+
+      if (errorMultimedia) throw errorMultimedia;
+
+      eventosConMultimedia = eventosPasados.map(evento => ({
+        ...evento,
+        multimedia: (multimedia || []).filter(
+          archivo => Number(archivo.id_evento) === Number(evento.id)
+        )
+      }));
     }
 
-    // 4. Consultar las imágenes y videos asociados
-    const idsEventos = eventosPasados.map(evento => evento.id);
-
+    // 5. Consultar la galería histórica manual de ESTA productora
     const {
-      data: multimedia,
-      error: errorMultimedia
+      data: galeriaManual,
+      error: errorGaleria
     } = await supabase
-      .from("cat_images")
-      .select("id, id_productora, id_evento, tipo, url, descripcion, orden")
+      .from("cat_galeria_historica")
+      .select(`
+        id,
+        id_productora,
+        nombre_evento,
+        descripcion,
+        ciudad,
+        fecha_evento,
+        imagen_url,
+        orden
+      `)
       .eq("id_productora", productora.id)
-      .in("id_evento", idsEventos)
       .eq("activo", true)
-      .order("orden", { ascending: true });
+      .order("orden", { ascending: true })
+      .order("fecha_evento", { ascending: false });
 
-    if (errorMultimedia) throw errorMultimedia;
+    if (errorGaleria) throw errorGaleria;
 
-    // 5. Adjuntar a cada evento únicamente su multimedia
-    const eventosConMultimedia = eventosPasados.map(evento => ({
-      ...evento,
-      multimedia: (multimedia || []).filter(
-        archivo => Number(archivo.id_evento) === Number(evento.id)
-      )
+    // 6. Adaptar las fotos manuales al formato que ya consume el frontend
+    const eventosManuales = (galeriaManual || []).map(foto => ({
+      id: `galeria-${foto.id}`,
+      name: foto.nombre_evento,
+      city: foto.ciudad || "",
+      event_date: foto.fecha_evento || null,
+      description: foto.descripcion || "",
+      image: foto.imagen_url,
+      multimedia: [{
+        id: foto.id,
+        id_productora: foto.id_productora,
+        id_evento: null,
+        tipo: "imagen",
+        url: foto.imagen_url,
+        descripcion: foto.descripcion || foto.nombre_evento,
+        orden: foto.orden
+      }],
+      origen: "galeria_manual"
     }));
+
+    // 7. Combinar los eventos reales y las fotos manuales
+    // Solo afecta el historial de esta productora.
+    const eventosFinales = [
+      ...eventosConMultimedia,
+      ...eventosManuales
+    ];
 
     return res.json({
       success: true,
@@ -3457,7 +3500,7 @@ app.get("/api/productora/:slug/eventos-pasados", async (req, res) => {
         nombre: productora.name,
         slug: productora.desc_slug
       },
-      eventos: eventosConMultimedia
+      eventos: eventosFinales
     });
 
   } catch (error) {

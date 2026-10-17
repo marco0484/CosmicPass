@@ -74,7 +74,9 @@ function renderEvent(evento) {
          loading="lazy">`
     : "";
 
-  const multimedia = Array.isArray(evento.multimedia)
+const multimedia = evento.origen === "galeria_manual"
+  ? []
+  : Array.isArray(evento.multimedia)
     ? evento.multimedia
     : [];
 
