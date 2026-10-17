@@ -544,31 +544,37 @@ div.addEventListener("click", () => {
 
   const globalQty   = document.getElementById("global-ticket-qty");
   const globalTotal = document.getElementById("global-ticket-total");
+
+
 const updateGlobalTotal = () => {
+  const esCortesia = Number(ticket.precio) === 0;
 
-  if (Number(ticket.precio) === 0) {
-
+  if (esCortesia) {
     globalQty.value = "1";
     globalQty.disabled = true;
     ticketQuantity = 1;
 
     document.querySelector(".checkout-summary").style.display = "none";
-
     globalTotal.innerHTML = "Total: Cortesía";
     return;
-
   }
 
   document.querySelector(".checkout-summary").style.display = "";
 
   globalQty.disabled = false;
 
-  ticketQuantity = Number(globalQty.value);
+  const cantidad = Math.min(
+    9,
+    Math.max(1, Number(globalQty.value) || 1)
+  );
+
+  globalQty.value = String(cantidad);
+  ticketQuantity = cantidad;
 
   globalTotal.innerHTML =
     `Total: $${Number(ticket.precio) * ticketQuantity}`;
-
 };
+
 
   updateGlobalTotal();
 
