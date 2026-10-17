@@ -3923,3 +3923,30 @@ section{
   transform: scale(1.05);
   opacity: 1;
 }
+
+
+/* ===== LINEUP RESPONSIVE PARA CELULAR ===== */
+
+@media (max-width: 600px) {
+  .trust .trust-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .trust .trust-grid .trust-item {
+    height: 160px;
+    min-height: 160px;
+    border-radius: 12px;
+  }
+
+  .trust .trust-grid .trust-item .trust-item-image {
+    object-position: center top;
+  }
+
+  .trust .trust-grid .trust-item h3 {
+    padding: 24px 5px 8px;
+    font-size: 13px;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+}
