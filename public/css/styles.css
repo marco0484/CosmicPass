@@ -3878,8 +3878,8 @@ section{
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  min-height: 220px;
-  height: 220px;
+  min-height: 150px;
+  height: 150px;
   border-radius: 16px;
 }
 
