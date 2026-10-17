@@ -237,20 +237,33 @@ headers.forEach(header => {
     });
   }
 
-  
 
-// Apoyando Patitas
-if (
-  Number(header.id_features) === 30 ||
-  nombreFeature.includes("Apoyando Patitas")
-) {
-  div.style.cursor = "pointer";
 
-  div.addEventListener("click", () => {
-    window.location.href =
-      `/apoyando-patitas.html?productora=${encodeURIComponent(slug)}`;
-  });
-}
+
+  // Apoyando Patitas
+  const idFeaturePatitas = Number(
+    header.id_features ?? header.id_feature ?? header.id
+  );
+
+  const nombrePatitas = nombreFeature
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  if (
+    idFeaturePatitas === 30 ||
+    nombrePatitas.includes("apoyando patitas")
+  ) {
+    div.style.cursor = "pointer";
+    div.style.pointerEvents = "auto";
+
+    div.addEventListener("click", function () {
+      window.location.assign(
+        "/apoyando-patitas.html?productora=" +
+        encodeURIComponent(slug || "")
+      );
+    });
+  }
+
 
 
   tag.appendChild(div);
