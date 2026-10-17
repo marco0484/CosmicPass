@@ -239,6 +239,17 @@ headers.forEach(header => {
 
   
 
+  // Apoyando Patitas: acceso exclusivo para el feature 30
+  if (Number(header.id_features) === 30) {
+    div.style.cursor = "pointer";
+
+    div.addEventListener("click", () => {
+      window.location.href =
+        `/apoyando-patitas.html?productora=${encodeURIComponent(slug)}`;
+    });
+  }
+
+  
   tag.appendChild(div);
 });
 
