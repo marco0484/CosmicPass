@@ -123,10 +123,6 @@ const multimedia = evento.origen === "galeria_manual"
 
       <h2>${escapeHTML(evento.name || "Evento")}</h2>
 
-      <div class="history-description">
-        ${escapeHTML(evento.description || "Evento realizado por la productora.")}
-      </div>
-
       ${gallery}
     </div>
   `;

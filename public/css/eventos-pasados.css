@@ -121,14 +121,17 @@ a {
    IMAGEN PRINCIPAL
 ============================== */
 
+
 .history-cover {
+  display: block;
   width: 100%;
-  height: 125px;
-  aspect-ratio: 4 / 3;
-  object-fit: contain;
-  object-position: center;
+  height: 230px;
+  object-fit: cover;
+  object-position: center 35%;
   background: #0b1725;
+  cursor: pointer;
 }
+
 
 /* ==============================
    INFORMACIÓN DE LA TARJETA
@@ -243,6 +246,7 @@ a {
    2 tarjetas pequeñas por fila
 ============================== */
 
+
 @media (max-width: 600px) {
   .history-header {
     padding: 15px 5%;
@@ -264,57 +268,47 @@ a {
   }
 
   .history-hero {
-    padding: 35px 0 22px;
-  }
-
-  .eyebrow {
-    font-size: 10px;
-    letter-spacing: 2px;
+    padding: 35px 0 25px;
   }
 
   .history-hero h1 {
     font-size: 29px;
-    margin: 12px 0;
+    line-height: 1.2;
   }
 
   .history-hero p {
-    font-size: 13px;
-    line-height: 1.6;
+    font-size: 14px;
   }
 
   .history-events {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
+    gap: 12px;
     padding-bottom: 40px;
   }
 
   .history-card {
-    border-radius: 11px;
-  }
-
-  .history-card:hover {
-    transform: none;
+    border-radius: 13px;
   }
 
   .history-cover {
-    height: 125px;
-    aspect-ratio: 4 / 3;
+    height: 175px;
+    object-fit: cover;
+    object-position: center 35%;
   }
 
   .history-info {
-    padding: 10px;
+    padding: 12px;
   }
 
   .history-info h2 {
-    font-size: 14px;
+    font-size: 15px;
     line-height: 1.35;
-    margin-bottom: 7px;
+    margin-bottom: 8px;
   }
 
   .history-meta {
-    font-size: 10px;
-    line-height: 1.45;
-    margin-bottom: 7px;
+    font-size: 11px;
+    line-height: 1.5;
   }
 
   .history-description {
@@ -324,13 +318,14 @@ a {
 
   .gallery {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
-    margin-top: 10px;
+    gap: 7px;
+    margin-top: 12px;
   }
 
   .gallery img,
   .gallery video {
-    border-radius: 6px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
   }
 
   .history-footer {
@@ -338,6 +333,21 @@ a {
     font-size: 11px;
   }
 }
+
+@media (max-width: 380px) {
+  .history-events {
+    gap: 9px;
+  }
+
+  .history-cover {
+    height: 150px;
+  }
+
+  .history-info {
+    padding: 9px;
+  }
+}
+
 
 /* ==============================
    CELULARES MUY ESTRECHOS
