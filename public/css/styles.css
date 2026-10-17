@@ -3869,157 +3869,57 @@ section{
 
 /*  NUEVO */
 
+/* ===== LINEUP: FOTOGRAFÍAS DE LOS DJs ===== */
 
-/* ===== LINEUP: TARJETAS CON ESTILO COSMIC ===== */
+
+/* ===== LINEUP: CARDS DE DJs CON FOTO ===== */
 
 .trust .trust-grid .trust-item {
   position: relative;
   isolation: isolate;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  min-height: 190px;
-  padding: 28px 18px 24px;
   overflow: hidden;
-  text-align: center;
-
-  border: 1px solid rgba(0, 229, 255, 0.28);
-  border-radius: 28px 8px 28px 8px;
-
-  background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(0, 229, 255, 0.17),
-      transparent 58%
-    ),
-    linear-gradient(
-      155deg,
-      rgba(20, 35, 58, 0.96),
-      rgba(4, 7, 18, 0.98) 72%
-    );
-
-  box-shadow:
-    0 16px 36px rgba(0, 0, 0, 0.32),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-
-  backdrop-filter: blur(12px);
-
-  transition:
-    transform 0.3s ease,
-    border-color 0.3s ease,
-    box-shadow 0.3s ease,
-    background 0.3s ease;
+  min-height: 220px;
+  height: 220px;
+  border-radius: 16px;
 }
 
-.trust .trust-grid .trust-item::before {
-  content: "";
+.trust .trust-grid .trust-item .trust-item-image {
   position: absolute;
-  z-index: -1;
-  top: -55px;
-  left: 50%;
-  width: 145px;
-  height: 145px;
-  border-radius: 50%;
+  inset: 0;
+  z-index: 0;
 
-  background: rgba(0, 229, 255, 0.16);
-  filter: blur(35px);
-  transform: translateX(-50%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.trust .trust-grid .trust-item::after {
-  content: "✦";
-  position: absolute;
-  top: 15px;
-  right: 17px;
-
-  color: rgba(126, 249, 255, 0.75);
-  font-size: 15px;
-  text-shadow: 0 0 14px rgba(0, 229, 255, 0.65);
+  opacity: 0.8;
+  transition: transform 0.35s ease, opacity 0.35s ease;
 }
 
 .trust .trust-grid .trust-item h3 {
-  position: relative;
-  width: 100%;
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
   margin: 0;
+  padding: 30px 12px 12px;
+
+  background: linear-gradient(
+    to top,
+    rgba(3, 7, 18, 0.95),
+    rgba(3, 7, 18, 0.45),
+    transparent
+  );
 
   color: #fff;
-  font-size: clamp(16px, 1.5vw, 21px);
-  font-weight: 850;
-  line-height: 1.25;
-  letter-spacing: 0.02em;
-
-  overflow-wrap: anywhere;
-  text-wrap: balance;
-
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.55);
-
-  transition: color 0.3s ease, text-shadow 0.3s ease;
+  text-align: center;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
 }
 
-.trust .trust-grid .trust-item:hover {
-  transform: translateY(-7px) rotate(-0.5deg);
-
-  border-color: rgba(0, 229, 255, 0.7);
-
-  background:
-    radial-gradient(
-      circle at 50% 0%,
-      rgba(0, 229, 255, 0.24),
-      transparent 62%
-    ),
-    linear-gradient(
-      155deg,
-      rgba(18, 47, 70, 0.98),
-      rgba(4, 7, 18, 0.99) 72%
-    );
-
-  box-shadow:
-    0 22px 42px rgba(0, 0, 0, 0.42),
-    0 0 28px rgba(0, 229, 255, 0.13);
-}
-
-.trust .trust-grid .trust-item:hover::before {
-  transform: translateX(-50%) scale(1.2);
-}
-
-.trust .trust-grid .trust-item:hover h3 {
-  color: #7ef9ff;
-  text-shadow: 0 0 18px rgba(0, 229, 255, 0.28);
-}
-
-/* ===== LINEUP: AJUSTES PARA CELULAR ===== */
-
-@media (max-width: 600px) {
-  .trust .trust-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 13px;
-  }
-
-  .trust .trust-grid .trust-item {
-    min-height: 145px;
-    padding: 24px 12px 18px;
-    border-radius: 22px 7px 22px 7px;
-  }
-
-  .trust .trust-grid .trust-item h3 {
-    font-size: 15px;
-  }
-
-  .trust .trust-grid .trust-item::after {
-    top: 10px;
-    right: 12px;
-    font-size: 12px;
-  }
-}
-
-/* ===== RESPETAR REDUCCIÓN DE MOVIMIENTO ===== */
-
-@media (prefers-reduced-motion: reduce) {
-  .trust .trust-grid .trust-item,
-  .trust .trust-grid .trust-item::before,
-  .trust .trust-grid .trust-item h3 {
-    transition: none;
-  }
+.trust .trust-grid .trust-item:hover .trust-item-image {
+  transform: scale(1.05);
+  opacity: 1;
 }
