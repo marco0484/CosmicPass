@@ -258,26 +258,45 @@ const badges = features.filter(f => Number(f.level) === 2);
     });
   }
 
-  const trustContainer = document.querySelector(".trust-grid");
 
-  if (trustContainer) {
-    trustContainer.innerHTML = "";
+const trustContainer = document.querySelector(".trust-grid");
 
-const trust = features.filter(f => Number(f.level) === 3);
+if (trustContainer) {
+  trustContainer.innerHTML = "";
 
-    trust.forEach(f => {
-      const div = document.createElement("div");
-      div.classList.add("trust-item");
+  const trust = features.filter(f => Number(f.level) === 3);
 
-      div.innerHTML = `
-        <h3>${f.icon || ""} ${f.name}</h3>
-      `;
+  trust.forEach(f => {
+    const div = document.createElement("div");
+    div.classList.add("trust-item");
 
-      trustContainer.appendChild(div);
-    });
-  }
+    // Fotografía del DJ desde cat_features.icon
+    const imagen = document.createElement("img");
+    imagen.classList.add("trust-item-image");
+    imagen.alt = f.name || "DJ";
+
+    const rutaImagen = String(f.icon || "").trim();
+
+    if (rutaImagen) {
+      imagen.src = rutaImagen.startsWith("http")
+        ? rutaImagen
+        : `/${rutaImagen.replace(/^\/+/, "")}`;
+
+      imagen.onerror = () => {
+        imagen.style.display = "none";
+      };
+
+      div.appendChild(imagen);
+    }
+
+    // Nombre del DJ
+    const titulo = document.createElement("h3");
+    titulo.textContent = f.name || "";
+    div.appendChild(titulo);
+
+    trustContainer.appendChild(div);
+  });
 }
-
 
 function renderProducer(data, eventos) {
 
