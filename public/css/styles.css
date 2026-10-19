@@ -3265,6 +3265,28 @@ section{
 
 
 
+
+/* LINEUP: ajuste de encuadre exclusivo para escritorio */
+@media (min-width: 769px) {
+  .trust .trust-grid .trust-item {
+    height: 190px;
+    min-height: 190px;
+    padding: 0;
+  }
+
+  .trust .trust-grid .trust-item .trust-item-image {
+    object-fit: contain;
+    object-position: center;
+    transform: none;
+  }
+
+  .trust .trust-grid .trust-item:hover .trust-item-image {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+
 /* Ajuste exclusivo para escritorio: tarjetas de DJs */
 @media (min-width: 769px) {
   .trust-grid {
