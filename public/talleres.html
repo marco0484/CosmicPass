@@ -1,37 +1,136 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#080d1b">
-  <title>Talleres | Cosmic Pass</title>
+
+  <meta
+    name="description"
+    content="Descubre talleres, actividades y experiencias disponibles en Cosmic Pass."
+  >
+
+  <title>Talleres y experiencias | Cosmic Pass</title>
+
   <link rel="icon" type="image/png" href="/images/cp.webp">
   <link rel="stylesheet" href="/css/styles.css">
   <link rel="stylesheet" href="/css/talleres.css">
+
   <script src="/js/talleres.js" defer></script>
 </head>
-<body class="cp-catalog-page">
-  <nav class="cp-catalog-nav">
-    <a href="/" class="cp-catalog-brand">COSMIC PASS</a>
-    <a id="back-to-producer" class="cp-back-link" href="/">← Volver a la productora</a>
+
+<body class="cp-catalog-page cp-workshops-page">
+
+  <!-- Navegación -->
+  <nav class="cp-catalog-nav" aria-label="Navegación principal">
+    <a href="/" class="cp-catalog-brand">
+      COSMIC PASS
+    </a>
+
+    <a
+      id="back-to-producer"
+      class="cp-back-link"
+      href="/"
+      aria-label="Volver a la productora"
+    >
+      <span class="cp-back-arrow" aria-hidden="true">←</span>
+      <span>Volver a la productora</span>
+    </a>
   </nav>
 
   <main class="cp-catalog-main">
-    <header class="cp-catalog-hero">
-      <span class="cp-eyebrow">EXPERIENCIAS Y APRENDIZAJE</span>
-      <h1 id="producer-title">Talleres</h1>
-      <p>Explora los talleres disponibles de esta productora.</p>
+
+    <!-- Presentación -->
+    <header class="cp-workshops-hero">
+
+      <div class="cp-workshops-hero-content">
+
+        <div class="cp-workshops-kicker">
+          <span class="cp-status-dot" aria-hidden="true"></span>
+          <span>EXPERIENCIAS · CONOCIMIENTO · CREATIVIDAD</span>
+        </div>
+
+        <h1>
+          Aprende algo
+          <span id="producer-title">nuevo.</span>
+        </h1>
+
+        <p class="cp-workshops-description">
+          Explora experiencias, desarrolla nuevas habilidades y encuentra
+          tu próximo taller.
+        </p>
+
+        <div class="cp-workshops-highlights" aria-label="Características">
+          <div class="cp-workshop-highlight">
+            <span class="cp-highlight-icon" aria-hidden="true">✦</span>
+            <span>Experiencias únicas</span>
+          </div>
+
+          <div class="cp-workshop-highlight">
+            <span class="cp-highlight-icon" aria-hidden="true">↗</span>
+            <span>Nuevas habilidades</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="cp-workshops-orbit" aria-hidden="true">
+        <div class="cp-orbit-ring cp-orbit-ring-one"></div>
+        <div class="cp-orbit-ring cp-orbit-ring-two"></div>
+        <div class="cp-orbit-core">
+          <span>✦</span>
+        </div>
+        <span class="cp-orbit-star cp-orbit-star-one">✧</span>
+        <span class="cp-orbit-star cp-orbit-star-two">·</span>
+        <span class="cp-orbit-star cp-orbit-star-three">✦</span>
+      </div>
+
     </header>
 
-    <div id="workshops-status" class="cp-catalog-status" role="status" aria-live="polite">
-      Cargando talleres...
-    </div>
+    <!-- Catálogo -->
+    <section class="cp-workshops-catalog" aria-label="Catálogo de talleres">
 
-    <section id="workshops-grid" class="cp-catalog-grid" aria-label="Talleres disponibles"></section>
+      <div class="cp-workshops-section-heading">
+        <div>
+          <span class="cp-section-eyebrow">DESCUBRE Y EXPLORA</span>
+          <h2>Próximas experiencias</h2>
+        </div>
+
+        <span class="cp-section-decoration" aria-hidden="true">✳</span>
+      </div>
+
+      <div
+        id="workshops-status"
+        class="cp-catalog-status"
+        role="status"
+        aria-live="polite"
+      >
+        Cargando talleres...
+      </div>
+
+      <section
+        id="workshops-grid"
+        class="cp-catalog-grid cp-workshops-grid"
+        aria-label="Talleres disponibles"
+      ></section>
+
+    </section>
+
+    <!-- Cierre -->
+    <section class="cp-workshops-bottom">
+      <span class="cp-bottom-symbol" aria-hidden="true">✧</span>
+      <p>Tu próxima experiencia comienza aquí.</p>
+    </section>
+
   </main>
 
-<footer>
- <p>Desarrollado por <strong>Matehuala Digital Engineering</strong></p>
-</footer>
+  <footer class="cp-catalog-footer">
+    <p>
+      Desarrollado por
+      <strong>Matehuala Digital Engineering</strong>
+    </p>
+  </footer>
+
 </body>
 </html>
