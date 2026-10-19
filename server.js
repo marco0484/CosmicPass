@@ -1170,17 +1170,35 @@ async function generarBoletoPDF({
         });
 
 
-        // =========================================
+// =========================================
 // FECHA LÍMITE PARA CORTESÍAS
 // =========================================
 if (
   String(tipoTicket || "").trim().toLowerCase() === "cortesia" &&
   fechaFin
 ) {
-const fechaTexto = String(fechaFin ?? "").trim();
+  const fechaTexto = String(fechaFin).trim();
 
-console.log("DEBUG fechaFin original:", fechaTexto);
-console.log("DEBUG fechaFin Date:", new Date(fechaTexto).toISOString());
+  // Las fechas sin zona horaria se interpretan
+  // como hora local de Ciudad de México.
+  const fechaSinZona =
+    /^\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:\.\d+)?$/
+      .test(fechaTexto);
+
+  const fechaLimite = fechaSinZona
+    ? new Date(
+        Number(fechaTexto.slice(0, 4)),
+        Number(fechaTexto.slice(5, 7)) - 1,
+        Number(fechaTexto.slice(8, 10)),
+        Number(fechaTexto.slice(11, 13)),
+        Number(fechaTexto.slice(14, 16)),
+        Number(fechaTexto.slice(17, 19))
+      )
+    : new Date(fechaTexto);
+
+  console.log("DEBUG fechaFin original:", fechaTexto);
+  console.log("DEBUG fechaLimite:", fechaLimite.toString());
+
   if (!Number.isNaN(fechaLimite.getTime())) {
     doc.font("Helvetica-Bold")
       .fontSize(9)
@@ -1190,7 +1208,7 @@ console.log("DEBUG fechaFin Date:", new Date(fechaTexto).toISOString());
           timeZone: "America/Mexico_City",
           day: "2-digit",
           month: "2-digit",
-          year: "numeric",
+          year: "2-digit",
           hour: "2-digit",
           minute: "2-digit",
           hour12: true
