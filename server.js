@@ -1177,8 +1177,10 @@ if (
   String(tipoTicket || "").trim().toLowerCase() === "cortesia" &&
   fechaFin
 ) {
-  const fechaLimite = new Date(fechaFin);
+const fechaTexto = String(fechaFin ?? "").trim();
 
+console.log("DEBUG fechaFin original:", fechaTexto);
+console.log("DEBUG fechaFin Date:", new Date(fechaTexto).toISOString());
   if (!Number.isNaN(fechaLimite.getTime())) {
     doc.font("Helvetica-Bold")
       .fontSize(9)
