@@ -378,6 +378,18 @@
   margin: 0;
 }
 
+.cp-back-link::before,
+.cp-back-link::after {
+  content: none !important;
+  display: none !important;
+}
+
+.cp-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
 /* =========================
    CELULARES MUY PEQUEÑOS
    ========================= */
