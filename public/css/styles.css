@@ -4035,3 +4035,126 @@ section{
     overflow-wrap: anywhere;
   }
 }
+
+.cp-notification[hidden] {
+  display: none !important;
+}
+
+.cp-notification {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.cp-notification__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(3, 8, 22, 0.78);
+  backdrop-filter: blur(7px);
+}
+
+.cp-notification__card {
+  position: relative;
+  width: 100%;
+  max-width: 390px;
+  padding: 32px 24px 24px;
+  text-align: center;
+  color: #f7faff;
+  background: linear-gradient(145deg, #142644, #071126);
+  border: 1px solid rgba(66, 232, 255, 0.35);
+  border-radius: 22px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+  animation: cpNotificationIn 0.22s ease-out;
+}
+
+.cp-notification__close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  padding: 4px 8px;
+  color: #a7b7d2;
+  background: transparent;
+  border: 0;
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.cp-notification__icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 18px;
+  color: #42e8a2;
+  background: rgba(66, 232, 162, 0.12);
+  border: 1px solid rgba(66, 232, 162, 0.4);
+  border-radius: 50%;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.cp-notification__brand {
+  margin: 0 0 10px;
+  color: #42e8ff;
+  font-size: 11px;
+  font-weight: bold;
+  letter-spacing: 3px;
+}
+
+.cp-notification__card h2 {
+  margin: 0 0 12px;
+  font-size: 23px;
+}
+
+.cp-notification__message {
+  margin: 0 0 25px;
+  color: #c4d0e5;
+  font-size: 14px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.cp-notification__button {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 20px;
+  color: #071126;
+  background: #42e8ff;
+  border: 0;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.cp-notification__button:hover {
+  background: #8af2ff;
+}
+
+.cp-notification__button:active {
+  transform: scale(0.98);
+}
+
+@keyframes cpNotificationIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cp-notification__card {
+    animation: none;
+  }
+}
+

@@ -140,6 +140,40 @@
     <h2> Completa tus datos </h2>
     <p class="ticket-sub"> Necesitamos estos datos para generar tu acceso </p>
 
+    
+<div id="cp-notification" class="cp-notification" hidden>
+  <div class="cp-notification__backdrop"></div>
+
+  <section
+    class="cp-notification__card"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="cp-notification-title"
+  >
+    <button
+      type="button"
+      class="cp-notification__close"
+      aria-label="Cerrar"
+      onclick="cerrarNotificacionCP()"
+    >×</button>
+
+    <div id="cp-notification-icon" class="cp-notification__icon"> ✓ </div>
+
+    <p class="cp-notification__brand">COSMIC PASS</p>
+    <h2 id="cp-notification-title">¡Acceso generado!</h2>
+    <p id="cp-notification-message" class="cp-notification__message"></p>
+
+    <button
+      type="button"
+      class="cp-notification__button"
+      onclick="cerrarNotificacionCP()"
+    >
+      Continuar
+    </button>
+  </section>
+</div>
+
+
     <div class="user-form">
 
       <input

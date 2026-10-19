@@ -743,8 +743,7 @@ if (pendingPaymentMethod === "free_access") {
 
   try {
 
-    const res = await fetch(
-      `${API}/crear-ticket-gratis`,
+    const res = await fetch(`${API}/crear-ticket-gratis`,
       {
         method: "POST",
         headers: {
@@ -763,13 +762,13 @@ if (pendingPaymentMethod === "free_access") {
     const data = await res.json();
 
     if (!res.ok || !data.success) {
-
-      alert(
-        data.error ||
-        data.message ||
-        "No se pudo generar el acceso"
-      );
-
+      
+    mostrarNotificacionCP(
+      data.error ||
+      data.message ||
+      "No se pudo generar el acceso",
+      "error"
+    );
       generatingTicket = false;
 
       if (generateButton) {
@@ -784,9 +783,7 @@ if (pendingPaymentMethod === "free_access") {
     closeUserDataModal();
     closeTicketModal();
 
-    alert(
-      "Tu acceso fue generado correctamente y enviado al correo registrado 🚀"
-    );
+mostrarNotificacionCP( "Tu acceso fue generado correctamente y enviado al correo registrado 🚀","success");
 
     document.getElementById("user-name").value = "";
     document.getElementById("user-email").value = "";
@@ -802,8 +799,7 @@ if (pendingPaymentMethod === "free_access") {
         "Generar acceso gratuito";
     }
 
-    alert("Error generando el acceso gratuito.");
-
+mostrarNotificacionCP("Ocurrió un error al generar el acceso gratuito. Inténtalo nuevamente.","error");
   }
 
   return;
@@ -816,8 +812,7 @@ if (pendingPaymentMethod === "free_access") {
 
   try {
 
-    const res = await fetch(
-      `${API}/crear-pago-ticket`,
+    const res = await fetch(`${API}/crear-pago-ticket`,
       {
         method: "POST",
         headers: {
@@ -1016,6 +1011,46 @@ if (metodo === "transferencia") {
     "Ya realicé mi transferencia";
 
   return;
+}
+
+
+function mostrarNotificacionCP(mensaje, tipo = "success") {
+  const modal = document.getElementById("cp-notification");
+  const titulo = document.getElementById("cp-notification-title");
+  const texto = document.getElementById("cp-notification-message");
+  const icono = document.getElementById("cp-notification-icon");
+
+  if (!modal || !titulo || !texto || !icono) {
+    console.error("No se encontró el modal de notificaciones Cosmic Pass.");
+    return;
+  }
+
+  const esExito = tipo === "success";
+
+  titulo.textContent = esExito ? "¡Acceso generado!" : "No se pudo completar";
+  texto.textContent = mensaje;
+  icono.textContent = esExito ? "✓" : "!";
+  icono.style.color = esExito ? "#42e8a2" : "#ff8b8b";
+  icono.style.borderColor = esExito
+    ? "rgba(66,232,162,.4)"
+    : "rgba(255,139,139,.4)";
+  icono.style.background = esExito
+    ? "rgba(66,232,162,.12)"
+    : "rgba(255,139,139,.12)";
+
+  modal.hidden = false;
+  document.body.style.overflow = "hidden";
+
+  modal.querySelector(".cp-notification__button").focus();
+}
+
+function cerrarNotificacionCP() {
+  const modal = document.getElementById("cp-notification");
+
+  if (modal) {
+    modal.hidden = true;
+    document.body.style.overflow = "";
+  }
 }
 
 });
