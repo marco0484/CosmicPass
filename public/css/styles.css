@@ -3264,6 +3264,33 @@ section{
 }
 
 
+
+/* Ajuste exclusivo para escritorio: tarjetas de DJs */
+@media (min-width: 769px) {
+  .trust-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 22px;
+    max-width: 1500px;
+    margin-inline: auto;
+  }
+
+  .trust-item {
+    min-width: 0;
+    overflow: hidden;
+  }
+
+  .trust-item-image {
+    display: block;
+    width: 100%;
+    height: 190px;
+    object-fit: contain;
+    object-position: center;
+    margin-inline: auto;
+  }
+}
+
+
+
 @media (max-width: 480px){
   .producer-hero {
     padding: 70px 15px 30px;
