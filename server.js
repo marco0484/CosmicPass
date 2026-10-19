@@ -1084,7 +1084,7 @@ async function generarBoletoPDF({
       doc.font("Helvetica-Bold")
         .fontSize(8)
         .fillColor(muted)
-        .text("TU ACCESO AL UNIVERSO DE LA MÚSICA", 0, 135, {
+        .text("TU ACCESO ESTA LISTO", 0, 135, {
           width: pageW,
           align: "center",
           characterSpacing: 1
@@ -1105,7 +1105,7 @@ async function generarBoletoPDF({
       doc.font("Helvetica-Bold")
         .fontSize(9)
         .fillColor(cyan)
-        .text("✦  BOLETO DIGITAL  ✦", 185, 192, {
+        .text("BOLETO DIGITAL", 185, 192, {
           width: 225,
           align: "center",
           lineBreak: false
@@ -4535,7 +4535,7 @@ contáctanos por WhatsApp.
 ">
 
 WhatsApp:
-<strong>55 6434 9230</strong>
+<strong>5580761435</strong>
 
 </p>
 
@@ -4569,8 +4569,7 @@ WhatsApp:
   letter-spacing:1px;
   color:#555555;
 ">
-  COSMIC PASS
-</div>
+ </div>
 
 
 <p style="
