@@ -3898,62 +3898,6 @@ section{
 
 /*  NUEVO */
 
-/* ===== LINEUP: FOTOGRAFÍAS DE LOS DJs ===== */
-
-
-/* ===== LINEUP: CARDS DE DJs CON FOTO ===== */
-
-.trust .trust-grid .trust-item {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  min-height: 150px;
-  height: 150px;
-  border-radius: 16px;
-}
-
-.trust .trust-grid .trust-item .trust-item-image {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-
-  opacity: 0.8;
-  transition: transform 0.35s ease, opacity 0.35s ease;
-}
-
-.trust .trust-grid .trust-item h3 {
-  position: absolute;
-  z-index: 1;
-  right: 0;
-  bottom: 0;
-  left: 0;
-
-  margin: 0;
-  padding: 30px 12px 12px;
-
-  background: linear-gradient(
-    to top,
-    rgba(3, 7, 18, 0.95),
-    rgba(3, 7, 18, 0.45),
-    transparent
-  );
-
-  color: #fff;
-  text-align: center;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.9);
-}
-
-.trust .trust-grid .trust-item:hover .trust-item-image {
-  transform: scale(1.05);
-  opacity: 1;
-}
-
-
 /* ===== LINEUP RESPONSIVE PARA CELULAR ===== */
 
 @media (max-width: 600px) {
