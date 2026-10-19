@@ -978,6 +978,7 @@ app.get("/productora/:slug", (req, res) => {
 
 const supabase = createClient("https://uqrbykxgsarsfyyvmibr.supabase.co",process.env.SUPABASE_SECRET_KEY);
 
+
 async function generarBoletoPDF({
   evento,
   nombre,
@@ -985,276 +986,324 @@ async function generarBoletoPDF({
   ticketToken,
   qrImage
 }) {
-
   return new Promise((resolve, reject) => {
-
     try {
-
       const doc = new PDFDocument({
         size: "A4",
-        margin: 0
+        margin: 0,
+        compress: true
       });
 
       const chunks = [];
 
-      doc.on("data", chunk => {
-        chunks.push(chunk);
-      });
-
-      doc.on("end", () => {
-        resolve(Buffer.concat(chunks));
-      });
-
+      doc.on("data", chunk => chunks.push(chunk));
+      doc.on("end", () => resolve(Buffer.concat(chunks)));
       doc.on("error", reject);
 
+      // =========================================
+      // PALETA COSMIC PASS
+      // =========================================
+      const navy = "#071126";
+      const navyLight = "#101F3D";
+      const cyan = "#42E8FF";
+      const white = "#F7FAFF";
+      const muted = "#A7B7D2";
+      const line = "#263958";
 
-      /* =========================
-         FONDO
-      ========================= */
+      const pageW = 595.28;
+      const pageH = 841.89;
 
-      doc
-        .rect(0, 0, 595, 842)
-        .fill("#f5f5f5");
+      // =========================================
+      // FONDO ESPACIAL
+      // =========================================
+      doc.rect(0, 0, pageW, pageH).fill(navy);
 
+      // Líneas decorativas superiores
+      doc.save();
+      doc.opacity(0.8);
+      doc.rect(0, 0, pageW, 7).fill(cyan);
+      doc.restore();
 
-      /* =========================
-         TARJETA
-      ========================= */
+      doc.circle(520, 95, 85).fill(navyLight);
+      doc.circle(520, 95, 63).lineWidth(1).stroke("#1D456A");
+      doc.circle(520, 95, 43).lineWidth(1).stroke("#1D456A");
 
-      doc
-        .roundedRect(
-          55,
-          50,
-          485,
-          742,
-          18
-        )
-        .fill("#ffffff");
+      doc.circle(65, 740, 90).fill(navyLight);
+      doc.circle(65, 740, 65).lineWidth(1).stroke("#1D456A");
 
+      // Estrellas decorativas
+      [
+        [48, 80, 2],
+        [120, 110, 1.5],
+        [475, 160, 2],
+        [530, 240, 1.5],
+        [62, 410, 1.5],
+        [520, 510, 2],
+        [465, 700, 1.5],
+        [130, 770, 2],
+        [480, 785, 1.5]
+      ].forEach(([x, y, r]) => {
+        doc.circle(x, y, r).fill(cyan);
+      });
 
-      /* =========================
-         LOGO
-      ========================= */
+      // =========================================
+      // TARJETA PRINCIPAL
+      // =========================================
+      doc.roundedRect(35, 35, pageW - 70, pageH - 70, 22)
+        .fill(navyLight);
 
-      doc
-        .fontSize(24)
-        .fillColor("#111111")
-        .font("Helvetica-Bold")
-        .text(
-          "COSMIC PASS",
-          0,
-          85,
-          {
-            width: 595,
-            align: "center"
-          }
-        );
+      doc.roundedRect(35, 35, pageW - 70, pageH - 70, 22)
+        .lineWidth(1.2)
+        .stroke("#294668");
 
+      // Acento cian en la cabecera
+      doc.roundedRect(55, 55, pageW - 110, 5, 2.5)
+        .fill(cyan);
 
-      /* =========================
-         EVENTO
-      ========================= */
+      // =========================================
+      // MARCA
+      // =========================================
+      doc.font("Helvetica-Bold")
+        .fontSize(23)
+        .fillColor(white)
+        .text("COSMIC", 0, 82, {
+          width: pageW,
+          align: "center",
+          lineBreak: false
+        });
 
-      doc
-        .fontSize(22)
-        .fillColor("#111111")
-        .font("Helvetica-Bold")
-        .text(
-          evento.name || "Evento",
-          90,
-          150,
-          {
-            width: 415,
-            align: "center"
-          }
-        );
+      doc.font("Helvetica")
+        .fontSize(10)
+        .fillColor(cyan)
+        .text("P A S S", 0, 109, {
+          width: pageW,
+          align: "center",
+          characterSpacing: 2
+        });
 
-
-      /* =========================
-         COMPRADOR
-      ========================= */
-
-      doc
-        .fontSize(12)
-        .fillColor("#777777")
-        .font("Helvetica")
-        .text(
-          "Nombre",
-          90,
-          220,
-          {
-            width: 415,
-            align: "center"
-          }
-        );
-
-      doc
-        .fontSize(17)
-        .fillColor("#111111")
-        .font("Helvetica-Bold")
-        .text(
-          nombre,
-          90,
-          240,
-          {
-            width: 415,
-            align: "center"
-          }
-        );
-
-
-      /* =========================
-         TIPO DE ACCESO
-      ========================= */
-
-      doc
-        .fontSize(12)
-        .fillColor("#777777")
-        .font("Helvetica")
-        .text(
-          "Tipo de acceso",
-          90,
-          285,
-          {
-            width: 415,
-            align: "center"
-          }
-        );
-
-      doc
-        .fontSize(16)
-        .fillColor("#111111")
-        .font("Helvetica-Bold")
-        .text(
-          tipoTicket || "Acceso general",
-          90,
-          305,
-          {
-            width: 415,
-            align: "center"
-          }
-        );
-
-
-      /* =========================
-         QR
-      ========================= */
-
-      const qrBase64 =
-        qrImage.split("base64,")[1];
-
-      const qrBuffer =
-        Buffer.from(
-          qrBase64,
-          "base64"
-        );
-
-      doc.image(
-        qrBuffer,
-        197,
-        350,
-        {
-          width: 200,
-          height: 200
-        }
-      );
-
-
-      /* =========================
-         INSTRUCCIÓN
-      ========================= */
-
-      doc
-        .fontSize(11)
-        .fillColor("#555555")
-        .font("Helvetica")
-        .text(
-          "Presenta este código QR en el acceso",
-          90,
-          570,
-          {
-            width: 415,
-            align: "center"
-          }
-        );
-
-
-      /* =========================
-         INFORMACIÓN EVENTO
-      ========================= */
-
-      doc
-        .fontSize(11)
-        .fillColor("#333333")
-        .text(
-          `Fecha: ${evento.date || "Por confirmar"}`,
-          90,
-          620,
-          {
-            width: 415,
-            align: "center"
-          }
-        );
-
-      doc
-        .text(
-          `Lugar: ${evento.city || "Por confirmar"}`,
-          90,
-          640,
-          {
-            width: 415,
-            align: "center"
-          }
-        );
-
-
-      /* =========================
-         FOLIO
-      ========================= */
-
-      doc
+      doc.font("Helvetica-Bold")
         .fontSize(8)
-        .fillColor("#999999")
-        .text(
-          `Folio: ${ticketToken}`,
-          90,
-          700,
-          {
-            width: 415,
-            align: "center"
-          }
-        );
+        .fillColor(muted)
+        .text("TU ACCESO AL UNIVERSO DE LA MÚSICA", 0, 135, {
+          width: pageW,
+          align: "center",
+          characterSpacing: 1
+        });
 
+      // Separador
+      doc.moveTo(75, 164)
+        .lineTo(pageW - 75, 164)
+        .lineWidth(1)
+        .stroke(line);
 
-      /* =========================
-         AVISO
-      ========================= */
+      // =========================================
+      // ETIQUETA DEL BOLETO
+      // =========================================
+      doc.roundedRect(185, 183, 225, 27, 13)
+        .fill("#173B57");
 
-      doc
+      doc.font("Helvetica-Bold")
         .fontSize(9)
-        .fillColor("#777777")
+        .fillColor(cyan)
+        .text("✦  BOLETO DIGITAL  ✦", 185, 192, {
+          width: 225,
+          align: "center",
+          lineBreak: false
+        });
+
+      // =========================================
+      // EVENTO
+      // =========================================
+      doc.font("Helvetica-Bold")
+        .fontSize(24)
+        .fillColor(white)
+        .text(evento.name || "Evento", 75, 230, {
+          width: pageW - 150,
+          align: "center",
+          height: 70,
+          ellipsis: true
+        });
+
+      doc.font("Helvetica")
+        .fontSize(10)
+        .fillColor(muted)
+        .text("PREPÁRATE PARA VIVIR LA EXPERIENCIA", 75, 294, {
+          width: pageW - 150,
+          align: "center",
+          characterSpacing: 0.5
+        });
+
+      // =========================================
+      // COMPRADOR
+      // =========================================
+      doc.roundedRect(75, 330, pageW - 150, 76, 12)
+        .fill("#0B1830");
+
+      doc.roundedRect(75, 330, 4, 76, 2)
+        .fill(cyan);
+
+      doc.font("Helvetica")
+        .fontSize(9)
+        .fillColor(muted)
+        .text("BOLETO A NOMBRE DE", 95, 345, {
+          width: pageW - 190,
+          lineBreak: false
+        });
+
+      doc.font("Helvetica-Bold")
+        .fontSize(17)
+        .fillColor(white)
+        .text(nombre || "Cliente", 95, 365, {
+          width: pageW - 190,
+          height: 28,
+          ellipsis: true
+        });
+
+      // =========================================
+      // TIPO DE ACCESO
+      // =========================================
+      doc.font("Helvetica")
+        .fontSize(9)
+        .fillColor(muted)
+        .text("TIPO DE ACCESO", 0, 425, {
+          width: pageW,
+          align: "center"
+        });
+
+      doc.font("Helvetica-Bold")
+        .fontSize(15)
+        .fillColor(cyan)
+        .text(tipoTicket || "Acceso general", 75, 443, {
+          width: pageW - 150,
+          align: "center",
+          height: 25,
+          ellipsis: true
+        });
+
+      // =========================================
+      // QR: MARCO Y ÁREA BLANCA PARA ESCANEO
+      // =========================================
+      const qrBase64 = String(qrImage || "").split("base64,").pop();
+
+      if (!qrBase64) {
+        throw new Error("No se recibió una imagen QR válida.");
+      }
+
+      const qrBuffer = Buffer.from(qrBase64, "base64");
+
+      const qrSize = 190;
+      const qrX = (pageW - qrSize) / 2;
+      const qrY = 485;
+
+      // Marco exterior
+      doc.roundedRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20, 14)
+        .fill("#FFFFFF");
+
+      // Imagen QR conservada con sus proporciones originales
+      doc.image(qrBuffer, qrX, qrY, {
+        fit: [qrSize, qrSize],
+        align: "center",
+        valign: "center"
+      });
+
+      // Instrucción
+      doc.font("Helvetica-Bold")
+        .fontSize(10)
+        .fillColor(white)
+        .text("PRESENTA TU QR EN EL ACCESO", 65, 704, {
+          width: pageW - 130,
+          align: "center"
+        });
+
+      doc.font("Helvetica")
+        .fontSize(9)
+        .fillColor(muted)
+        .text("Mantén el código visible y listo para escanear.", 65, 721, {
+          width: pageW - 130,
+          align: "center"
+        });
+
+      // =========================================
+      // INFORMACIÓN DEL EVENTO
+      // =========================================
+      const infoY = 755;
+      const infoW = (pageW - 150) / 2;
+
+      doc.moveTo(75, 746)
+        .lineTo(pageW - 75, 746)
+        .lineWidth(1)
+        .stroke(line);
+
+      doc.font("Helvetica")
+        .fontSize(8)
+        .fillColor(muted)
+        .text("FECHA", 80, infoY, {
+          width: infoW - 10,
+          lineBreak: false
+        });
+
+      doc.font("Helvetica-Bold")
+        .fontSize(10)
+        .fillColor(white)
+        .text(String(evento.date || "Por confirmar"), 80, infoY + 15, {
+          width: infoW - 10,
+          height: 25,
+          ellipsis: true
+        });
+
+      doc.font("Helvetica")
+        .fontSize(8)
+        .fillColor(muted)
+        .text("LUGAR", 315, infoY, {
+          width: infoW - 10,
+          lineBreak: false
+        });
+
+      doc.font("Helvetica-Bold")
+        .fontSize(10)
+        .fillColor(white)
+        .text(String(evento.city || "Por confirmar"), 315, infoY + 15, {
+          width: infoW - 10,
+          height: 25,
+          ellipsis: true
+        });
+
+      // =========================================
+      // FOLIO Y AVISO
+      // =========================================
+      doc.font("Helvetica")
+        .fontSize(7)
+        .fillColor(muted)
+        .text(`Folio: ${ticketToken}`, 65, 798, {
+          width: pageW - 130,
+          align: "center",
+          height: 12,
+          ellipsis: true
+        });
+
+      doc.font("Helvetica")
+        .fontSize(7)
+        .fillColor(muted)
         .text(
-          "Este boleto es único y válido para un solo ingreso. No compartas tu código QR.",
-          90,
-          735,
+          "Boleto único para un solo ingreso. No compartas tu código QR.",
+          65,
+          812,
           {
-            width: 415,
-            align: "center"
+            width: pageW - 130,
+            align: "center",
+            height: 12,
+            ellipsis: true
           }
         );
-
 
       doc.end();
 
     } catch (error) {
-
       reject(error);
-
     }
-
   });
-
 }
+
 
 app.post("/login", async (req, res) => {
   try {
