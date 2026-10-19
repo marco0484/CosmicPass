@@ -1045,13 +1045,13 @@ window.mostrarNotificacionCP = function(mensaje, tipo = "success") {  const moda
   modal.querySelector(".cp-notification__button").focus();
 }
 
-function cerrarNotificacionCP() {
+window.cerrarNotificacionCP = function() {
   const modal = document.getElementById("cp-notification");
 
   if (modal) {
     modal.hidden = true;
     document.body.style.overflow = "";
   }
-}
+};
 
 });
