@@ -1014,8 +1014,9 @@ if (metodo === "transferencia") {
 }
 
 
-function mostrarNotificacionCP(mensaje, tipo = "success") {
-  const modal = document.getElementById("cp-notification");
+});
+
+window.mostrarNotificacionCP = function(mensaje, tipo = "success") {  const modal = document.getElementById("cp-notification");
   const titulo = document.getElementById("cp-notification-title");
   const texto = document.getElementById("cp-notification-message");
   const icono = document.getElementById("cp-notification-icon");
@@ -1053,5 +1054,4 @@ function cerrarNotificacionCP() {
   }
 }
 
-});
 });
