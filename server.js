@@ -509,8 +509,6 @@ if (stockError) {
   console.error(stockError);
 }
 
-console.log("NUEVO STOCK:", nuevoStock);
-
 
 /* ================================
    OBTENER TIPO DE TICKET
@@ -930,26 +928,15 @@ WhatsApp:
 `,
 
       attachments: [
-
         {
-          filename:
-            `Boleto-${evento.name}.pdf`,
-
-          content:
-            pdfBuffer,
-
-          contentType:
-            "application/pdf"
+          filename:     `Boleto-${evento.name}.pdf`,
+          content:      pdfBuffer,
+          contentType: "application/pdf"
         }
 
       ]
 
     });
-
-    console.log(
-      "BOLETO STRIPE ENVIADO A:",
-      correoCliente
-    );
 
   } catch (mailError) {
 
@@ -2307,20 +2294,7 @@ app.post("/admin/rps/asignar", requerirSesion, async (req, res) => {
 
     // VALIDAR PERMISOS
       const rolesPermitidos = ["admin", "owner", "usuario"];
-
-      if (!rolesPermitidos.includes(rol) || !idProductora) {
-        console.log("PERMISOS ASIGNAR:", {
-          id: req.usuario.id,
-          rol: req.usuario.rol,
-          id_productora: req.usuario.id_productora
-        });
-
-        return res.status(403).json({
-          success: false,
-          error: "No tienes permisos para asignar accesos"
-        });
-      }
-
+      
     // VALIDAR DATOS
     const rpId = Number(rp_user_id);
     const eventoId = Number(id_evento);
@@ -2421,8 +2395,8 @@ app.post("/admin/rps/asignar", requerirSesion, async (req, res) => {
       if (error) throw error;
 
       resultado = data;
-    } else {
-      // CREAR NUEVA ASIGNACIÓN
+    } 
+    else {    // CREAR NUEVA ASIGNACIÓN
       const {
         data,
         error
@@ -4044,23 +4018,35 @@ app.post("/contacto", async (req, res) => {
 });
 
 
+
 app.get("/eventos/buscar", async (req, res) => {
   try {
-    const { q } = req.query;
+    const q = typeof req.query.q === "string"
+      ? req.query.q.trim()
+      : "";
+
+    if (!q) {
+      return res.json([]);
+    }
 
     const { data, error } = await supabase
       .from("cat_events")
-      .select("*")
-      .ilike("name", `%${q}%`);
+      .select("id, name, city, date, price, image, id_productora")
+      .ilike("name", `%${q}%`)
+      .limit(30);
 
-    if (error) throw error;
+    if (error) {
+      console.error("[Cosmic Pass] Error buscando eventos:", error);
+      return res.status(500).json({ error: "Error al buscar eventos" });
+    }
 
-    res.json(data);
-
+    return res.json(data || []);
   } catch (error) {
-    res.status(500).send("Error");
+    console.error("[Cosmic Pass] Error inesperado:", error);
+    return res.status(500).json({ error: "Error al buscar eventos" });
   }
 });
+
 
 app.get("/productoras/:id/features", async (req, res) => {
   try {
