@@ -1,4 +1,6 @@
 let cacheEventos = {};
+const cacheProductora = new Map();
+const CACHE_PRODUCTORA_TTL = 30_000; // 30 segundos
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -3030,12 +3032,14 @@ return res.redirect(accountLink.url);
   }
 );
 
+
 app.get("/api/productora/:slug", async (req, res) => {
+  const inicio = performance.now();
+  const tiempos = {};
+  let marca = inicio;
 
   try {
-
-    const slugOriginal =
-      String(req.params.slug || "").trim();
+    const slugOriginal = String(req.params.slug || "").trim();
 
     if (!slugOriginal) {
       return res.status(400).json({
@@ -3043,198 +3047,125 @@ app.get("/api/productora/:slug", async (req, res) => {
       });
     }
 
-    /*NORMALIZAR SLUG */
+    const slug = slugOriginal
+      .toLowerCase()
+      .replace(/\s+/g, "-")
+      .replace(/-+/g, "-");
 
-    const slugNormalizado =
-      slugOriginal
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/-+/g, "-")
-        .trim();
+    // 1. Caché de respuesta completa
+    const cache = cacheProductora.get(slug);
+    const ahora = Date.now();
 
+    if (cache && ahora - cache.time < CACHE_PRODUCTORA_TTL) {
+      res.set("X-Productora-Cache", "HIT");
+      return res.json(cache.data);
+    }
 
-    /* BUSCAR PRODUCTORA */
+    res.set("X-Productora-Cache", "MISS");
 
-    let productoraSlug = null;
-
-    // Primero buscamos por desc_slug
-    const {
-      data: productoraPorSlug,
-      error: slugError
-    } = await supabase
+    // 2. Buscar por slug
+    const { data: porSlug, error: errorSlug } = await supabase
       .from("cat_productoras")
       .select("id, name, desc_slug")
-      .ilike("desc_slug", slugNormalizado)
+      .ilike("desc_slug", slug)
       .maybeSingle();
 
+    tiempos.busquedaSlug = Math.round(performance.now() - marca);
+    marca = performance.now();
 
-    if (slugError) {
-      console.error(
-        "ERROR BUSCANDO POR SLUG:",
-        slugError
-      );
-    }
+    if (errorSlug) throw errorSlug;
 
+    let productora = porSlug;
 
-    if (productoraPorSlug) {
+    // 3. Respaldo: buscar por nombre exacto sin descargar
+    // toda la tabla de productoras.
+    if (!productora) {
+      const nombre = slugOriginal.replace(/-/g, " ");
 
-      productoraSlug =
-        productoraPorSlug;
-
-    } else {
-
-      /*
-      ==========================================
-      RESPALDO:
-      BUSCAR POR NOMBRE
-      ==========================================
-      */
-
-      const nombreBuscado =
-        slugOriginal.replace(/-/g, " ");
-
-
-      const {
-        data: productoras,
-        error: nombreError
-      } = await supabase
+      const { data, error } = await supabase
         .from("cat_productoras")
-        .select("id, name, desc_slug");
+        .select("id, name, desc_slug")
+        .ilike("name", nombre)
+        .limit(1)
+        .maybeSingle();
 
+      if (error) throw error;
 
-      if (nombreError) {
-        throw nombreError;
-      }
-
-
-      productoraSlug =
-        (productoras || []).find(productora => {
-
-          const nombreNormalizado =
-            String(productora.name || "")
-              .toLowerCase()
-              .trim();
-
-          return (
-            nombreNormalizado ===
-            nombreBuscado.toLowerCase().trim()
-          );
-
-        });
-
+      productora = data;
     }
 
+    tiempos.busquedaProductora = Math.round(performance.now() - marca);
+    marca = performance.now();
 
-    /*
-    ==========================================
-    SI NO EXISTE
-    ==========================================
-    */
-
-    if (!productoraSlug) {
-
-      console.error(
-        "PRODUCTORA NO ENCONTRADA:",
-        {
-          slugOriginal,
-          slugNormalizado
-        }
-      );
-
+    if (!productora) {
       return res.status(404).json({
         error: "Productora no encontrada"
       });
-
     }
 
+    const id = Number(productora.id);
 
-    const id =
-      Number(productoraSlug.id);
-
-
-    /*
-    ==========================================
-    CARGAR INFORMACIÓN
-    ==========================================
-    */
-
-    const [
-      prod,
-      eventos,
-      features
-    ] = await Promise.all([
-
-      supabase.rpc(
-        "get_productora_by_id",
-        {
-          p_id: id
-        }
-      ),
-
-      supabase.rpc(
-        "get_events_by_productora",
-        {
-          p_id: id
-        }
-      ),
-
-      supabase.rpc(
-        "get_productora_features",
-        {
-          p_id: id
-        }
-      )
-
+    // 4. Consultas paralelas: conservamos las tres RPC actuales.
+    const [prod, eventos, features] = await Promise.all([
+      supabase.rpc("get_productora_by_id", {
+        p_id: id
+      }),
+      supabase.rpc("get_events_by_productora", {
+        p_id: id
+      }),
+      supabase.rpc("get_productora_features", {
+        p_id: id
+      })
     ]);
 
+    tiempos.consultasRPC = Math.round(performance.now() - marca);
 
-    if (prod.error) {
-      throw prod.error;
+    if (prod.error) throw prod.error;
+    if (eventos.error) throw eventos.error;
+    if (features.error) throw features.error;
+
+    const respuesta = {
+      productora: prod.data?.[0] || null,
+      eventos: eventos.data || [],
+      features: features.data || []
+    };
+
+    if (!respuesta.productora) {
+      return res.status(404).json({
+        error: "Datos de productora no encontrados"
+      });
     }
 
-    if (eventos.error) {
-      throw eventos.error;
-    }
-
-    if (features.error) {
-      throw features.error;
-    }
-
-
-    /*
-    ==========================================
-    RESPUESTA
-    ==========================================
-    */
-
-    return res.json({
-
-      productora:
-        prod.data?.[0] || null,
-
-      eventos:
-        eventos.data || [],
-
-      features:
-        features.data || []
-
+    // 5. Guardar respuesta durante 30 segundos.
+    cacheProductora.set(slug, {
+      data: respuesta,
+      time: Date.now()
     });
 
+    // Evitar que la caché crezca indefinidamente.
+    if (cacheProductora.size > 200) {
+      const primeraClave = cacheProductora.keys().next().value;
+      cacheProductora.delete(primeraClave);
+    }
+
+    tiempos.total = Math.round(performance.now() - inicio);
+
+    console.info("[Cosmic Pass] API productora", {
+      slug,
+      ...tiempos
+    });
+
+    return res.json(respuesta);
 
   } catch (error) {
-
-    console.error(
-      "ERROR /api/productora/:slug:",
-      error
-    );
+    console.error("ERROR /api/productora/:slug:", error);
 
     return res.status(500).json({
       error: "Error en servidor"
     });
-
   }
-
 });
+
 
 
 
@@ -3351,9 +3282,6 @@ app.get("/api/productora/:slug/talleres", async (req, res) => {
     });
   }
 });
-
-
-/* HISTORIAL PÚBLICO DE EVENTOS  */
 
 
 /* HISTORIAL PÚBLICO DE EVENTOS */
