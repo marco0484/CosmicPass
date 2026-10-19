@@ -598,16 +598,9 @@ const qrImage =
 const pdfBuffer =
   await generarBoletoPDF({
     evento,
-
-    nombre:
-      session.customer_details?.name ||
-      "Cliente Stripe",
-
-    tipoTicket:
-      ticketInfo.tipo_ticket,
-
+    nombre: session.customer_details?.name || "Cliente Stripe",
+    tipoTicket: ticketInfo.tipo_ticket,
     ticketToken,
-
     qrImage
   });
 
@@ -615,13 +608,8 @@ const pdfBuffer =
    ENVIAR BOLETO POR CORREO
 ================================ */
 
-const correoCliente =
-  session.customer_details?.email || null;
-
-const nombreCliente =
-  session.customer_details?.name ||
-  "Cliente Stripe";
-
+const correoCliente = session.customer_details?.email || null;
+const nombreCliente = session.customer_details?.name || "Cliente Stripe";
 if (correoCliente) {
 
   try {
@@ -983,6 +971,7 @@ async function generarBoletoPDF({
   evento,
   nombre,
   tipoTicket,
+  fechaFin,
   ticketToken,
   qrImage
 }) {
@@ -1180,6 +1169,41 @@ async function generarBoletoPDF({
           ellipsis: true
         });
 
+
+        // =========================================
+// FECHA LÍMITE PARA CORTESÍAS
+// =========================================
+if (
+  String(tipoTicket || "").trim().toLowerCase() === "cortesia" &&
+  fechaFin
+) {
+  const fechaLimite = new Date(fechaFin);
+
+  if (!Number.isNaN(fechaLimite.getTime())) {
+    doc.font("Helvetica-Bold")
+      .fontSize(9)
+      .fillColor("#FFB454")
+      .text(
+        `CORTESÍA VÁLIDA HASTA: ${fechaLimite.toLocaleString("es-MX", {
+          timeZone: "America/Mexico_City",
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true
+        })}`,
+        45,
+        469,
+        {
+          width: pageW - 90,
+          align: "center",
+          lineBreak: false
+        }
+      );
+  }
+}
+
       // =========================================
       // QR: MARCO Y ÁREA BLANCA PARA ESCANEO
       // =========================================
@@ -1193,7 +1217,7 @@ async function generarBoletoPDF({
 
       const qrSize = 190;
       const qrX = (pageW - qrSize) / 2;
-      const qrY = 485;
+      const qrY = 500;
 
       // Marco exterior
       doc.roundedRect(qrX - 10, qrY - 10, qrSize + 20, qrSize + 20, 14)
@@ -4215,13 +4239,15 @@ if (eventoError || !evento) {
                                                           errorCorrectionLevel:"H"
                                                         });
 
+
     const pdfBuffer = await generarBoletoPDF({
-                                                evento,
-                                                nombre,
-                                                tipoTicket: ticket.tipo_ticket,
-                                                ticketToken,
-                                                qrImage
-                                              });
+      evento,
+      nombre,
+      tipoTicket: ticket.tipo_ticket,
+      fechaFin: ticket.fecha_fin,
+      ticketToken,
+      qrImage
+    });
 
     const { error: insertError } = await supabase
       .from("tickets")
