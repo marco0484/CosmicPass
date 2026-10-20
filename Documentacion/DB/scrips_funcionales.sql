@@ -1,4 +1,8 @@
-UPDATE public.cosmic_usuarios
+/*
+Acttualiza el pasword de un usuario, el parametro es el id del usuario.
+*/
+
+UPDATE cosmic_usuarios
 SET password_hash = extensions.crypt(
     'marco0484**..',
     extensions.gen_salt('bf')
@@ -40,3 +44,37 @@ select * from scanner_sessions;
 select * from ticket_types; 
 select * from tickets;  -- TICKETS ACTIVOS
 
+/*
+
+*/
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto
+WITH SCHEMA extensions;
+
+commit;
+
+INSERT INTO cosmic_usuarios (
+    usuario,
+    nombre,
+    rol,
+    activo,
+    password_hash
+)
+VALUES (
+    'Woofer',
+    'Fernando W',
+    'admin',
+    true,
+    extensions.crypt('Fer0484', extensions.gen_salt('bf', 12))
+);
+
+select count (1)
+,evento_id
+from tickets
+group by evento_id;
+
+commit;
+
+-- User Sain Pass: Sain0484
+-- 	Woofer 	 Pass: Fer0484
