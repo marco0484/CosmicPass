@@ -463,10 +463,7 @@ document.querySelector(
 ).innerText =
   "Selecciona el método de pago que prefieras.";
 
-document.querySelector(
-  ".checkout-summary"
-).style.display =
-  "";
+document.querySelector(".checkout-summary").style.display = "none";
 
 document.querySelector(
   ".btn-buy-final"
@@ -483,6 +480,12 @@ title.textContent =
   pendingPaymentMethod = null;
 selectedTicket = null;
 ticketQuantity = 1;
+
+const resumen = document.querySelector("#ticket-modal .checkout-summary");
+const btnContinuar = document.querySelector("#ticket-modal .btn-buy-final");
+if (resumen) resumen.style.display = "none";
+if (btnContinuar) btnContinuar.disabled = true;
+
 
 const globalQty = document.getElementById("global-ticket-qty");
 const globalTotal = document.getElementById("global-ticket-total");
@@ -518,10 +521,10 @@ tickets.forEach(ticket => {
   const div = document.createElement("div");
   div.classList.add("ticket-option");
 
-  const agotado = ticket.stock_disponible !== null && Number(ticket.stock_disponible) <= 0;
-
+const agotado = Number(ticket.stock_disponible) <= 0;
 if (agotado) {
   div.classList.add("sold-out");
+  div.setAttribute("aria-disabled", "true");
 }
 
   div.innerHTML = `
@@ -530,8 +533,8 @@ if (agotado) {
   <p> ${ticket.desc_ticket || ""} </p>
 
   ${
-    Number(ticket.stock_disponible) <= 0
-      ? ` <span class="ticket-mini-info ticket-sold-out"> SOLD OUT </span> `
+    agotado
+  ? `<span class="ticket-mini-info ticket-sold-out">SOLD OUT</span>`
       : ` <span class="ticket-mini-info"> ${ticket.stock_disponible} disponibles </span>
         ${
           ticket.fecha_fin
@@ -567,7 +570,7 @@ div.addEventListener("click", () => {
   selectedTicket = ticket;
   selectedEventId = eventId;
 
-  const btnContinuar = document.querySelector(".btn-buy-final");
+const btnContinuar = document.querySelector("#ticket-modal .btn-buy-final");
 if (btnContinuar) btnContinuar.disabled = false;
 
   const globalQty   = document.getElementById("global-ticket-qty");
@@ -592,7 +595,7 @@ const updateGlobalTotal = () => {
   globalQty.disabled = false;
 
   const cantidad = Math.min(
-    9,
+    3,
     Math.max(1, Number(globalQty.value) || 1)
   );
 
