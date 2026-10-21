@@ -4157,4 +4157,53 @@ section{
     animation: none;
   }
 }
+.ticket-option.sold-out{
+  position:relative;
+  overflow:hidden;
+  cursor:not-allowed;
+  border:1px solid rgba(255,65,85,.4);
+  background:linear-gradient(135deg,rgba(100,20,32,.22),rgba(255,45,65,.07));
+  box-shadow:inset 3px 0 0 #ff4058;
+  opacity:.82;
+}
+.ticket-option.sold-out h3{
+  color:#ff7183;
+}
+.ticket-option.sold-out p{
+  color:rgba(255,210,215,.65);
+}
+.ticket-option.sold-out .ticket-sold-out{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:8px;
+  padding:7px 12px;
+  border:1px solid rgba(255,65,85,.45);
+  border-radius:8px;
+  background:rgba(255,45,65,.16);
+  color:#ff6479;
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:1.5px;
+}
+.ticket-option.sold-out .ticket-sold-out::before{
+  content:"";
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#ff4058;
+  box-shadow:0 0 8px rgba(255,64,88,.7);
+}
+.ticket-option.sold-out:hover{
+  transform:none;
+  border-color:rgba(255,65,85,.5);
+  background:linear-gradient(135deg,rgba(100,20,32,.22),rgba(255,45,65,.07));
+  box-shadow:inset 3px 0 0 #ff4058;
+}
+.btn-buy-final:disabled{
+  opacity:.4;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
 

@@ -518,9 +518,7 @@ tickets.forEach(ticket => {
   const div = document.createElement("div");
   div.classList.add("ticket-option");
 
-  const agotado =
-  ticket.stock_disponible !== null &&
-  Number(ticket.stock_disponible) <= 0;
+  const agotado = ticket.stock_disponible !== null && Number(ticket.stock_disponible) <= 0;
 
 if (agotado) {
   div.classList.add("sold-out");
@@ -533,7 +531,7 @@ if (agotado) {
 
   ${
     Number(ticket.stock_disponible) <= 0
-      ? ` <span class="ticket-mini-info ticket-sold-out"> AGOTADO </span> `
+      ? ` <span class="ticket-mini-info ticket-sold-out"> SOLD OUT </span> `
       : ` <span class="ticket-mini-info"> ${ticket.stock_disponible} disponibles </span>
         ${
           ticket.fecha_fin
@@ -568,6 +566,9 @@ div.addEventListener("click", () => {
 
   selectedTicket = ticket;
   selectedEventId = eventId;
+
+  const btnContinuar = document.querySelector(".btn-buy-final");
+if (btnContinuar) btnContinuar.disabled = false;
 
   const globalQty   = document.getElementById("global-ticket-qty");
   const globalTotal = document.getElementById("global-ticket-total");
@@ -1000,10 +1001,9 @@ if (metodo === "transferencia") {
   ).innerHTML =
     selectedTicket.detalle_pago || "";
 
-  document.querySelector(
-    ".checkout-summary"
-  ).style.display =
-    "none";
+document.querySelector(".checkout-summary").style.display = "none";
+const btnContinuar = document.querySelector(".btn-buy-final");
+if (btnContinuar) btnContinuar.disabled = true;
 
   document.querySelector(
     ".btn-buy-final"
