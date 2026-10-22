@@ -46,9 +46,7 @@ function cerrarSesion() {
   localStorage.removeItem("cosmic_user");
   window.location.href = "login.html";
 }
-async function cargarMenus() {
-  const menu = document.getElementById("dynamicMenu");
-
+async function cargarMenus() { const menu = document.getElementById("dynamicMenu");
   if (!menu) return;
 
   try {
@@ -56,9 +54,7 @@ async function cargarMenus() {
     const data = await res.json();
 
     if (!res.ok || !data.success) {
-      throw new Error(
-        data.error || "No fue posible cargar los menús."
-      );
+      throw new Error(data.error || "No fue posible cargar los menús.");
     }
 
     const menus = Array.isArray(data.menus)
@@ -98,7 +94,6 @@ async function cargarMenus() {
 
       /*MENÚ TIPO ACCIÓN*/
      else if (tipo === "accion" || esAccionCortesia) {
-
         link.href = "#";
         link.dataset.action = ruta;
 
@@ -139,11 +134,7 @@ if (ruta === "activar-cortesias") {
   return;
 }
 
-          /*
-           * ================================
-           * GENERADOR DE BOLETOS
-           * ================================
-           */
+          /*GENERADOR DE BOLETOS*/
 
           if (ruta === "generador-boletos") {
 
@@ -370,8 +361,8 @@ async function cargarDashboard() {
       );
     }
 
-    const metricas = data.metricas || {};
-    const accesosEmitidos = Number(metricas.emitidos || 0);
+  const metricas = data.metricas || {};
+  const accesosEmitidos = Number(metricas.emitidos || 0);
   const accesosDescargados =
     Number(
       metricas.asignados ??

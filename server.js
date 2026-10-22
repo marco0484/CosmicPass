@@ -1768,7 +1768,7 @@ app.post("/admin/rps", requerirSesion, async (req, res) => {
     // EVITAR DUPLICADOS
     // =========================
 
-    while (true) {
+    while (true) {DASH
 
       const { data: existente, error: errorExistente } =
         await supabase
@@ -2571,13 +2571,13 @@ const idProductora =
         : "admin",
       id_productora: idProductora,
       metricas: {
-                eventos: Number(metricas.eventos || 0),
-                emitidos: Number(metricas.emitidos || 0),
-                asignados: Number(metricas.asignados || 0),
-                tickets: Number(metricas.tickets || 0),
+                eventos: Number(metricas.eventos         || 0),
+                emitidos: Number(metricas.emitidos       || 0),
+                asignados: Number(metricas.asignados     || 0),
+                tickets: Number(metricas.tickets         || 0),
                 disponibles: Number(metricas.disponibles || 0),
-                cortesias: Number(metricas.cortesias || 0),
-                ingresos: Number(metricas.ingresos || 0),
+                cortesias: Number(metricas.cortesias     || 0),
+                ingresos: Number(metricas.ingresos       || 0),
                 productoras: Number(metricas.productoras || 0)
               }
     });
