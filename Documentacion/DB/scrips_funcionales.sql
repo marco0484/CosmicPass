@@ -9,6 +9,9 @@ SET password_hash = extensions.crypt(
 )
 WHERE id = 2;
 
+
+/**/
+
 select  cp.id 		 as id_prodcutora
 	   ,cp.name 	 as nombre_productora
 	   ,ce.id		 as id_evento 
