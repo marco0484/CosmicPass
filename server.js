@@ -4269,29 +4269,30 @@ if (eventoError || !evento) {
       qrImage
     });
 
-    const { error: insertError } = await supabase
-      .from("tickets")
-      .insert([{
-        evento_id:ticket.id_evento,
-        nombre_cliente:nombre,
-        correo,
-        telefono,
-        cantidad:1,
-        monto:0,
-        metodo_pago:"FREE_ACCESS",
-        payment_id:null,
-        payment_status:"free",
-        fecha_pago:new Date(),
-        ticket_type_id:ticket.id,
-        ticket_token:ticketToken
-            }]);
+const { error: insertError } = await supabase
+  .from("tickets")
+  .insert([{
+    evento_id:        ticket.id_evento,
+    nombre_cliente:   nombre,
+    correo:           correoNormalizado,
+    telefono:         telefonoNormalizado,
+    cantidad:         1,
+    monto:            0,
+    tipo_ticket:      null,
+    metodo_pago:      null,
+    payment_id:       null,
+    payment_status:  "free",
+    fecha_pago:       null,
+    ticket_type_id:   ticket.id,
+    ticket_token:     ticketToken
+  }]);
 
-    if (insertError) {
-      return res.status(500).json({
-        success:false,
-        error:insertError.message
-      });
-    }
+if (insertError) {
+  return res.status(500).json({
+    success: false,
+    error: insertError.message
+  });
+}
 
     await supabase.rpc("descontar_stock", {
       p_ticket_id:ticket.id,
