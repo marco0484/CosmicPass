@@ -1461,96 +1461,100 @@ app.post("/logout", (req, res) => {
 
 });
 
+
 app.post("/scanner/token", requerirSesion, async (req, res) => {
   try {
+    const userId = Number(req.usuario.id);
+    if (!Number.isInteger(userId) || userId <= 0) {
+      return res.status(401).json({ success: false, error: "Sesión de usuario inválida" });
+    }
 
-const evento_id = Number(req.body.evento_id);
-if (!Number.isInteger(evento_id) || evento_id <= 0) {
-  return res.status(400).json({
-    success: false,
-    error: "Debes seleccionar un evento válido"
-  });
-}
-
-const { data: evento, error: eventoError } = await supabase
-  .from("cat_events")
-  .select("id, id_productora")
-  .eq("id", evento_id)
-  .maybeSingle();
-
-if (eventoError) throw eventoError;
-
-if (!evento || Number(evento.id_productora) !== Number(user.id_productora)) {
-  return res.status(403).json({
-    success: false,
-    error: "El evento no existe o no pertenece a tu productora"
-  });
-}
-
-const userId = Number(req.usuario.id);
-
-if (!userId) {
-  return res.status(401).json({
-    success: false,
-    error: "Sesión de usuario inválida"
-  });
-}
-
-    const { data: user, error } = await supabase
+    const { data: user, error: userError } = await supabase
       .from("cosmic_usuarios")
-      .select(`
-        id,
-        nombre,
-        usuario,
-        rol,
-        activo,
-        id_productora
-      `)
+      .select("id, nombre, usuario, rol, activo, id_productora")
       .eq("id", userId)
       .maybeSingle();
 
-    if (error || !user) {
-      return res.status(404).json({
-        success: false,
-        error: "Usuario no encontrado"
-      });
+    if (userError) throw userError;
+    if (!user) {
+      return res.status(404).json({ success: false, error: "Usuario no encontrado" });
+    }
+    if (!user.activo) {
+      return res.status(403).json({ success: false, error: "Usuario inactivo" });
     }
 
-    if (!user.activo) {
+    const idProductora = Number(user.id_productora);
+    if (!Number.isInteger(idProductora) || idProductora <= 0) {
+      return res.status(403).json({ success: false, error: "Sin productora asignada" });
+    }
+
+    let eventoId = Number(req.body?.evento_id);
+
+    // Si el frontend no envía evento, buscar el evento activo de la productora.
+    if (!Number.isInteger(eventoId) || eventoId <= 0) {
+      const { data: eventos, error: eventosError } = await supabase
+        .from("cat_events")
+        .select("id, id_productora, ind_activo")
+        .eq("id_productora", idProductora)
+        .eq("ind_activo", 1);
+
+      if (eventosError) throw eventosError;
+
+      if (!eventos || eventos.length === 0) {
+        return res.status(404).json({
+          success: false,
+          error: "Tu productora no tiene eventos activos para validar"
+        });
+      }
+
+      if (eventos.length > 1) {
+        return res.status(400).json({
+          success: false,
+          error: "Tu productora tiene varios eventos activos; debes seleccionar uno"
+        });
+      }
+
+      eventoId = Number(eventos[0].id);
+    }
+
+    const { data: evento, error: eventoError } = await supabase
+      .from("cat_events")
+      .select("id, id_productora, ind_activo")
+      .eq("id", eventoId)
+      .maybeSingle();
+
+    if (eventoError) throw eventoError;
+
+    if (!evento || Number(evento.id_productora) !== idProductora) {
       return res.status(403).json({
         success: false,
-        error: "Usuario inactivo"
+        error: "El evento no existe o no pertenece a tu productora"
       });
     }
 
-if (!user.id_productora) {
-    return res.status(403).json({
+    if (Number(evento.ind_activo) !== 1) {
+      return res.status(400).json({
         success: false,
-        error: "Sin productora asignada"
-    });
-}
+        error: "El evento seleccionado no está activo"
+      });
+    }
 
     const token = crypto.randomUUID();
+    const expires_at = new Date(Date.now() + 5 * 60 * 1000);
 
-    const expires_at = new Date(
-      Date.now() + (5 * 60 * 1000)
-    );
-
-    const { error: insertError } =
-      await supabase
-        .from("scanner_sessions")
-        .insert({
-                  token,
-                  user_id: user.id,
-                  id_productora: user.id_productora,
-                  id_evento: evento_id,
-                  expires_at,
-                  used: false
-                });
+    const { error: insertError } = await supabase
+      .from("scanner_sessions")
+      .insert({
+        token,
+        user_id: user.id,
+        id_productora: idProductora,
+        id_evento: eventoId,
+        expires_at,
+        used: false
+      });
 
     if (insertError) {
-      console.error(insertError);
-
+      console.error("ERROR INSERTANDO scanner_sessions:", insertError);
       return res.status(500).json({
         success: false,
         error: "No fue posible crear el token"
@@ -1560,21 +1564,19 @@ if (!user.id_productora) {
     return res.json({
       success: true,
       token,
-      expires_at
+      expires_at,
+      id_evento: eventoId,
+      id_productora: idProductora
     });
-
   } catch (err) {
-
-    console.error(err);
-
+    console.error("ERROR /scanner/token:", err);
     return res.status(500).json({
       success: false,
       error: "Error interno"
     });
-
   }
-
 });
+
 /* =========================================================
    GENERADOR - CREAR TOKEN
 ========================================================= */
