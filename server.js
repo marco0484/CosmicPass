@@ -1464,7 +1464,28 @@ app.post("/logout", (req, res) => {
 app.post("/scanner/token", requerirSesion, async (req, res) => {
   try {
 
-const { evento_id = null } = req.body;
+const evento_id = Number(req.body.evento_id);
+if (!Number.isInteger(evento_id) || evento_id <= 0) {
+  return res.status(400).json({
+    success: false,
+    error: "Debes seleccionar un evento válido"
+  });
+}
+
+const { data: evento, error: eventoError } = await supabase
+  .from("cat_events")
+  .select("id, id_productora")
+  .eq("id", evento_id)
+  .maybeSingle();
+
+if (eventoError) throw eventoError;
+
+if (!evento || Number(evento.id_productora) !== Number(user.id_productora)) {
+  return res.status(403).json({
+    success: false,
+    error: "El evento no existe o no pertenece a tu productora"
+  });
+}
 
 const userId = Number(req.usuario.id);
 
