@@ -199,26 +199,26 @@ if (ruta === "activar-cortesias") {
            * ================================
            */
 
-          if (ruta === "validar-qr") {
+
+if (ruta === "validar-qr") {
   try {
-    const evento_id = Number(idEvento);
-    if (!Number.isInteger(evento_id) || evento_id <= 0) {
-      alert("Selecciona un evento antes de abrir el validador.");
-      return;
-    }
     const response = await fetch(`${API}/scanner/token`, {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.stringify({ evento_id })
+      body: JSON.stringify({})
     });
+
     const result = await response.json();
+
     if (!response.ok || !result.success || !result.token) {
       console.error("ERROR VALIDADOR:", result);
       alert(result.error || "No fue posible abrir el validador.");
       return;
     }
+
     window.open(
       `https://validador-ok.vercel.app/?token=${encodeURIComponent(result.token)}`,
       "_blank"
@@ -229,6 +229,7 @@ if (ruta === "activar-cortesias") {
   }
   return;
 }
+
         });
       }
     });
