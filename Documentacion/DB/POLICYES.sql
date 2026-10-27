@@ -55,3 +55,9 @@ on parking_config
 FOR SELECT
 TO anon, authenticated
 USING (true);
+
+CREATE POLICY "Lectura publica de mercancia"
+ON public.cat_mercancia
+FOR SELECT
+TO anon, authenticated
+USING (true);

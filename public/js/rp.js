@@ -1,6 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("🔥 rp.js cargado");
-
   const API =
     window.location.hostname === "localhost"
       ? "http://localhost:3000"
@@ -105,8 +103,6 @@ async function cargarRPs() { try {
       );
     }
 
-    console.log("RP recibidos:", data);
-
     renderizarRPs(data.rps || data);
 
   } catch (error) {
@@ -138,8 +134,6 @@ async function cargarEventos() {
         data.error || "No fue posible cargar los eventos."
       );
     }
-
-    console.log("Eventos de la productora:", data);
 
     const eventos = data.events || data;
 
@@ -225,8 +219,6 @@ async function cargarResumen() {
     if (!response.ok) {
       throw new Error(data.error || "No fue posible cargar el resumen.");
     }
-
-    console.log("Resumen RP:", data);
 
     const rps = data.rps || [];
 
@@ -478,8 +470,6 @@ asignarEvento?.addEventListener("change", async () => {
 
     const data = await response.json();
 
-    console.log("Tipos de boleto:", data);
-
     if (!response.ok) {
       throw new Error(
         data.error ||
@@ -623,8 +613,6 @@ const tipos = data.tickets || data.ticket_types || data.tipos || [];
 
       const data = await response.json();
 
-      console.log("Respuesta asignar boletos:", data);
-
       if (!response.ok || !data.success) {
         throw new Error(
           data.error ||
@@ -723,8 +711,6 @@ const tipos = data.tickets || data.ticket_types || data.tipos || [];
       );
 
       const data = await response.json();
-
-      console.log("Respuesta crear RP:", data);
 
       if (!response.ok || !data.ok) {
         throw new Error(

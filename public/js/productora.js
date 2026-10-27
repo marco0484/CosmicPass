@@ -421,8 +421,6 @@ const res = await fetch(
 
 const data = await res.json();
 
-console.log("DATA:", data);
-
 renderProducer(
   data.productora,
   data.eventos || []
@@ -450,34 +448,17 @@ async function openTicketModal(eventName, eventId) {
   if (!modal || !title || !container) {
     return;
   }
-  document.querySelector(
-  ".ticket-kicker"
-).style.display = "";
 
-document.querySelector(
-  ".modal-step"
-).style.display = "";
-
-document.querySelector(
-  ".ticket-sub"
-).innerText =
-  "Selecciona el método de pago que prefieras.";
-
-document.querySelector(".checkout-summary").style.display = "none";
-
-document.querySelector(
-  ".btn-buy-final"
-).innerText =
-  "Continuar compra";
-
-title.textContent =
-  "Elige cómo pagar tu acceso";
-
+  document.querySelector(".ticket-kicker").style.display = "";
+  document.querySelector(".modal-step").style.display = "";
+  document.querySelector(".ticket-sub").innerText ="Selecciona el método de pago que prefieras.";
+  document.querySelector(".checkout-summary").style.display = "none";
+  document.querySelector(".btn-buy-final").innerText ="Continuar compra";
+  title.textContent ="Elige cómo pagar tu acceso";
   container.innerHTML = "<p>Cargando boletos...</p>";
-
   modal.classList.add("active");
 
-  pendingPaymentMethod = null;
+pendingPaymentMethod = null;
 selectedTicket = null;
 ticketQuantity = 1;
 
@@ -485,7 +466,6 @@ const resumen = document.querySelector("#ticket-modal .checkout-summary");
 const btnContinuar = document.querySelector("#ticket-modal .btn-buy-final");
 if (resumen) resumen.style.display = "none";
 if (btnContinuar) btnContinuar.disabled = true;
-
 
 const globalQty = document.getElementById("global-ticket-qty");
 const globalTotal = document.getElementById("global-ticket-total");
@@ -545,7 +525,6 @@ if (agotado) {
   }
 
 </div>
-
   <div class="ticket-price">
   ${
     Number(ticket.precio) === 0
@@ -553,7 +532,6 @@ if (agotado) {
       : `$${ticket.precio}`
   }
 </div>
-
 `;
 div.addEventListener("click", () => {
 
@@ -577,7 +555,7 @@ if (btnContinuar) btnContinuar.disabled = false;
   const globalTotal = document.getElementById("global-ticket-total");
 
 
-const updateGlobalTotal = () => {
+  const updateGlobalTotal = () => {
   const esCortesia = Number(ticket.precio) === 0;
 
   if (esCortesia) {
@@ -608,7 +586,6 @@ const updateGlobalTotal = () => {
 
 
   updateGlobalTotal();
-
   globalQty.onchange = updateGlobalTotal;
 
 });
@@ -671,21 +648,18 @@ async function generatepago() {
   return;
 }
 
-const nombreLimpio =
-  nombre.replace(/\s+/g, " ").trim();
+const nombreLimpio = nombre.replace(/\s+/g, " ").trim();
 
 if (nombreLimpio.length < 3) {
   alert("Ingresa un nombre válido.");
   return;
 }
 
-const emailRegex =
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 if (!emailRegex.test(email)) {
 
-  const input =
-    document.getElementById("user-email");
+  const input = document.getElementById("user-email");
 
   input.focus();
   input.classList.add("input-error");

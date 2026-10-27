@@ -299,7 +299,6 @@ function configurarBotones() {
 
 
 function mostrarModulo(modulo) {
-console.log("Módulo:", modulo);
   const dashboardElements =
     document.querySelectorAll(
       '[data-module="dashboard"]'
@@ -685,12 +684,6 @@ async function cargarEventosCortesia() {
     );
 
     const eventos = await res.json();
-
-    console.log(
-      "EVENTOS CORTESÍAS:",
-      eventos
-    );
-
     if (!res.ok) {
       throw new Error(
         "No fue posible consultar los eventos"
